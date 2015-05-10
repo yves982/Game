@@ -10,11 +10,16 @@ public class PlayerModel {
 	private MutableRectangle area;
 	private Image image;
 	private boolean collided;
+	private int score;
+	private int lives;
 	private PropertyChangeSupport propertyChange;
 	
-	public PlayerModel(int x, int y, int width, int height, Image image) {
+	public PlayerModel(int x, int y, int width, int height, int lives, Image image) {
 		area = new MutableRectangle(x, y, width, height);
 		this.image = image;
+		score = 0;
+		this.lives = lives;
+		collided = false;
 		propertyChange = new PropertyChangeSupport(this);
 	}
 	
@@ -55,6 +60,36 @@ public class PlayerModel {
 		return area;
 	}
 	
+	/**
+	 * @return the score
+	 */
+	public int getScore() {
+		return score;
+	}
+	/**
+	 * @param score the score to set
+	 */
+	public void setScore(int score) {
+		int oldScore = this.score;
+		this.score = score;
+		propertyChange.firePropertyChange("score", oldScore, score);
+	}
+
+	/**
+	 * @return the lives
+	 */
+	public int getLives() {
+		return lives;
+	}
+	/**
+	 * @param lives the lives to set
+	 */
+	public void setLives(int lives) {
+		int oldLives = this.lives;
+		this.lives = lives;
+		propertyChange.firePropertyChange("lives", oldLives, lives);
+	}
+
 	/**
 	 * @param listener
 	 * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.beans.PropertyChangeListener)
