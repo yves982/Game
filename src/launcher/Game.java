@@ -2,7 +2,7 @@ package launcher;
 
 import java.util.Locale;
 
-import controller.MainController;
+import main.MainController;
 
 public class Game {
 
