@@ -1,12 +1,12 @@
-package main.model;
+package menu.model;
 
 import javax.swing.DefaultButtonModel;
 
-public class MainViewMenuItemModel extends DefaultButtonModel {
+public class MainMenuItemModel extends DefaultButtonModel {
 	private static final long serialVersionUID = -987726507584486451L;
 	private String value;
 	private int mnemonic;
-	private MainViewActions action;
+	private MainMenuActions action;
 	
 	
 	/**
@@ -36,13 +36,13 @@ public class MainViewMenuItemModel extends DefaultButtonModel {
 	/**
 	 * @return the action
 	 */
-	public MainViewActions getAction() {
+	public MainMenuActions getAction() {
 		return action;
 	}
 	/**
 	 * @param action the action to set
 	 */
-	public void setAction(MainViewActions action) {
+	public void setAction(MainMenuActions action) {
 		this.action = action;
 	}
 }

@@ -4,52 +4,58 @@ import java.awt.Dialog.ModalityType;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.LayoutManager;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 
-import settings.model.Difficulty;
-import settings.model.DifficultyButtonModel;
-import settings.model.Resolution;
-import settings.model.ResolutionButtonModel;
+import settings.model.Actions;
+import settings.model.Difficulties;
+import settings.model.Resolutions;
+import settings.model.SettingsProperties;
 import settings.model.SettingsViewModel;
+import utils.ui.ComponentLocation;
 import utils.ui.GridBagConstraintsAnchor;
 import utils.ui.GridBagConstraintsBuilder;
-import utils.ui.ComponentLocation;
 
-public class SettingsView implements PropertyChangeListener {
+public class SettingsView implements PropertyChangeListener, ActionListener {
 	private JDialog settingsDialog;
-	private ActionListener actionHandler;
 	private JPanel difficultyPanel;
 	private JPanel resolutionPanel;
 	private JButton okBtn;
 	private JButton cancelBtn;
 	private GridBagConstraintsBuilder constraintBuilder;
 	private SettingsViewModel model;
-	private Map<Difficulty, JRadioButton> difficultyButtons;
-	private Map<Resolution, JRadioButton> resolutionButtons;
+	private Map<Difficulties, JRadioButton> difficultyButtons;
+	private Map<Resolutions, JRadioButton> resolutionButtons;
+	private Map<JComponent, Consumer<Void>> actionHandlers;
 	private ButtonGroup difficultyButtonGroup;
 	private ButtonGroup resolutionButtonGroup;
+	private PropertyChangeSupport propertyChange;
 	
-	public SettingsView(ActionListener listener, SettingsViewModel model) {
-		actionHandler = listener;
+	public SettingsView(SettingsViewModel model) {
 		this.model = model;
 		constraintBuilder = new GridBagConstraintsBuilder();
-		difficultyButtons = new HashMap<Difficulty, JRadioButton>();
+		difficultyButtons = new HashMap<Difficulties, JRadioButton>();
 		difficultyButtonGroup = new ButtonGroup();
-		resolutionButtons = new HashMap<Resolution, JRadioButton>();
+		resolutionButtons = new HashMap<Resolutions, JRadioButton>();
 		resolutionButtonGroup = new ButtonGroup();
+		actionHandlers = new HashMap<JComponent, Consumer<Void>>();
+		propertyChange = new PropertyChangeSupport(this);
 		SwingUtilities.invokeLater( () -> buildComponents() );
 	}
 
@@ -61,20 +67,21 @@ public class SettingsView implements PropertyChangeListener {
 		model.addPropertyChangeListener(this);
 	}
 
-	private JRadioButton buildRadioButton(Difficulty difficulty) {
+	private JRadioButton buildRadioButton(Difficulties difficulty) {
 		JRadioButton radioButton = new JRadioButton(model.getDifficulty(difficulty));
-		DifficultyButtonModel buttonModel = new DifficultyButtonModel(difficulty);
-		radioButton.setModel(buttonModel);
+		actionHandlers.put(radioButton, (v) -> propertyChange.firePropertyChange(SettingsProperties.DIFFICULTY.toString(), 
+				model.getSelectedDifficulty(),
+				difficulty));
 		
 		if(model.getSelectedDifficulty().equals(difficulty)) {
 			radioButton.setSelected(true);
 		}
 		difficultyButtons.put(difficulty, radioButton);
 		
-		radioButton.addActionListener(actionHandler);
+		radioButton.addActionListener(this);
 		return radioButton;
 	}
-	
+
 	private void buildDifficultyPanel() {
 		GridBagLayout layout = new GridBagLayout();
 		difficultyPanel = new JPanel();
@@ -82,9 +89,9 @@ public class SettingsView implements PropertyChangeListener {
 		Border titledBorder = BorderFactory.createTitledBorder(model.getDifficultyTitle());
 		difficultyPanel.setBorder(titledBorder);
 		
-		JRadioButton rdbEasy = buildRadioButton(Difficulty.EASY);
-		JRadioButton rdbNormal = buildRadioButton(Difficulty.NORMAL);
-		JRadioButton rdbHard = buildRadioButton(Difficulty.HARD);
+		JRadioButton rdbEasy = buildRadioButton(Difficulties.EASY);
+		JRadioButton rdbNormal = buildRadioButton(Difficulties.NORMAL);
+		JRadioButton rdbHard = buildRadioButton(Difficulties.HARD);
 		
 		difficultyButtonGroup.add(rdbEasy);
 		difficultyButtonGroup.add(rdbNormal);
@@ -110,17 +117,19 @@ public class SettingsView implements PropertyChangeListener {
 		difficultyPanel.add(rdbHard, hardConstraint);
 	}
 
-	private JRadioButton buildRadioButton(Resolution resolution) {
+	private JRadioButton buildRadioButton(Resolutions resolution) {
 		JRadioButton radioButton = new JRadioButton(model.getResolution(resolution));
-		ResolutionButtonModel buttonModel = new ResolutionButtonModel(resolution);
-		radioButton.setModel(buttonModel);
 		
 		if(model.getSelectedResolution().equals(resolution)) {
 			radioButton.setSelected(true);
 		}
 		resolutionButtons.put(resolution,  radioButton);
 		
-		radioButton.addActionListener(actionHandler);
+		actionHandlers.put(radioButton, (v) -> propertyChange.firePropertyChange(SettingsProperties.RESOLUTION.toString(),
+				model.getSelectedResolution(),
+				resolution));
+		
+		radioButton.addActionListener(this);
 		return radioButton;
 	}
 	
@@ -131,9 +140,9 @@ public class SettingsView implements PropertyChangeListener {
 		Border titledBorder = BorderFactory.createTitledBorder(model.getResolutionTitle());
 		resolutionPanel.setBorder(titledBorder);
 		
-		JRadioButton rdbLow = buildRadioButton(Resolution.LOW);
-		JRadioButton rdbStandard = buildRadioButton(Resolution.STANDARD);
-		JRadioButton rdbHigh = buildRadioButton(Resolution.HIGH);
+		JRadioButton rdbLow = buildRadioButton(Resolutions.LOW);
+		JRadioButton rdbStandard = buildRadioButton(Resolutions.STANDARD);
+		JRadioButton rdbHigh = buildRadioButton(Resolutions.HIGH);
 		
 		resolutionButtonGroup.add(rdbLow);
 		resolutionButtonGroup.add(rdbStandard);
@@ -159,9 +168,18 @@ public class SettingsView implements PropertyChangeListener {
 		resolutionPanel.add(rdbHigh, highConstraint);
 	}
 
+	private JButton buildButton(Actions action) {
+		JButton button = new JButton(model.getAction(action));
+		button.addActionListener(this);
+		actionHandlers.put(button, (v) -> propertyChange.firePropertyChange(SettingsProperties.ACTION.toString()
+				, null,
+				action));
+		return button;
+	}
+	
 	private void buildButtons() {
-		okBtn = new JButton(model.getOk());
-		cancelBtn = new JButton(model.getCancel());
+		okBtn = buildButton(Actions.OK);
+		cancelBtn = buildButton(Actions.CANCEL);
 	}
 
 	private void addSettingsDialogComponents() {
@@ -198,9 +216,9 @@ public class SettingsView implements PropertyChangeListener {
 		
 		addSettingsDialogComponents();
 				
-		settingsDialog.setResizable(false);
 		settingsDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		settingsDialog.pack();
+		settingsDialog.setResizable(false);
 		settingsDialog.setLocation(ComponentLocation.getCenteredLocation(settingsDialog));
 	}
 	
@@ -212,18 +230,62 @@ public class SettingsView implements PropertyChangeListener {
 		});
 	}
 
+	public void close() {
+		settingsDialog.dispose();
+	}
+
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		String propertyName = evt.getPropertyName();
 		switch(propertyName) {
 			case "selectedDifficulty":
-				Difficulty difficulty = (Difficulty)evt.getNewValue();
+				Difficulties difficulty = (Difficulties)evt.getNewValue();
 				difficultyButtonGroup.setSelected(difficultyButtons.get(difficulty).getModel(), true);
 				break;
 			case "selectedResolution":
-				Resolution resolution = (Resolution)evt.getNewValue();
+				Resolutions resolution = (Resolutions)evt.getNewValue();
 				resolutionButtonGroup.setSelected(resolutionButtons.get(resolution).getModel(), true);
 				break;
 		}
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		JComponent source = (JComponent)e.getSource();
+		actionHandlers.get(source).accept(null);
+	}
+
+	/**
+	 * @param listener
+	 * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.beans.PropertyChangeListener)
+	 */
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		propertyChange.addPropertyChangeListener(listener);
+	}
+
+	/**
+	 * @param listener
+	 * @see java.beans.PropertyChangeSupport#removePropertyChangeListener(java.beans.PropertyChangeListener)
+	 */
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		propertyChange.removePropertyChangeListener(listener);
+	}
+
+	/**
+	 * @param propertyName
+	 * @param listener
+	 * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
+	 */
+	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+		propertyChange.addPropertyChangeListener(propertyName, listener);
+	}
+
+	/**
+	 * @param propertyName
+	 * @param listener
+	 * @see java.beans.PropertyChangeSupport#removePropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
+	 */
+	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+		propertyChange.removePropertyChangeListener(propertyName, listener);
 	}
 }

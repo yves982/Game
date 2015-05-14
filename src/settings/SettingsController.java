@@ -1,25 +1,23 @@
 package settings;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.swing.ButtonModel;
 import javax.swing.JOptionPane;
-import javax.swing.JRadioButton;
 
 import lang.Messages;
-import settings.model.Difficulty;
-import settings.model.DifficultyButtonModel;
-import settings.model.Resolution;
-import settings.model.ResolutionButtonModel;
-import settings.model.SettingsStrings;
+import settings.model.Actions;
+import settings.model.Difficulties;
+import settings.model.Resolutions;
+import settings.model.SettingsProperties;
 import settings.model.SettingsViewModel;
+import settings.model.Titles;
 import settings.ui.SettingsView;
 
-public class SettingsController implements ActionListener {
+public class SettingsController implements PropertyChangeListener {
 	private Messages messages;
 	private SettingsView view;
 	private SettingsViewModel model;
@@ -27,57 +25,87 @@ public class SettingsController implements ActionListener {
 	public SettingsController(Locale locale) {
 		messages = new Messages(locale);
 		model = new SettingsViewModel();
-		view = new SettingsView(this, model);
-		
+		view = new SettingsView(model);
+		view.addPropertyChangeListener(this);
 		buildModel();
 	}
 	
-	private void fillResolutions(Map<Resolution, String> resolutions) {
-		resolutions.put(Resolution.LOW, messages.getString(Resolution.LOW.getKey()));
-		resolutions.put(Resolution.STANDARD, messages.getString(Resolution.STANDARD.getKey()));
-		resolutions.put(Resolution.HIGH, messages.getString(Resolution.HIGH.getKey()));
+	private void fillResolutions(Map<Resolutions, String> resolutions) {
+		resolutions.put(Resolutions.LOW, messages.getString(Resolutions.LOW.getKey()));
+		resolutions.put(Resolutions.STANDARD, messages.getString(Resolutions.STANDARD.getKey()));
+		resolutions.put(Resolutions.HIGH, messages.getString(Resolutions.HIGH.getKey()));
 	}
 
-	private void fillDifficulties(Map<Difficulty, String> difficulties) {
-		difficulties.put(Difficulty.EASY, messages.getString(Difficulty.EASY.getKey()));
-		difficulties.put(Difficulty.NORMAL, messages.getString(Difficulty.NORMAL.getKey()));
-		difficulties.put(Difficulty.HARD, messages.getString(Difficulty.HARD.getKey()));
+	private void fillDifficulties(Map<Difficulties, String> difficulties) {
+		difficulties.put(Difficulties.EASY, messages.getString(Difficulties.EASY.getKey()));
+		difficulties.put(Difficulties.NORMAL, messages.getString(Difficulties.NORMAL.getKey()));
+		difficulties.put(Difficulties.HARD, messages.getString(Difficulties.HARD.getKey()));
+	}
+
+	private void fillActions(Map<Actions, String> actions) {
+		actions.put(Actions.OK, messages.getString(Actions.OK.getKey()));
+		actions.put(Actions.CANCEL, messages.getString(Actions.CANCEL.getKey()));
 	}
 
 	private void buildModel() {
-		Map<Difficulty, String> difficulties = new HashMap<Difficulty, String>();
-		Map<Resolution, String> resolutions = new HashMap<Resolution, String>();
+		Map<Difficulties, String> difficulties = new HashMap<Difficulties, String>();
+		Map<Resolutions, String> resolutions = new HashMap<Resolutions, String>();
+		Map<Actions, String> actions = new HashMap<Actions, String>();
 		model.setDifficulties(difficulties);
-		model.setSelectedDifficulty(Difficulty.EASY);
+		model.setSelectedDifficulty(Difficulties.EASY);
 		model.setResolutions(resolutions);
-		model.setSelectedResolution(Resolution.LOW);
+		model.setSelectedResolution(Resolutions.LOW);
+		model.setActions(actions);
 		
 		fillDifficulties(difficulties);
 		fillResolutions(resolutions);
+		fillActions(actions);
 		
-		model.setOk(messages.getString(SettingsStrings.MAIN_BUTTONS_OK.getKey()));
-		model.setCancel(messages.getString(SettingsStrings.MAIN_BUTTONS_CANCEL.getKey()));
-		model.setDifficultyTitle(messages.getString(SettingsStrings.DIFFICULTY_TITLE.getKey()));
-		model.setResolutionTitle(SettingsStrings.RESOLUTION_TITLE.getKey());
+		model.setDifficultyTitle(messages.getString(Titles.DIFFICULTY.getKey()));
+		model.setResolutionTitle(messages.getString(Titles.RESOLUTION.getKey()));
 	}
 
 	public void start() {
 		view.show();
 	}
 
+	public void handleChoice(Difficulties difficulty) {
+		model.setSelectedDifficulty(difficulty);
+		JOptionPane.showMessageDialog(null, messages.getString(difficulty.getKey()), "Difficulty Selected", JOptionPane.OK_OPTION);
+	}
+
+	private void handleChoice(Resolutions resolution) {
+		model.setSelectedResolution(resolution);
+		JOptionPane.showMessageDialog(null, messages.getString(resolution.getKey()), "Resolution Selected", JOptionPane.OK_OPTION);
+	}
+	
+	public void handleAction(Actions action) {
+			switch(action) {
+				case OK:
+					JOptionPane.showMessageDialog(null, String.format("Difficulté: %s, Resolution: %s", 
+							model.getSelectedDifficulty(), model.getSelectedResolution()));
+					break;
+				default:
+			}
+			view.close();
+	}
+
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		JRadioButton button = (JRadioButton)e.getSource();
-		ButtonModel buttonModel = button.getModel();
+	public void propertyChange(PropertyChangeEvent evt) {
+		String propertyName = evt.getPropertyName();
+		SettingsProperties property = SettingsProperties.valueOf(SettingsProperties.class, propertyName);
 		
-		if(buttonModel instanceof DifficultyButtonModel) {
-			Difficulty difficulty = ((DifficultyButtonModel)buttonModel).getDifficulty();
-			model.setSelectedDifficulty(difficulty);
-			JOptionPane.showMessageDialog(null, messages.getString(difficulty.getKey()), "Difficulty Selected", JOptionPane.OK_OPTION);
-		} else if (buttonModel instanceof ResolutionButtonModel) {
-			Resolution resolution = ((ResolutionButtonModel)buttonModel).getResolution();
-			model.setSelectedResolution(resolution);
-			JOptionPane.showMessageDialog(null, messages.getString(resolution.getKey()), "Resolution Selected", JOptionPane.OK_OPTION);
+		switch(property) {
+			case DIFFICULTY:
+				handleChoice((Difficulties)evt.getNewValue());
+				break;
+			case RESOLUTION:
+				handleChoice((Resolutions)evt.getNewValue());
+				break;
+			case ACTION:
+				handleAction((Actions)evt.getNewValue());
+				break;
 		}
 	}
+
 }

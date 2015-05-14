@@ -1,6 +1,6 @@
-package main.model;
+package menu.model;
 
-public enum MainViewActions {
+public enum MainMenuActions {
 	
 	START("MainFrame.menu_start"),
 	HIGH_SCORE("MainFrame.menu_highscores"),
@@ -9,7 +9,7 @@ public enum MainViewActions {
 	
 	private String key;
 	
-	MainViewActions(String key) {
+	MainMenuActions(String key) {
 		this.key = key;
 	}
 	

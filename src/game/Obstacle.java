@@ -2,8 +2,10 @@ package game;
 
 import game.model.ObstacleModel;
 import game.ui.ObstacleView;
+import main.IChildController;
+import main.ui.IChildView;
 
-public class Obstacle {
+public class Obstacle implements IChildController {
 	private ObstacleModel model;
 	private ObstacleView view;
 	
@@ -17,5 +19,10 @@ public class Obstacle {
 	
 	public boolean collide(Player player) {
 		return player.collide(model.getArea());
+	}
+
+	@Override
+	public IChildView getChild() {
+		return view;
 	}
 }

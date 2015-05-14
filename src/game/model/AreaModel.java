@@ -1,8 +1,7 @@
 package game.model;
 
-import game.model.geom.Rectangle;
-
 import java.awt.Image;
+import java.awt.Rectangle;
 
 
 /**
@@ -24,14 +23,6 @@ public class AreaModel {
 		rectangle = new Rectangle(x, y, width, height);
 		this.image = image;
 	}
-	
-	
-	/**
-	 * @return the rectangle
-	 */
-	public Rectangle getRectangle() {
-		return rectangle;
-	}
 
 
 	/**
@@ -39,5 +30,41 @@ public class AreaModel {
 	 */
 	public Image getImage() {
 		return image;
+	}
+
+
+	/**
+	 * @return
+	 * @see java.awt.Rectangle#getX()
+	 */
+	public int getX() {
+		return rectangle.x;
+	}
+
+
+	/**
+	 * @return
+	 * @see java.awt.Rectangle#getY()
+	 */
+	public int getY() {
+		return rectangle.y;
+	}
+
+
+	/**
+	 * @return
+	 * @see java.awt.Rectangle#getWidth()
+	 */
+	public int getWidth() {
+		return rectangle.width;
+	}
+
+
+	/**
+	 * @return
+	 * @see java.awt.Rectangle#getHeight()
+	 */
+	public int getHeight() {
+		return rectangle.height;
 	}
 }

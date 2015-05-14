@@ -7,13 +7,12 @@ import java.util.Map;
 public class SettingsViewModel {
 	private String difficultyTitle;
 	private String resolutionTitle;
-	private String ok;
-	private String cancel;
 	private String settingsTitle;
-	private Map<Difficulty, String> difficulties;
-	private Difficulty selectedDifficulty;
-	private Map<Resolution, String> resolutions;
-	private Resolution selectedResolution;
+	private Map<Difficulties, String> difficulties;
+	private Difficulties selectedDifficulty;
+	private Map<Resolutions, String> resolutions;
+	private Resolutions selectedResolution;
+	private Map<Actions, String> actions;
 	private PropertyChangeSupport propertyChange;
 	
 	public SettingsViewModel() {
@@ -78,30 +77,7 @@ public class SettingsViewModel {
 	public void setResolutionTitle(String resolutionTitle) {
 		this.resolutionTitle = resolutionTitle;
 	}
-	/**
-	 * @return the ok
-	 */
-	public String getOk() {
-		return ok;
-	}
-	/**
-	 * @param ok the ok to set
-	 */
-	public void setOk(String ok) {
-		this.ok = ok;
-	}
-	/**
-	 * @return the cancel
-	 */
-	public String getCancel() {
-		return cancel;
-	}
-	/**
-	 * @param cancel the cancel to set
-	 */
-	public void setCancel(String cancel) {
-		this.cancel = cancel;
-	}
+	
 	/**
 	 * @return the settingsTitle
 	 */
@@ -114,30 +90,31 @@ public class SettingsViewModel {
 	public void setSettingsTitle(String settingsTitle) {
 		this.settingsTitle = settingsTitle;
 	}
+
 	/**
 	 * @return the difficulties
 	 */
-	public Map<Difficulty, String> getDifficulties() {
+	public Map<Difficulties, String> getDifficulties() {
 		return difficulties;
 	}
 	/**
 	 * @param difficulties the difficulties to set
 	 */
-	public void setDifficulties(Map<Difficulty, String> difficulties) {
+	public void setDifficulties(Map<Difficulties, String> difficulties) {
 		this.difficulties = difficulties;
 	}
 	
 	/**
 	 * @return the selectedDifficulty
 	 */
-	public Difficulty getSelectedDifficulty() {
+	public Difficulties getSelectedDifficulty() {
 		return selectedDifficulty;
 	}
 	/**
 	 * @param selectedDifficulty the selectedDifficulty to set
 	 */
-	public void setSelectedDifficulty(Difficulty selectedDifficulty) {
-		Difficulty oldDifficulty = this.selectedDifficulty;
+	public void setSelectedDifficulty(Difficulties selectedDifficulty) {
+		Difficulties oldDifficulty = this.selectedDifficulty;
 		this.selectedDifficulty = selectedDifficulty;
 		propertyChange.firePropertyChange("selectedDifficulty", oldDifficulty, selectedDifficulty);
 	}
@@ -145,27 +122,40 @@ public class SettingsViewModel {
 	/**
 	 * @return the resolutions
 	 */
-	public Map<Resolution, String> getResolutions() {
+	public Map<Resolutions, String> getResolutions() {
 		return resolutions;
 	}
 	/**
 	 * @param resolutions the resolutions to set
 	 */
-	public void setResolutions(Map<Resolution, String> resolutions) {
+	public void setResolutions(Map<Resolutions, String> resolutions) {
 		this.resolutions = resolutions;
 	}
 	
 	/**
+	 * @return the actions
+	 */
+	public Map<Actions, String> getActions() {
+		return actions;
+	}
+	/**
+	 * @param actions the actions to set
+	 */
+	public void setActions(Map<Actions, String> actions) {
+		this.actions = actions;
+	}
+
+	/**
 	 * @return the selectedResolution
 	 */
-	public Resolution getSelectedResolution() {
+	public Resolutions getSelectedResolution() {
 		return selectedResolution;
 	}
 	/**
 	 * @param selectedResolution the selectedResolution to set
 	 */
-	public void setSelectedResolution(Resolution selectedResolution) {
-		Resolution oldResolution = this.selectedResolution;
+	public void setSelectedResolution(Resolutions selectedResolution) {
+		Resolutions oldResolution = this.selectedResolution;
 		this.selectedResolution = selectedResolution;
 		propertyChange.firePropertyChange("selectedResolution", oldResolution, selectedResolution);
 	}
@@ -174,7 +164,7 @@ public class SettingsViewModel {
 	 * @param difficulty the seeked difficulty
 	 * @return the difficulty string representation
 	 */
-	public String getDifficulty(Difficulty difficulty) {
+	public String getDifficulty(Difficulties difficulty) {
 		return difficulties.get(difficulty);
 	}
 	
@@ -182,8 +172,15 @@ public class SettingsViewModel {
 	 * @param resolution the seeked resolution
 	 * @return the resolution string representation
 	 */
-	public String getResolution(Resolution resolution) {
+	public String getResolution(Resolutions resolution) {
 		return resolutions.get(resolution);
 	}
 	
+	/**
+	 * @param action the seeked action
+	 * @return the action string representation
+	 */
+	public String getAction(Actions action) {
+		return actions.get(action);
+	}
 }

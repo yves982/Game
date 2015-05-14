@@ -1,13 +1,16 @@
 package game;
 
+import game.ui.WorldView;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import game.ui.WorldView;
+import main.IChildController;
+import main.ui.IChildView;
 
 
 
-public class World {
+public class World implements IChildController {
 	private List<Obstacle> obstacles;
 	private List<Area> areas;
 	private Player player;
@@ -16,14 +19,17 @@ public class World {
 	public World() {
 		obstacles = new ArrayList<Obstacle>();
 		areas = new ArrayList<Area>();
+		player = new Player();
 	}
 	
 	public void addObstacle(Obstacle obstacle) {
 		obstacles.add(obstacle);
+		view.addChild(obstacle.getChild());
 	}
 	
 	public void addArea(Area area) {
 		areas.add(area);
+		view.addChild(area.getChild());
 	}
 	
 	/**
@@ -36,6 +42,11 @@ public class World {
 	 * @param player the player to set
 	 */
 	public void setPlayer(Player player) {
-		
+		this.player = player;
+	}
+
+	@Override
+	public IChildView getChild() {
+		return view;
 	}
 }

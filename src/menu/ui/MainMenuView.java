@@ -1,4 +1,4 @@
-package main.ui;
+package menu.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -11,17 +11,18 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
 
+import main.ui.IChildView;
+import menu.model.MainMenuModel;
 import utils.ui.ComponentLocation;
-import main.model.MainViewModel;
 
-public class MainView {
+public class MainMenuView {
 	private JFrame frame;
 	private JMenuBar menuBar;
 	private JMenu menu;
 	private ActionListener actionHandler;
-	private MainViewModel viewModel;
+	private MainMenuModel viewModel;
 	
-	public MainView(ActionListener listener, MainViewModel viewModel) {
+	public MainMenuView(ActionListener listener, MainMenuModel viewModel) {
 		actionHandler = listener;
 		this.viewModel = viewModel;
 		SwingUtilities.invokeLater( 
@@ -73,7 +74,7 @@ public class MainView {
 	}
 
 	private void buildFrame() {
-		frame = new JFrame(viewModel.getTitle());
+		frame = new JFrame(viewModel.getFrameTitle());
 		LayoutManager layout = new BorderLayout();
 		frame.setLayout(layout);
 		
@@ -89,5 +90,10 @@ public class MainView {
 		SwingUtilities.invokeLater( () -> {
 				frame.setVisible(true); 
 		});
+	}
+	
+	public void addChild(IChildView child) {
+		frame.add(child.getComponent());
+		frame.pack();
 	}
 }

@@ -1,13 +1,13 @@
 package settings.model;
 
-public enum Resolution {
+public enum Resolutions {
 	LOW("Resolution_Low"),
 	STANDARD("Resolution_Standard"),
 	HIGH("Resolution_High");
 	
 	private String key;
 	
-	private Resolution(String key) {
+	private Resolutions(String key) {
 		this.key = key;
 	}
 	

@@ -1,63 +1,63 @@
-package main.model;
+package menu.model;
 
 
-public class MainViewModel {
-	private MainViewMenuItemModel start;
-	private MainViewMenuItemModel highScores;
-	private MainViewMenuItemModel settings;
-	private MainViewMenuItemModel quit;
+public class MainMenuModel {
+	private MainMenuItemModel start;
+	private MainMenuItemModel highScores;
+	private MainMenuItemModel settings;
+	private MainMenuItemModel quit;
 	private String menuTitle;
-	private String title;
+	private String frameTitle;
 	
 	/**
 	 * @return the start
 	 */
-	public MainViewMenuItemModel getStart() {
+	public MainMenuItemModel getStart() {
 		return start;
 	}
 	/**
 	 * @param start the start to set
 	 */
-	public void setStart(MainViewMenuItemModel start) {
+	public void setStart(MainMenuItemModel start) {
 		this.start = start;
 	}
 	
 	/**
 	 * @return the highScores
 	 */
-	public MainViewMenuItemModel getHighScores() {
+	public MainMenuItemModel getHighScores() {
 		return highScores;
 	}
 	/**
 	 * @param highScores the highScores to set
 	 */
-	public void setHighScores(MainViewMenuItemModel highScores) {
+	public void setHighScores(MainMenuItemModel highScores) {
 		this.highScores = highScores;
 	}
 	
 	/**
 	 * @return the settings
 	 */
-	public MainViewMenuItemModel getSettings() {
+	public MainMenuItemModel getSettings() {
 		return settings;
 	}
 	/**
 	 * @param settings the settings to set
 	 */
-	public void setSettings(MainViewMenuItemModel settings) {
+	public void setSettings(MainMenuItemModel settings) {
 		this.settings = settings;
 	}
 	
 	/**
 	 * @return the quit
 	 */
-	public MainViewMenuItemModel getQuit() {
+	public MainMenuItemModel getQuit() {
 		return quit;
 	}
 	/**
 	 * @param quit the quit to set
 	 */
-	public void setQuit(MainViewMenuItemModel quit) {
+	public void setQuit(MainMenuItemModel quit) {
 		this.quit = quit;
 	}
 	
@@ -75,16 +75,16 @@ public class MainViewModel {
 	}
 	
 	/**
-	 * @return the title
+	 * @return the frameTitle
 	 */
-	public String getTitle() {
-		return title;
+	public String getFrameTitle() {
+		return frameTitle;
 	}
 	/**
-	 * @param title the title to set
+	 * @param frameTitle the frameTitle to set
 	 */
-	public void setTitle(String title) {
-		this.title = title;
+	public void setFrameTitle(String frameTitle) {
+		this.frameTitle = frameTitle;
 	}
 	public int getMenuMnemonic() {
 		return 'M';
