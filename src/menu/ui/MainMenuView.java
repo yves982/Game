@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.LayoutManager;
 import java.awt.event.ActionListener;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -12,22 +14,23 @@ import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
 
 import main.ui.IChildView;
+import main.ui.IParentView;
 import menu.model.MainMenuModel;
 import utils.ui.ComponentLocation;
 
-public class MainMenuView {
+public class MainMenuView implements IParentView {
 	private JFrame frame;
 	private JMenuBar menuBar;
 	private JMenu menu;
 	private ActionListener actionHandler;
 	private MainMenuModel viewModel;
+	private FutureTask<Void> buildTask;
 	
 	public MainMenuView(ActionListener listener, MainMenuModel viewModel) {
 		actionHandler = listener;
 		this.viewModel = viewModel;
-		SwingUtilities.invokeLater( 
-				() -> buildComponents()
-		);
+		buildTask = new FutureTask<Void>(() -> buildComponents(), null);
+		SwingUtilities.invokeLater(buildTask);
 	}
 
 	private void buildComponents() {
@@ -92,8 +95,14 @@ public class MainMenuView {
 		});
 	}
 	
-	public void addChild(IChildView child) {
-		frame.add(child.getComponent());
-		frame.pack();
+	@Override
+	public void addChild(IChildView child){
+		try {
+			buildTask.get();
+			frame.add(child.getComponent());
+			frame.pack();
+		} catch (InterruptedException | ExecutionException e) {
+			throw new RuntimeException(e);
+		}
 	}
 }

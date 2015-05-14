@@ -3,6 +3,7 @@ package menu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -82,7 +83,7 @@ public class MainMenuController implements ActionListener {
 		}
 	}
 
-	public void start() {
+	public void start() throws InterruptedException, ExecutionException {
 		mainView = new MainMenuView(this, mainModel);
 		if(child != null && child.getChild() != null) {
 			mainView.addChild(child.getChild());
