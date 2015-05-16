@@ -7,6 +7,13 @@ import java.beans.PropertyChangeSupport;
 
 /**
  * Mutable Rectangle, with proper bound properties (unlike java.awt.Rectangle)
+ * <p>
+ * It has the following bound properties:
+ * <ul>
+ * 	<li>x the x coordinate</li>
+ *  <li>y the y coordinate</li>
+ * </ul>
+ * </p>
  */
 public class MutableRectangle {
 	private Rectangle rectangle;
@@ -14,13 +21,9 @@ public class MutableRectangle {
 
 	/**
 	 * Initialize a MutableRectangle
-	 * @param x
-	 * @param y
-	 * @param width
-	 * @param height
 	 */
-	public MutableRectangle(int x, int y, int width, int height) {
-		rectangle = new Rectangle(x, y, width, height);
+	public MutableRectangle() {
+		rectangle = new Rectangle();
 		propertyChange = new PropertyChangeSupport(this);
 	}
 	
@@ -60,12 +63,24 @@ public class MutableRectangle {
 	public int getWidth() {
 		return rectangle.width;
 	}
+	/**
+	 * @param width the width to set
+	 */
+	public void setWidth(int width) {
+		rectangle.width = width;
+	}
 	
 	/**
 	 * @return the height
 	 */
 	public int getHeight() {
 		return rectangle.height;
+	}
+	/**
+	 * @param height the height to set
+	 */
+	public void setHeight(int height) {
+		rectangle.height = height;
 	}
 	
 	

@@ -7,15 +7,15 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
 import javax.swing.JComponent;
-import javax.swing.JPanel;
+import javax.swing.JLayeredPane;
 import javax.swing.SwingUtilities;
 
 import main.ui.IChildView;
-import main.ui.IParentView;
+import main.ui.ILayeredParentView;
 
-public class WorldView implements IChildView, IParentView {
+public class WorldView implements IChildView, ILayeredParentView {
 	private List<IChildView> childViews;
-	private JPanel mainPanel;
+	private JLayeredPane mainPanel;
 	private FutureTask<Void> buildTask;
 	private JComponent parent;
 	
@@ -26,7 +26,9 @@ public class WorldView implements IChildView, IParentView {
 	}
 	
 	private void buildComponents() {
-		mainPanel = new JPanel(null, true);
+		mainPanel = new JLayeredPane();
+		mainPanel.setLayout(null);
+		mainPanel.setDoubleBuffered(true);
 		mainPanel.setBackground(Color.BLACK);
 		mainPanel.setFocusable(true);
 		mainPanel.requestFocus();
@@ -38,17 +40,21 @@ public class WorldView implements IChildView, IParentView {
 	}
 	
 	@Override
-	public void addChild(IChildView child) {
+	public void addChild(IChildView childView) {
+		addChild(childView, 0);
+	}
+	
+	@Override
+	public void addChild(IChildView childView, int layer) {
 		try {
 			buildTask.get();
-			child.setParent(mainPanel);
-			childViews.add(child);
-			mainPanel.add(child.getComponent());
+			childView.setParent(mainPanel);
+			childViews.add(childView);
+			mainPanel.add(childView.getComponent(), layer);
 			mainPanel.repaint();
 		} catch (InterruptedException | ExecutionException e) {
 			throw new RuntimeException(e);
 		}
-		
 	}
 
 	@Override

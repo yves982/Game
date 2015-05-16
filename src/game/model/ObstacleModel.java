@@ -3,19 +3,33 @@ package game.model;
 import game.model.geom.MutableRectangle;
 
 import java.awt.Image;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.nio.file.Paths;
 
-public class ObstacleModel {
+import main.ResourcesManager;
+
+/**
+ * Model for an Obstacle with an {@link MutableRectangle area}, and an imagePath
+ * <p>
+ * It has the following bound properties:
+ * <ul>
+ * 	<li>imagePath</li>
+ *  <li>x</li>
+ *  <li>y</li>
+ * </ul>
+ * </p>
+ */
+public class ObstacleModel{
 	private MutableRectangle area;
-	private Image image;
+	private String imagePath;
 	private int dx;
 	private int dy;
 	private PropertyChangeSupport propertyChange;
 	
-	public ObstacleModel(int x, int y, int width, int height, Image image) {
-		area = new MutableRectangle(x, y, width, height);
-		this.image = image;
+	public ObstacleModel() {
+		area = new MutableRectangle();
 		dx=0;
 		dy=0;
 		propertyChange = new PropertyChangeSupport(this);
@@ -48,27 +62,43 @@ public class ObstacleModel {
 	}
 	
 	/**
-	 * @return the image
-	 */
-	public Image getImage() {
-		return image;
-	}
-	/**
-	 * @param image the image to set
-	 */
-	public void setImage(Image image) {
-		Image oldImage = this.image;
-		this.image = image;
-		propertyChange.firePropertyChange("image", oldImage, image);
-	}
-	
-	/**
 	 * @return the area
 	 */
 	public MutableRectangle getArea() {
 		return area;
 	}
 	
+	/**
+	 * @return the area's width
+	 * @see MutableRectangle#getWidth()
+	 */
+	public int getWidth() {
+		return area.getWidth();
+	}
+	
+	/**
+	 * @return the area's height
+	 * @see MutableRectangle#getHeight()
+	 */
+	public int getHeight() {
+		return area.getHeight();
+	}
+	
+	/**
+	 * @return the imagePath
+	 */
+	public String getImagePath() {
+		return imagePath;
+	}
+	/**
+	 * @param imagePath the imagePath to set
+	 */
+	public void setImagePath(String imagePath) {
+		String oldImagePath = this.imagePath;
+		this.imagePath = imagePath;
+		propertyChange.firePropertyChange("imagePath", oldImagePath, imagePath);
+	}
+
 	/**
 	 * @param listener
 	 * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.beans.PropertyChangeListener)
@@ -86,6 +116,7 @@ public class ObstacleModel {
 	 */
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		propertyChange.removePropertyChangeListener(listener);
+		area.removePropertyChangeListener(listener);
 	}
 
 	/**

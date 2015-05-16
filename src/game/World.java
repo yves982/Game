@@ -36,7 +36,7 @@ public class World implements IChildController {
 	 */
 	public void addObstacle(Obstacle obstacle) throws InterruptedException, ExecutionException {
 		obstacles.add(obstacle);
-		view.addChild(obstacle.getChild());
+		view.addChild(obstacle.getChild(), 1);
 	}
 	
 	/**
@@ -62,7 +62,7 @@ public class World implements IChildController {
 	 */
 	public void setPlayer(Player player) throws InterruptedException, ExecutionException {
 		this.player = player;
-		player.getChildren().forEach( childView -> view.addChild(childView));
+		player.getChildren().forEach( childView -> view.addChild(childView, 1));
 	}
 
 	@Override

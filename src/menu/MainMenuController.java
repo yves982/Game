@@ -8,6 +8,7 @@ import java.util.concurrent.ExecutionException;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
+import lang.LocaleManager;
 import lang.Messages;
 import main.IChildController;
 import menu.model.MainMenuActions;
@@ -19,28 +20,20 @@ import settings.SettingsController;
 
 public class MainMenuController implements ActionListener {
 
-	private Messages messages;
-	private Locale locale;
 	private MainMenuView mainView;
 	private IChildController child;
 	private MainMenuModel mainModel;
 	
-	public MainMenuController(Locale locale) {
-		this(locale, null);
-	}
-	
-	public MainMenuController(Locale locale, IChildController child) {
-		this.locale = locale;
+	public MainMenuController(IChildController child) {
 		this.child = child;
-		messages = new Messages(locale);
 		buildMainModel();
 	}
 	
 	private MainMenuItemModel buildMenuItemModel(MainMenuActions action) {
 		MainMenuItemModel itemModel = new MainMenuItemModel();
 		itemModel.setAction(action);
-		itemModel.setMnemonic(messages.getString(action.getKey() + "_mnemonic").charAt(0));
-		itemModel.setValue(messages.getString(action.getKey()));
+		itemModel.setMnemonic(LocaleManager.getString(action.getKey() + "_mnemonic").charAt(0));
+		itemModel.setValue(LocaleManager.getString(action.getKey()));
 		return itemModel;
 	}
 	
@@ -50,8 +43,8 @@ public class MainMenuController implements ActionListener {
 		MainMenuItemModel highScoresModel = buildMenuItemModel(MainMenuActions.HIGH_SCORE);
 		MainMenuItemModel settingsModel = buildMenuItemModel(MainMenuActions.SETTINGS);
 		MainMenuItemModel quitModel = buildMenuItemModel(MainMenuActions.QUIT);
-		String menuTitle = messages.getString(MainMenuStrings.MENU_TITLE.getKey());
-		String frameTitle = messages.getString(MainMenuStrings.TITLE.getKey());
+		String menuTitle = LocaleManager.getString(MainMenuStrings.MENU_TITLE.getKey());
+		String frameTitle = LocaleManager.getString(MainMenuStrings.TITLE.getKey());
 		
 		mainModel.setStart(startModel);
 		mainModel.setHighScores(highScoresModel);
@@ -77,7 +70,7 @@ public class MainMenuController implements ActionListener {
 			JOptionPane.showMessageDialog(null, "high scores was clicked", "Info", JOptionPane.INFORMATION_MESSAGE);
 			break;
 		case SETTINGS:
-			SettingsController settingsController = new SettingsController(locale);
+			SettingsController settingsController = new SettingsController();
 			settingsController.start();
 			break;
 		}

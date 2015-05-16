@@ -6,19 +6,34 @@ import java.awt.Image;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
+import lang.LocaleManager;
+
+/**
+ * Player model
+ * <p>
+ * 	It has the following bound properties:
+ * <ul>
+ * 	<li>collided</li>
+ * 	<li>imagePath</li>
+ * 	<li>score</li>
+ * 	<li>lives</li>
+ * 	<li>x</li>
+ * 	<li>y</li>
+ * </ul>
+ * </p>
+ */
 public class PlayerModel {
 	private MutableRectangle area;
-	private Image image;
+	private String imagePath;
 	private boolean collided;
 	private int score;
 	private int lives;
 	private PropertyChangeSupport propertyChange;
 	
-	public PlayerModel(int x, int y, int width, int height, int lives, Image image) {
-		area = new MutableRectangle(x, y, width, height);
-		this.image = image;
+	public PlayerModel() {
+		area = new MutableRectangle();
 		score = 0;
-		this.lives = lives;
+		this.lives = 0;
 		collided = false;
 		propertyChange = new PropertyChangeSupport(this);
 	}
@@ -39,18 +54,18 @@ public class PlayerModel {
 	}
 
 	/**
-	 * @return the image
+	 * @return the imagePath
 	 */
-	public Image getImage() {
-		return image;
+	public String getImagePath() {
+		return imagePath;
 	}
 	/**
-	 * @param image the image to set
+	 * @param imagePath the imagePath to set
 	 */
-	public void setImage(Image image) {
-		Image oldImage = this.image;
-		this.image = image;
-		propertyChange.firePropertyChange("image", oldImage, image);
+	public void setImagePath(String imagePath) {
+		String oldImagePath = this.imagePath;
+		this.imagePath = imagePath;
+		propertyChange.firePropertyChange("imagePath", oldImagePath, imagePath);
 	}
 	
 	/**
@@ -59,7 +74,7 @@ public class PlayerModel {
 	public MutableRectangle getArea() {
 		return area;
 	}
-	
+
 	/**
 	 * @return the score
 	 */
@@ -89,7 +104,7 @@ public class PlayerModel {
 		this.lives = lives;
 		propertyChange.firePropertyChange("lives", oldLives, lives);
 	}
-
+	
 	/**
 	 * @param listener
 	 * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.beans.PropertyChangeListener)

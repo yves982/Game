@@ -3,12 +3,11 @@ package settings;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.swing.JOptionPane;
 
-import lang.Messages;
+import lang.LocaleManager;
 import settings.model.Actions;
 import settings.model.Difficulties;
 import settings.model.Resolutions;
@@ -18,12 +17,10 @@ import settings.model.Titles;
 import settings.ui.SettingsView;
 
 public class SettingsController implements PropertyChangeListener {
-	private Messages messages;
 	private SettingsView view;
 	private SettingsViewModel model;
 	
-	public SettingsController(Locale locale) {
-		messages = new Messages(locale);
+	public SettingsController() {
 		model = new SettingsViewModel();
 		view = new SettingsView(model);
 		view.addPropertyChangeListener(this);
@@ -31,20 +28,20 @@ public class SettingsController implements PropertyChangeListener {
 	}
 	
 	private void fillResolutions(Map<Resolutions, String> resolutions) {
-		resolutions.put(Resolutions.LOW, messages.getString(Resolutions.LOW.getKey()));
-		resolutions.put(Resolutions.STANDARD, messages.getString(Resolutions.STANDARD.getKey()));
-		resolutions.put(Resolutions.HIGH, messages.getString(Resolutions.HIGH.getKey()));
+		resolutions.put(Resolutions.LOW, LocaleManager.getString(Resolutions.LOW.getKey()));
+		resolutions.put(Resolutions.STANDARD, LocaleManager.getString(Resolutions.STANDARD.getKey()));
+		resolutions.put(Resolutions.HIGH, LocaleManager.getString(Resolutions.HIGH.getKey()));
 	}
 
 	private void fillDifficulties(Map<Difficulties, String> difficulties) {
-		difficulties.put(Difficulties.EASY, messages.getString(Difficulties.EASY.getKey()));
-		difficulties.put(Difficulties.NORMAL, messages.getString(Difficulties.NORMAL.getKey()));
-		difficulties.put(Difficulties.HARD, messages.getString(Difficulties.HARD.getKey()));
+		difficulties.put(Difficulties.EASY, LocaleManager.getString(Difficulties.EASY.getKey()));
+		difficulties.put(Difficulties.NORMAL, LocaleManager.getString(Difficulties.NORMAL.getKey()));
+		difficulties.put(Difficulties.HARD, LocaleManager.getString(Difficulties.HARD.getKey()));
 	}
 
 	private void fillActions(Map<Actions, String> actions) {
-		actions.put(Actions.OK, messages.getString(Actions.OK.getKey()));
-		actions.put(Actions.CANCEL, messages.getString(Actions.CANCEL.getKey()));
+		actions.put(Actions.OK, LocaleManager.getString(Actions.OK.getKey()));
+		actions.put(Actions.CANCEL, LocaleManager.getString(Actions.CANCEL.getKey()));
 	}
 
 	private void buildModel() {
@@ -61,8 +58,8 @@ public class SettingsController implements PropertyChangeListener {
 		fillResolutions(resolutions);
 		fillActions(actions);
 		
-		model.setDifficultyTitle(messages.getString(Titles.DIFFICULTY.getKey()));
-		model.setResolutionTitle(messages.getString(Titles.RESOLUTION.getKey()));
+		model.setDifficultyTitle(LocaleManager.getString(Titles.DIFFICULTY.getKey()));
+		model.setResolutionTitle(LocaleManager.getString(Titles.RESOLUTION.getKey()));
 	}
 
 	public void start() {
@@ -71,12 +68,12 @@ public class SettingsController implements PropertyChangeListener {
 
 	public void handleChoice(Difficulties difficulty) {
 		model.setSelectedDifficulty(difficulty);
-		JOptionPane.showMessageDialog(null, messages.getString(difficulty.getKey()), "Difficulty Selected", JOptionPane.OK_OPTION);
+		JOptionPane.showMessageDialog(null, LocaleManager.getString(difficulty.getKey()), "Difficulty Selected", JOptionPane.OK_OPTION);
 	}
 
 	private void handleChoice(Resolutions resolution) {
 		model.setSelectedResolution(resolution);
-		JOptionPane.showMessageDialog(null, messages.getString(resolution.getKey()), "Resolution Selected", JOptionPane.OK_OPTION);
+		JOptionPane.showMessageDialog(null, LocaleManager.getString(resolution.getKey()), "Resolution Selected", JOptionPane.OK_OPTION);
 	}
 	
 	public void handleAction(Actions action) {
