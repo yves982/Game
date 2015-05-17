@@ -15,7 +15,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
-import main.ui.IChildView;
+import main.ui.ILayeredChildView;
 import utils.ui.ImageLoader;
 
 /**
@@ -28,7 +28,7 @@ import utils.ui.ImageLoader;
  * </ul>
  * </p>
  */
-public class PlayerView implements IChildView, PropertyChangeListener {
+public class PlayerView implements ILayeredChildView, PropertyChangeListener {
 	private FutureTask<Void> buildTask;
 	private PlayerModel model;
 	private JComponent parent;
@@ -71,6 +71,11 @@ public class PlayerView implements IChildView, PropertyChangeListener {
 		} catch (InterruptedException | ExecutionException e) {
 			throw new RuntimeException(e);
 		}
+	}
+	
+	@Override
+	public int getLayer() {
+		return 1;
 	}
 	
 	@Override

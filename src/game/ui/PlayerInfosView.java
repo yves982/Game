@@ -23,7 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import lang.LocaleManager;
-import main.ui.IChildView;
+import main.ui.ILayeredChildView;
 import utils.ui.GridBagConstraintsAnchor;
 import utils.ui.GridBagConstraintsBuilder;
 import utils.ui.ImageLoader;
@@ -31,7 +31,7 @@ import utils.ui.ImageLoader;
 /**
  * a view for player infos, this one does not raise events as it's inputless
  */
-public class PlayerInfosView implements IChildView, PropertyChangeListener {
+public class PlayerInfosView implements ILayeredChildView, PropertyChangeListener {
 	private JComponent parent;
 	private JPanel infosPanel;
 	private JLabel livesLabel;
@@ -147,6 +147,11 @@ public class PlayerInfosView implements IChildView, PropertyChangeListener {
 		} catch (InterruptedException | ExecutionException e) {
 			throw new RuntimeException(e);
 		}
+	}
+	
+	@Override
+	public int getLayer() {
+		return 0;
 	}
 
 	@Override

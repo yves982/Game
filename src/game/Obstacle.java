@@ -1,13 +1,13 @@
 package game;
 
+import game.model.ObstacleModel;
+import game.model.geom.MutableRectangle;
+import game.ui.ObstacleView;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.nio.file.Paths;
 
-import game.model.ObstacleModel;
-import game.model.geom.MutableRectangle;
-import game.ui.ObstacleView;
-import lang.Messages;
 import main.IChildController;
 import main.ResourcesManager;
 import main.ui.IChildView;
@@ -21,7 +21,8 @@ public class Obstacle implements IChildController, PropertyChangeListener {
 	private ObstacleView view;
 	
 	/**
-	 * Default constructor
+	 * Initialize an Obstacle
+	 * @param kind the obstacle's kind
 	 */
 	public Obstacle(ObstacleKind kind) {
 		this.kind = kind;
@@ -31,17 +32,44 @@ public class Obstacle implements IChildController, PropertyChangeListener {
 		view.addPropertyChangeListener(this);
 	}
 	
+	/**
+	 * @return the obstacle's kind
+	 */
 	public ObstacleKind getKind() {
 		return kind;
 	}
 
 	/**
+	 * Places this obstacle in the world
+	 * <p>
+	 * 	<b>Note: the obstacle must be added to the world before setting its position</b>
+	 * </p>
+	 * @param x the x coordinate
+	 * @param y the y coordinate
+	 */
+	public void startPosition(int x, int y) {
+		MutableRectangle obstacleArea = model.getArea();
+		obstacleArea.setX(x);
+		obstacleArea.setY(y);
+	}
+	
+	/**
+	 * defines moving steps along X and Y axis
+	 * @param dx X axis step
+	 * @param dy Y axis step
+	 */
+	public void defineSteps(int dx, int dy) {
+		model.setDx(dx);
+		model.setDy(dy);
+	}
+	
+	/**
 	 * Moves the box with predefined steps (dx on the X axis and dy on the Y one)
 	 */
 	public void move() {
-		MutableRectangle area = model.getArea();
-		area.setX(area.getX() + model.getDx());
-		area.setY(area.getY() + model.getDy());
+		MutableRectangle obstacleArea = model.getArea();
+		obstacleArea.setX(obstacleArea.getX() + model.getDx());
+		obstacleArea.setY(obstacleArea.getY() + model.getDy());
 	}
 	
 	/**

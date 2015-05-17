@@ -2,11 +2,8 @@ package game.model;
 
 import game.model.geom.MutableRectangle;
 
-import java.awt.Image;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-
-import lang.LocaleManager;
 
 /**
  * Player model

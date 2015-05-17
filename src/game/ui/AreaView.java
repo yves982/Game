@@ -19,6 +19,13 @@ import utils.ui.ImageLoader;
 
 /**
  * A view for an Area, inputless, but generate data by loading model's image
+ * <p>
+ * It has the following bound properties:
+ * <ul>
+ * 	<li>width</li>
+ * 	<li>height</li>
+ * </ul>
+ * </p>
  */
 public class AreaView implements IChildView, PropertyChangeListener {
 	private JComponent parent;
@@ -95,6 +102,37 @@ public class AreaView implements IChildView, PropertyChangeListener {
 				loadImage();
 				break;
 		}
+	}
+
+	/**
+	 * @param listener
+	 * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.beans.PropertyChangeListener)
+	 */
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		modelChange.addPropertyChangeListener(listener);
+	}
+	/**
+	 * @param listener
+	 * @see java.beans.PropertyChangeSupport#removePropertyChangeListener(java.beans.PropertyChangeListener)
+	 */
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		modelChange.removePropertyChangeListener(listener);
+	}
+	/**
+	 * @param propertyName
+	 * @param listener
+	 * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
+	 */
+	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+		modelChange.addPropertyChangeListener(propertyName, listener);
+	}
+	/**
+	 * @param propertyName
+	 * @param listener
+	 * @see java.beans.PropertyChangeSupport#removePropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
+	 */
+	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+		modelChange.removePropertyChangeListener(propertyName, listener);
 	}
 
 }

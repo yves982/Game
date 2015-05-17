@@ -2,13 +2,8 @@ package game.model;
 
 import game.model.geom.MutableRectangle;
 
-import java.awt.Image;
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.nio.file.Paths;
-
-import main.ResourcesManager;
 
 /**
  * Model for an Obstacle with an {@link MutableRectangle area}, and an imagePath
@@ -18,6 +13,7 @@ import main.ResourcesManager;
  * 	<li>imagePath</li>
  *  <li>x</li>
  *  <li>y</li>
+ *   <li>dropped</li>
  * </ul>
  * </p>
  */
@@ -26,6 +22,7 @@ public class ObstacleModel{
 	private String imagePath;
 	private int dx;
 	private int dy;
+	private boolean dropped;
 	private PropertyChangeSupport propertyChange;
 	
 	public ObstacleModel() {
@@ -97,6 +94,21 @@ public class ObstacleModel{
 		String oldImagePath = this.imagePath;
 		this.imagePath = imagePath;
 		propertyChange.firePropertyChange("imagePath", oldImagePath, imagePath);
+	}
+
+	/**
+	 * @return the dropped
+	 */
+	public boolean isDropped() {
+		return dropped;
+	}
+	/**
+	 * @param dropped the dropped to set
+	 */
+	public void setDropped(boolean dropped) {
+		boolean oldDropped = this.dropped;
+		this.dropped = dropped;
+		propertyChange.firePropertyChange("dropped", oldDropped, dropped);
 	}
 
 	/**

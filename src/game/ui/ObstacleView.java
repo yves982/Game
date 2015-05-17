@@ -101,6 +101,11 @@ public class ObstacleView implements IChildView, PropertyChangeListener {
 		modelChange.removePropertyChangeListener(propertyName, listener);
 	}
 
+	private void handleDrop() {
+		parent.remove(obstacleLabel);
+		parent.repaint();
+	}
+
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		String propertyName = evt.getPropertyName();
@@ -113,6 +118,9 @@ public class ObstacleView implements IChildView, PropertyChangeListener {
 				break;
 			case "y":
 				updateY();
+				break;
+			case "dropped":
+				handleDrop();
 				break;
 		}
 		

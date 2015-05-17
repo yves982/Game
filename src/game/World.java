@@ -34,19 +34,17 @@ public class World implements IChildController {
 	 * @throws InterruptedException
 	 * @throws ExecutionException
 	 */
-	public void addObstacle(Obstacle obstacle) throws InterruptedException, ExecutionException {
+	public void addObstacle(Obstacle obstacle) {
 		obstacles.add(obstacle);
 		view.addChild(obstacle.getChild(), 1);
 	}
 	
 	/**
 	 * @param area
-	 * @throws InterruptedException
-	 * @throws ExecutionException
 	 */
-	public void addArea(Area area) throws InterruptedException, ExecutionException {
+	public void addArea(Area area) {
 		areas.add(area);
-		view.addChild(area.getChild());
+		view.addChild(area.getChild(), 0);
 	}
 	
 	/**
@@ -57,12 +55,10 @@ public class World implements IChildController {
 	}
 	/**
 	 * @param player the player to set
-	 * @throws ExecutionException 
-	 * @throws InterruptedException 
 	 */
-	public void setPlayer(Player player) throws InterruptedException, ExecutionException {
+	public void setPlayer(Player player) {
 		this.player = player;
-		player.getChildren().forEach( childView -> view.addChild(childView, 1));
+		player.getChildren().forEach( layeredChildView -> view.addChild(layeredChildView, layeredChildView.getLayer()));
 	}
 
 	@Override

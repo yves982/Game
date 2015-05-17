@@ -11,19 +11,19 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import main.IChildrenController;
+import main.ILayeredChildrenController;
 import main.ResourcesManager;
-import main.ui.IChildView;
+import main.ui.ILayeredChildView;
 
-public class Player implements IChildrenController, PropertyChangeListener {
+public class Player implements ILayeredChildrenController, PropertyChangeListener {
 	private PlayerModel model;
 	private PlayerView mainView;
 	private PlayerInfosView infosView;
-	private List<IChildView> childrenView;
+	private List<ILayeredChildView> childrenView;
 	
 	private void fillChildrenView() {
-		childrenView.add(mainView);
 		childrenView.add(infosView);
+		childrenView.add(mainView);
 	}
 
 	private void builModel() {
@@ -35,7 +35,7 @@ public class Player implements IChildrenController, PropertyChangeListener {
 	 * Default constructor
 	 */
 	public Player() {
-		childrenView = new ArrayList<IChildView>();
+		childrenView = new ArrayList<ILayeredChildView>();
 		fillChildrenView();
 		builModel();
 		infosView = new PlayerInfosView(model);
@@ -43,10 +43,28 @@ public class Player implements IChildrenController, PropertyChangeListener {
 		mainView.addPropertyChangeListener(this);
 	}
 	
-	public void move(int x, int y) {
-		MutableRectangle area = model.getArea();
-		area.setX(area.getX() + x);
-		area.setY(area.getY() + y);
+	/**
+	 * Places the player in the world
+	 * <p>
+	 * 	<b>Note: the player must be added to the world before setting its position</b>
+	 * </p>                                                                                   
+	 * @param x the x coordinate
+	 * @param y the y coordinate
+	 */
+	public void startPosition(int x, int y) {
+		model.getArea().setX(x);
+		model.getArea().setY(y);
+	}
+	
+	/**
+	 * Moves this player along both axis (X and Y)
+	 * @param dx the X axis step
+	 * @param dy the Y axis step
+	 */
+	public void move(int dx, int dy) {
+		MutableRectangle playerArea = model.getArea();
+		playerArea.setX(playerArea.getX() + dx);
+		playerArea.setY(playerArea.getY() + dy);
 	}
 
 	public boolean isWithin(int x, int y, int radius) {
@@ -58,7 +76,7 @@ public class Player implements IChildrenController, PropertyChangeListener {
 	}
 
 	@Override
-	public List<IChildView> getChildren() {
+	public List<ILayeredChildView> getChildren() {
 		return childrenView;
 	}
 

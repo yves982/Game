@@ -2,14 +2,12 @@ package menu;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 import lang.LocaleManager;
-import lang.Messages;
 import main.IChildController;
 import menu.model.MainMenuActions;
 import menu.model.MainMenuItemModel;
