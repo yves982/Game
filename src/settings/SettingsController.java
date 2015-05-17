@@ -20,13 +20,6 @@ public class SettingsController implements PropertyChangeListener {
 	private SettingsView view;
 	private SettingsViewModel model;
 	
-	public SettingsController() {
-		model = new SettingsViewModel();
-		view = new SettingsView(model);
-		view.addPropertyChangeListener(this);
-		buildModel();
-	}
-	
 	private void fillResolutions(Map<Resolutions, String> resolutions) {
 		resolutions.put(Resolutions.LOW, LocaleManager.getString(Resolutions.LOW.getKey()));
 		resolutions.put(Resolutions.STANDARD, LocaleManager.getString(Resolutions.STANDARD.getKey()));
@@ -60,6 +53,19 @@ public class SettingsController implements PropertyChangeListener {
 		
 		model.setDifficultyTitle(LocaleManager.getString(Titles.DIFFICULTY.getKey()));
 		model.setResolutionTitle(LocaleManager.getString(Titles.RESOLUTION.getKey()));
+		model.setSettingsTitle(LocaleManager.getString(Titles.SETTINGS.getKey()));
+	}
+
+	private void handleChoice(Resolutions resolution) {
+		model.setSelectedResolution(resolution);
+		JOptionPane.showMessageDialog(null, LocaleManager.getString(resolution.getKey()), "Resolution Selected", JOptionPane.OK_OPTION);
+	}
+
+	public SettingsController() {
+		model = new SettingsViewModel();
+		view = new SettingsView(model);
+		view.addPropertyChangeListener(this);
+		buildModel();
 	}
 
 	public void start() {
@@ -71,11 +77,6 @@ public class SettingsController implements PropertyChangeListener {
 		JOptionPane.showMessageDialog(null, LocaleManager.getString(difficulty.getKey()), "Difficulty Selected", JOptionPane.OK_OPTION);
 	}
 
-	private void handleChoice(Resolutions resolution) {
-		model.setSelectedResolution(resolution);
-		JOptionPane.showMessageDialog(null, LocaleManager.getString(resolution.getKey()), "Resolution Selected", JOptionPane.OK_OPTION);
-	}
-	
 	public void handleAction(Actions action) {
 			switch(action) {
 				case OK:

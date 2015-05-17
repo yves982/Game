@@ -6,9 +6,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
-import main.IChildController;
+import main.IRunnableChildController;
 import main.ui.IChildView;
 
 
@@ -16,7 +15,7 @@ import main.ui.IChildView;
 /**
  * 
  */
-public class World implements IChildController, PropertyChangeListener {
+public class World implements IRunnableChildController, PropertyChangeListener {
 	private List<Obstacle> obstacles;
 	private List<Area> areas;
 	private Player player;
@@ -32,6 +31,24 @@ public class World implements IChildController, PropertyChangeListener {
 		this.height = height;
 	}
 
+	private void fillRowXSteps(List<Integer> rowXSteps, int rowCount) {
+		for(int i=0; i < rowCount; i++) {
+			rowXSteps.add(5);
+		}
+	}
+
+	/**
+	 * Spawns this world and start the game
+	 */
+	private void spawn() {
+		int rowsCount = 11;
+		List<Integer> rowXSteps = new ArrayList<Integer>(rowsCount);
+		fillRowXSteps(rowXSteps, rowsCount);
+		WorldGenerator generator = new WorldGenerator(this, rowXSteps);
+		//Player player = generator.generatePlayer(3, 1000, 1);
+		//setPlayer(player);
+	}
+
 	/**
 	 * Initialize the World
 	 */
@@ -44,8 +61,7 @@ public class World implements IChildController, PropertyChangeListener {
 	
 	/**
 	 * @param obstacle
-	 * @throws InterruptedException
-	 * @throws ExecutionException
+	 * @throws RuntimeException in case the Obstacle fails to get its child
 	 */
 	public void addObstacle(Obstacle obstacle) {
 		obstacles.add(obstacle);
@@ -54,6 +70,7 @@ public class World implements IChildController, PropertyChangeListener {
 	
 	/**
 	 * @param area
+	 * @throws RuntimeException in case the area fails to get its child
 	 */
 	public void addArea(Area area) {
 		areas.add(area);
@@ -68,6 +85,7 @@ public class World implements IChildController, PropertyChangeListener {
 	}
 	/**
 	 * @param player the player to set
+	 * @throws RuntimeException in case the player fails to get any of its children
 	 */
 	public void setPlayer(Player player) {
 		this.player = player;
@@ -105,5 +123,10 @@ public class World implements IChildController, PropertyChangeListener {
 				updateHeight((int)newValue);
 				break;
 		}
+	}
+
+	@Override
+	public void run() {
+		spawn();
 	}
 }

@@ -14,6 +14,7 @@ public interface IChildView {
 	 *  <b>Note:</b> {@code getComponent} should be called after {@code setParent}.
 	 * </p>
 	 * @return the view's main component to display in a parent view
+	 * @throws RuntimeException in case the view fails to retrieve its child or to build herself
 	 */
 	JComponent getComponent();
 

@@ -6,6 +6,8 @@ import java.nio.file.Paths;
 
 import javax.imageio.ImageIO;
 
+import main.ResourcesManager;
+
 /**
  * Utility class to load images
  */
@@ -22,5 +24,10 @@ public class ImageLoader {
 		} catch(IOException ioe) {
 			throw new RuntimeException(ioe);
 		}
+	}
+
+	public static Image LoadImageWithShortPath(String shortPath) {
+		String fullPath = Paths.get(ResourcesManager.RESOURCES_BASE, shortPath).toString();
+		return LoadImage(fullPath);
 	}
 }

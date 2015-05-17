@@ -1,9 +1,9 @@
 package game;
 
 public enum AreaKind {
-	START("area/start.png"),
-	WAIT("area/wait.png"),
-	FINISH("area/finish.png");
+	START("/area/start.png"),
+	WAIT("/area/wait.png"),
+	FINISH("/area/finish.png");
 	
 	private String imagePath;
 	

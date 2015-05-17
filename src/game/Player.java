@@ -47,7 +47,7 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 
 	private void builModel(int maxLives, int maxLeftTimeMs) {
 		model = new PlayerModel();
-		model.setImagePath(Paths.get(ResourcesManager.RESOURCES_BASE, "player/player.png").toString());
+		model.setImagePath(Paths.get(ResourcesManager.RESOURCES_BASE, "/player/player.png").toString());
 		model.setLives(maxLives);
 		model.setMaxLiveTimeMs(maxLeftTimeMs);
 	}
@@ -98,11 +98,11 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	 */
 	public Player(int maxLives, int maxLeftTimeMs) {
 		childrenView = new ArrayList<ILayeredChildView>();
-		fillChildrenView();
 		builModel(maxLives, maxLeftTimeMs);
-		propertyChange = new PropertyChangeSupport(this);
 		infosView = new PlayerInfosView(model);
 		mainView = new PlayerView(model);
+		fillChildrenView();
+		propertyChange = new PropertyChangeSupport(this);
 		scheduled = Executors.newSingleThreadScheduledExecutor();
 		mainView.addPropertyChangeListener(this);
 	}

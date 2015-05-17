@@ -26,7 +26,7 @@ public class WorldGenerator {
 		int interRowSpace = (int)Math.ceil(0.04 * freeHeightPerRow);
 		int start=0, end=rowSpace;
 		
-		for(int i=0; i<rows.size(); i++) {
+		for(int i=0; i<rowCount; i++) {
 			if(i != 0) {
 				start = i * (rowSpace + interRowSpace);
 				end = (i * (rowSpace + interRowSpace)) + rowSpace;

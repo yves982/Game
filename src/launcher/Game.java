@@ -16,7 +16,7 @@ public class Game {
 		MainMenuController controller = new MainMenuController(world);
 		try {
 			controller.start();
-		} catch (InterruptedException | ExecutionException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

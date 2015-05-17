@@ -1,14 +1,12 @@
 package menu;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.concurrent.ExecutionException;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 import lang.LocaleManager;
-import main.IChildController;
+import main.IRunnableChildController;
 import menu.model.MainMenuActions;
 import menu.model.MainMenuItemModel;
 import menu.model.MainMenuModel;
@@ -16,16 +14,11 @@ import menu.model.MainMenuStrings;
 import menu.ui.MainMenuView;
 import settings.SettingsController;
 
-public class MainMenuController implements ActionListener {
+public class MainMenuController implements PropertyChangeListener {
 
 	private MainMenuView mainView;
-	private IChildController child;
+	private IRunnableChildController child;
 	private MainMenuModel mainModel;
-	
-	public MainMenuController(IChildController child) {
-		this.child = child;
-		buildMainModel();
-	}
 	
 	private MainMenuItemModel buildMenuItemModel(MainMenuActions action) {
 		MainMenuItemModel itemModel = new MainMenuItemModel();
@@ -52,12 +45,8 @@ public class MainMenuController implements ActionListener {
 		mainModel.setFrameTitle(frameTitle);
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		JMenuItem menuItem = (JMenuItem)e.getSource();
-		MainMenuItemModel menuItemModel = (MainMenuItemModel)menuItem.getModel();
-		
-		switch(menuItemModel.getAction()) {
+	private void handleAction(MainMenuActions action) {
+		switch(action) {
 			case START:
 				JOptionPane.showMessageDialog(null, "start was clicked", "Info", JOptionPane.INFORMATION_MESSAGE);
 				break;
@@ -74,12 +63,39 @@ public class MainMenuController implements ActionListener {
 		}
 	}
 
-	public void start() throws InterruptedException, ExecutionException {
-		mainView = new MainMenuView(this, mainModel);
+	/**
+	 * Initialize the MainMenuController
+	 * @param child the IRunnableChildController to run on start
+	 */
+	public MainMenuController(IRunnableChildController child) {
+		this.child = child;
+		buildMainModel();
+	}
+
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		String propertyName = evt.getPropertyName();
+		Object newValue = evt.getNewValue();
+		
+		switch(propertyName) {
+			case "action":
+				MainMenuActions action = Enum.valueOf(MainMenuActions.class, newValue.toString());
+				handleAction(action);
+				break;
+		}
+	}
+
+	/**
+	 * Starts this controller and display its view and its child's view
+	 */
+	public void start() {
+		mainView = new MainMenuView(mainModel);
+		mainView.addPropertyChangeListener("action", this);
 		if(child != null && child.getChild() != null) {
 			mainView.addChild(child.getChild());
 		}
 		mainView.show();
+		child.run();
 	}
 
 }
