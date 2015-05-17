@@ -61,13 +61,36 @@ public class ObstacleView implements IChildView, PropertyChangeListener {
 	private void updateX() {
 		int x = model.getArea().getX();
 		obstacleLabel.setBounds(x, obstacleLabel.getY(), obstacleLabel.getWidth(), obstacleLabel.getHeight());
-		parent.repaint();
 	}
 
 	private void updateY() {
 		int y = model.getArea().getY();
 		obstacleLabel.setBounds(obstacleLabel.getX(), y, obstacleLabel.getWidth(), obstacleLabel.getHeight());
+	}
+
+	private void handleDrop() {
+		parent.remove(obstacleLabel);
 		parent.repaint();
+	}
+
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		String propertyName = evt.getPropertyName();
+		switch(propertyName) {
+			case "imagePath":
+				loadImage();
+				break;
+			case "x":
+				updateX();
+				break;
+			case "y":
+				updateY();
+				break;
+			case "dropped":
+				handleDrop();
+				break;
+		}
+		
 	}
 
 	/**
@@ -99,30 +122,5 @@ public class ObstacleView implements IChildView, PropertyChangeListener {
 	 */
 	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
 		modelChange.removePropertyChangeListener(propertyName, listener);
-	}
-
-	private void handleDrop() {
-		parent.remove(obstacleLabel);
-		parent.repaint();
-	}
-
-	@Override
-	public void propertyChange(PropertyChangeEvent evt) {
-		String propertyName = evt.getPropertyName();
-		switch(propertyName) {
-			case "imagePath":
-				loadImage();
-				break;
-			case "x":
-				updateX();
-				break;
-			case "y":
-				updateY();
-				break;
-			case "dropped":
-				handleDrop();
-				break;
-		}
-		
 	}
 }

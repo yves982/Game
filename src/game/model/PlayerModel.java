@@ -16,6 +16,7 @@ import java.beans.PropertyChangeSupport;
  * 	<li>lives</li>
  * 	<li>x</li>
  * 	<li>y</li>
+ *  <li>remainingLiveTimeMs</li>
  * </ul>
  * </p>
  */
@@ -25,6 +26,8 @@ public class PlayerModel {
 	private boolean collided;
 	private int score;
 	private int lives;
+	private int remainingLiveTimeMs;
+	private int maxLiveTimeMs;
 	private PropertyChangeSupport propertyChange;
 	
 	public PlayerModel() {
@@ -102,6 +105,35 @@ public class PlayerModel {
 		propertyChange.firePropertyChange("lives", oldLives, lives);
 	}
 	
+	/**
+	 * @return the remainingLiveTimeMs
+	 */
+	public int getRemainingLiveTimeMs() {
+		return remainingLiveTimeMs;
+	}
+	/**
+	 * @param remainingLiveTimeMs the remainingLiveTimeMs to set
+	 */
+	public void setRemainingLiveTimeMs(int remainingLiveTimeMs) {
+		int oldRemainingLiveTimeMs = this.remainingLiveTimeMs;
+		this.remainingLiveTimeMs = remainingLiveTimeMs;
+		propertyChange.firePropertyChange("remainingLiveTimeMs", oldRemainingLiveTimeMs, remainingLiveTimeMs);
+	}
+
+	/**
+	 * @return the maxLiveTimeMs
+	 */
+	public int getMaxLiveTimeMs() {
+		return maxLiveTimeMs;
+	}
+
+	/**
+	 * @param maxLiveTimeMs the maxLiveTimeMs to set
+	 */
+	public void setMaxLiveTimeMs(int maxLiveTimeMs) {
+		this.maxLiveTimeMs = maxLiveTimeMs;
+	}
+
 	/**
 	 * @param listener
 	 * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.beans.PropertyChangeListener)

@@ -86,20 +86,17 @@ public class PlayerView implements ILayeredChildView, PropertyChangeListener {
 	private void updateX() {
 		MutableRectangle playerArea = model.getArea();
 		playerLabel.setBounds(playerArea.getX(), playerLabel.getY(), playerLabel.getWidth(), playerLabel.getHeight());
-		parent.repaint();
 	}
 
 	private void updateY() {
 		MutableRectangle playerArea = model.getArea();
 		playerLabel.setBounds(playerLabel.getX(), playerArea.getY(), playerLabel.getWidth(), playerLabel.getHeight());
-		parent.repaint();
 	}
 
 	private void collide() {
 		Image collisionImage = ImageLoader.LoadImage("player/collision.png");
 		ImageIcon collisionIcon = new ImageIcon(collisionImage);
 		playerLabel.setIcon(collisionIcon);
-		parent.repaint();
 	}
 
 	@Override

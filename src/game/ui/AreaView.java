@@ -69,13 +69,11 @@ public class AreaView implements IChildView, PropertyChangeListener {
 	private void updateX() {
 		int x = model.getX();
 		areaLabel.setBounds(x, areaLabel.getY(), areaLabel.getWidth(), areaLabel.getHeight());
-		parent.repaint();
 	}
 
 	private void updateY() {
 		int y = model.getY();
 		areaLabel.setBounds(areaLabel.getX(), y, areaLabel.getWidth(), areaLabel.getHeight());
-		parent.repaint();
 	}
 
 	private void loadImage() {

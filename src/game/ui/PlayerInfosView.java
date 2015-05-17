@@ -47,6 +47,7 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 	private static final String LIVES = "lives";
 	private static final String SCORE = "score";
 	private ImageIcon livesIcon;
+	private int timeLeftMaxSize;
 	
 	public PlayerInfosView(PlayerModel model) {
 		this.model = model;
@@ -157,12 +158,20 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 	@Override
 	public void setParent(JComponent parent) {
 		this.parent = parent;
+		timeLeftMaxSize = (int)Math.ceil(0.04 * this.parent.getWidth());
 	}
 
 	private void updateScore() {
 		scoresLabel.setText(String.format("%s %i", 
 				LocaleManager.getString(PlayerInfosStrings.SCORE.getKey()), 
 				model.getScore()));
+	}
+
+	private void updateTimeLeft() {
+		double timeLeftMs = model.getRemainingLiveTimeMs();
+		double totalTimeMs = model.getMaxLiveTimeMs();
+		int currentWidth = (int)Math.ceil(timeLeftMaxSize * (timeLeftMs / totalTimeMs));
+		timeLeftLabel.setSize(currentWidth , timeLeftLabel.getHeight());
 	}
 
 	@Override
@@ -175,6 +184,9 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 				break;
 			case "lives":
 				updateLives();
+				break;
+			case "remainingLiveTimeMs":
+				updateTimeLeft();
 				break;
 		}
 	}
