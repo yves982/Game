@@ -31,26 +31,6 @@ public class ObstacleView implements IChildView, PropertyChangeListener {
 	private PropertyChangeSupport modelChange;
 
 	/**
-	 * 
-	 */
-	public ObstacleView(ObstacleModel model) {
-		this.model = model;
-		obstacleLabel = new JLabel();
-		modelChange = new PropertyChangeSupport(model);
-		model.addPropertyChangeListener(this);
-	}
-
-	@Override
-	public JComponent getComponent() {
-		return obstacleLabel;
-	}
-
-	@Override
-	public void setParent(JComponent parent) {
-		this.parent = parent;
-	}
-	
-	/**
 	 * Load the image and raise propertyChange for width and height properties:
 	 * <p>
 	 * the ObstacleView has no width and height properties, but that's not a problem for a one time event (per instance)
@@ -77,6 +57,27 @@ public class ObstacleView implements IChildView, PropertyChangeListener {
 	private void handleDrop() {
 		parent.remove(obstacleLabel);
 		parent.repaint();
+	}
+
+	/**
+	 * Initialize the Obstacle view
+	 * @param model the obstacle model
+	 */
+	public ObstacleView(ObstacleModel model) {
+		this.model = model;
+		obstacleLabel = new JLabel();
+		modelChange = new PropertyChangeSupport(model);
+		model.addPropertyChangeListener(this);
+	}
+
+	@Override
+	public JComponent getComponent() {
+		return obstacleLabel;
+	}
+
+	@Override
+	public void setParent(JComponent parent) {
+		this.parent = parent;
 	}
 
 	@Override

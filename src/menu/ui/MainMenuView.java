@@ -99,6 +99,7 @@ public class MainMenuView implements IParentView {
 	public void addChild(IChildView child){
 		try {
 			buildTask.get();
+			child.setParent(frame.getRootPane());
 			frame.add(child.getComponent());
 			frame.pack();
 		} catch (InterruptedException | ExecutionException e) {

@@ -5,7 +5,7 @@ package main.ui;
  */
 public interface ILayeredChildView extends IChildView {
 	/**
-	 * @return the layer, main component belongs to
+	 * @return the layer, main component belongs to (the lowest in foreground, highest in the background)
 	 */
 	int getLayer();
 }

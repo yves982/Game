@@ -49,14 +49,6 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 	private ImageIcon livesIcon;
 	private int timeLeftMaxSize;
 	
-	public PlayerInfosView(PlayerModel model) {
-		this.model = model;
-		model.addPropertyChangeListener(this);
-		gridBagConstraintsBuilder = new GridBagConstraintsBuilder();
-		buildTask = new FutureTask<Void>(() -> buildComponents(), null);
-		SwingUtilities.invokeLater(buildTask);
-	}
-
 	private void updateLives() {
 		livesLabel.removeAll();
 		
@@ -148,6 +140,31 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 		buildInfos();
 	}
 
+	private void updateScore() {
+		scoresLabel.setText(String.format("%s %i", 
+				LocaleManager.getString(PlayerInfosStrings.SCORE.getKey()), 
+				model.getScore()));
+	}
+
+	private void updateTimeLeft() {
+		double timeLeftMs = model.getRemainingLiveTimeMs();
+		double totalTimeMs = model.getMaxLiveTimeMs();
+		int currentWidth = (int)Math.ceil(timeLeftMaxSize * (timeLeftMs / totalTimeMs));
+		timeLeftLabel.setSize(currentWidth , timeLeftLabel.getHeight());
+	}
+
+	/**
+	 * Initialize the Player infos view
+	 * @param model the player model
+	 */
+	public PlayerInfosView(PlayerModel model) {
+		this.model = model;
+		model.addPropertyChangeListener(this);
+		gridBagConstraintsBuilder = new GridBagConstraintsBuilder();
+		buildTask = new FutureTask<Void>(() -> buildComponents(), null);
+		SwingUtilities.invokeLater(buildTask);
+	}
+
 	@Override
 	public JComponent getComponent() {
 		try {
@@ -167,19 +184,6 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 	public void setParent(JComponent parent) {
 		this.parent = parent;
 		timeLeftMaxSize = (int)Math.ceil(0.04 * this.parent.getWidth());
-	}
-
-	private void updateScore() {
-		scoresLabel.setText(String.format("%s %i", 
-				LocaleManager.getString(PlayerInfosStrings.SCORE.getKey()), 
-				model.getScore()));
-	}
-
-	private void updateTimeLeft() {
-		double timeLeftMs = model.getRemainingLiveTimeMs();
-		double totalTimeMs = model.getMaxLiveTimeMs();
-		int currentWidth = (int)Math.ceil(timeLeftMaxSize * (timeLeftMs / totalTimeMs));
-		timeLeftLabel.setSize(currentWidth , timeLeftLabel.getHeight());
 	}
 
 	@Override

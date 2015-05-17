@@ -35,17 +35,6 @@ public class PlayerView implements ILayeredChildView, PropertyChangeListener {
 	private JLabel playerLabel;
 	private PropertyChangeSupport modelChange;
 	
-	/**
-	 * Default constructor
-	 */
-	public PlayerView(PlayerModel model) {
-		this.model = model;
-		modelChange = new PropertyChangeSupport(model);
-		model.addPropertyChangeListener(this);
-		buildTask = new FutureTask<Void>( () -> buildComponents(), null);
-		SwingUtilities.invokeLater(buildTask);
-	}
-
 	private void loadImage() {
 		Image playerImage = ImageLoader.LoadImage(model.getImagePath());
 		ImageIcon playerIcon = new ImageIcon(playerImage);
@@ -63,26 +52,6 @@ public class PlayerView implements ILayeredChildView, PropertyChangeListener {
 		buildPlayer();
 	}
 
-	@Override
-	public JComponent getComponent() {
-		try {
-			buildTask.get();
-			return playerLabel;
-		} catch (InterruptedException | ExecutionException e) {
-			throw new RuntimeException(e);
-		}
-	}
-	
-	@Override
-	public int getLayer() {
-		return 1;
-	}
-	
-	@Override
-	public void setParent(JComponent parent) {
-		this.parent = parent;
-	}
-
 	private void updateX() {
 		MutableRectangle playerArea = model.getArea();
 		playerLabel.setBounds(playerArea.getX(), playerLabel.getY(), playerLabel.getWidth(), playerLabel.getHeight());
@@ -97,6 +66,38 @@ public class PlayerView implements ILayeredChildView, PropertyChangeListener {
 		Image collisionImage = ImageLoader.LoadImage("player/collision.png");
 		ImageIcon collisionIcon = new ImageIcon(collisionImage);
 		playerLabel.setIcon(collisionIcon);
+	}
+
+	/**
+	 * Initialize the Player view
+	 * @param model the player model
+	 */
+	public PlayerView(PlayerModel model) {
+		this.model = model;
+		modelChange = new PropertyChangeSupport(model);
+		model.addPropertyChangeListener(this);
+		buildTask = new FutureTask<Void>( () -> buildComponents(), null);
+		SwingUtilities.invokeLater(buildTask);
+	}
+
+	@Override
+	public JComponent getComponent() {
+		try {
+			buildTask.get();
+			return playerLabel;
+		} catch (InterruptedException | ExecutionException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@Override
+	public int getLayer() {
+		return 0;
+	}
+
+	@Override
+	public void setParent(JComponent parent) {
+		this.parent = parent;
 	}
 
 	@Override

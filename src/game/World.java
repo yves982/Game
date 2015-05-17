@@ -33,7 +33,7 @@ public class World implements IChildController, PropertyChangeListener {
 	}
 
 	/**
-	 * Default constructor
+	 * Initialize the World
 	 */
 	public World() {
 		obstacles = new ArrayList<Obstacle>();
@@ -49,7 +49,7 @@ public class World implements IChildController, PropertyChangeListener {
 	 */
 	public void addObstacle(Obstacle obstacle) {
 		obstacles.add(obstacle);
-		view.addChild(obstacle.getChild(), 1);
+		view.addChild(obstacle.getChild(), 0);
 	}
 	
 	/**
@@ -57,7 +57,7 @@ public class World implements IChildController, PropertyChangeListener {
 	 */
 	public void addArea(Area area) {
 		areas.add(area);
-		view.addChild(area.getChild(), 0);
+		view.addChild(area.getChild(), 1);
 	}
 	
 	/**

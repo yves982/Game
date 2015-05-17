@@ -40,8 +40,28 @@ public class AreaView implements IChildView, PropertyChangeListener {
 		areaLabel.setVisible(true);
 	}
 
+	private void updateX() {
+		int x = model.getX();
+		areaLabel.setBounds(x, areaLabel.getY(), areaLabel.getWidth(), areaLabel.getHeight());
+	}
+
+	private void updateY() {
+		int y = model.getY();
+		areaLabel.setBounds(areaLabel.getX(), y, areaLabel.getWidth(), areaLabel.getHeight());
+	}
+
+	private void loadImage() {
+		Image areaImage = ImageLoader.LoadImage(model.getImagePath());
+		ImageIcon areaIcon = new ImageIcon(areaImage);
+		areaLabel.setIcon(areaIcon);
+		areaLabel.setVisible(true);
+		modelChange.firePropertyChange("width", model.getWidth(), areaImage.getWidth(null));
+		modelChange.firePropertyChange("height", model.getHeight(), areaImage.getHeight(null));
+	}
+
 	/**
 	 * Initialize an AreaView
+	 * @param model the Area model
 	 */
 	public AreaView(AreaModel model) {
 		this.model = model;
@@ -64,25 +84,6 @@ public class AreaView implements IChildView, PropertyChangeListener {
 	@Override
 	public void setParent(JComponent parent) {
 		this.parent = parent;
-	}
-
-	private void updateX() {
-		int x = model.getX();
-		areaLabel.setBounds(x, areaLabel.getY(), areaLabel.getWidth(), areaLabel.getHeight());
-	}
-
-	private void updateY() {
-		int y = model.getY();
-		areaLabel.setBounds(areaLabel.getX(), y, areaLabel.getWidth(), areaLabel.getHeight());
-	}
-
-	private void loadImage() {
-		Image areaImage = ImageLoader.LoadImage(model.getImagePath());
-		ImageIcon areaIcon = new ImageIcon(areaImage);
-		areaLabel.setIcon(areaIcon);
-		areaLabel.setVisible(true);
-		modelChange.firePropertyChange("width", model.getWidth(), areaImage.getWidth(null));
-		modelChange.firePropertyChange("height", model.getHeight(), areaImage.getHeight(null));
 	}
 
 	@Override

@@ -27,6 +27,10 @@ import main.ui.ILayeredParentView;
  * </ul>
  * </p>
  */
+/**
+ * @author yves
+ *
+ */
 public class WorldView implements IChildView, ILayeredParentView {
 	private List<IChildView> childViews;
 	private JLayeredPane mainPanel;
@@ -44,26 +48,32 @@ public class WorldView implements IChildView, ILayeredParentView {
 
 	private void buildForeground() {
 		foregroundPanel = new JPanel(null, true);
+		foregroundPanel.setOpaque(false);
+		foregroundPanel.setVisible(true);
 	}
 
 	private void buildBackground() {
 		backgroundPanel = new JPanel(true);
 		BoxLayout boxLayout = new BoxLayout(backgroundPanel, BoxLayout.PAGE_AXIS);
 		backgroundPanel.setLayout(boxLayout);
+		backgroundPanel.setBackground(Color.BLACK);
+		backgroundPanel.setVisible(true);
 	}
 
 	private void buildMain() {
 		mainPanel = new JLayeredPane();
 		mainPanel.setLayout(null);
 		mainPanel.setDoubleBuffered(true);
-		mainPanel.setBackground(Color.BLACK);
-		mainPanel.add(backgroundPanel, 0);
-		mainPanel.add(foregroundPanel, 1);
+		mainPanel.add(backgroundPanel, 1);
+		mainPanel.add(foregroundPanel, 0);
 		mainPanel.setVisible(true);
 		mainPanel.setFocusable(true);
 		mainPanel.requestFocus();
 	}
 
+	/**
+	 * Initialize the World view
+	 */
 	public WorldView() {
 		childViews = new ArrayList<IChildView>();
 		buildTask = new FutureTask<Void>(() -> buildComponents(), null);
@@ -71,9 +81,18 @@ public class WorldView implements IChildView, ILayeredParentView {
 		SwingUtilities.invokeLater( buildTask );
 	}
 
-	public void show() throws InterruptedException, ExecutionException {
-		buildTask.get();
-		mainPanel.setVisible(true);
+	
+	/**
+	 * Shows this view
+	 * @throws RuntimeException in case the view builds was interrupted or threw an exception
+	 */
+	public void show() {
+		try {
+			buildTask.get();
+			mainPanel.setVisible(true);
+		} catch(InterruptedException | ExecutionException e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 	/**

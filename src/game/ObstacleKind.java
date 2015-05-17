@@ -11,6 +11,9 @@ public enum ObstacleKind {
 		this.imagePath = imagePath;
 	}
 
+	/**
+	 * @return the imagePath
+	 */
 	public String getImagePath() {
 		return imagePath;
 	}

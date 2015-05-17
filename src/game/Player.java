@@ -93,6 +93,8 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 
 	/**
 	 * Initialize a Player
+	 * @param maxLives the maximum number of lives before the game is over
+	 * @param maxLeftTimeMs the maximum time every life can last (in milliseconds)
 	 */
 	public Player(int maxLives, int maxLeftTimeMs) {
 		childrenView = new ArrayList<ILayeredChildView>();
@@ -166,7 +168,10 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	}
 
 	/**
-	 * @return the lifeLess
+	 * <p>
+	 * a lifeless player cannot keep on player, the party should end
+	 * </p>
+	 * @return the lifeLess state
 	 */
 	public boolean isLifeLess() {
 		return lifeLess;
