@@ -58,9 +58,14 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 	}
 
 	private void updateLives() {
+		livesLabel.removeAll();
+		
 		for(int i=0; i < model.getLives(); i++) {
-			livesLabel.add(new JLabel(livesIcon));
+			JLabel liveLabel = new JLabel(livesIcon);
+			livesLabel.add(liveLabel);
+			liveLabel.setVisible(true);
 		}
+		livesLabel.repaint();
 	}
 
 	private void buildLives() {
@@ -69,12 +74,14 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 		livesLabel.setLayout(boxLayout);
 		Image livesImage = ImageLoader.LoadImage("player/infos/lives.gif");
 		livesIcon = new ImageIcon(livesImage);
+		livesLabel.setVisible(true);
 		updateLives();
 	}
 
 	private void buildScore() {
 		scoresLabel = new JLabel();
 		scoresLabel.setText(String.format("%s %d", LocaleManager.getString(PlayerInfosStrings.SCORE.getKey()), model.getScore()));
+		scoresLabel.setVisible(true);
 	}
 
 	private void buildTime() {
@@ -131,6 +138,7 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 		infosPanel.add(scoresLabel, constraints.get(SCORE));
 		infosPanel.add(timeLeftLabel, constraints.get(TIME_LEFT));
 		infosPanel.add(timeLabel, constraints.get(TIME));
+		infosPanel.setVisible(true);
 	}
 
 	private void buildComponents() {

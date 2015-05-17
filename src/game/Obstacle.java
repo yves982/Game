@@ -13,13 +13,21 @@ import main.ResourcesManager;
 import main.ui.IChildView;
 
 /**
- * An Obstacle : basically, from a model's point of view, a box crossing game's board
+ * An Obstacle : basically, a moving area, which can be checked for collisions
  */
 public class Obstacle implements IChildController, PropertyChangeListener {
 	private ObstacleKind kind;
 	private ObstacleModel model;
 	private ObstacleView view;
 	
+	private void updateWidth(int width) {
+		model.getArea().setWidth(width);
+	}
+
+	private void updateHeight(int height) {
+		model.getArea().setHeight(height);
+	}
+
 	/**
 	 * Initialize an Obstacle
 	 * @param kind the obstacle's kind
@@ -64,7 +72,7 @@ public class Obstacle implements IChildController, PropertyChangeListener {
 	}
 	
 	/**
-	 * Moves the box with predefined steps (dx on the X axis and dy on the Y one)
+	 * Moves the obstacle by predefined steps (dx on the X axis and dy on the Y one)
 	 */
 	public void move() {
 		MutableRectangle obstacleArea = model.getArea();
@@ -73,45 +81,57 @@ public class Obstacle implements IChildController, PropertyChangeListener {
 	}
 	
 	/**
-	 * Checks whether this box is at least partially contained in the a given circular area
+	 * Checks whether the obstacle's area is at least partially contained in the a given circular area
 	 * @param x the center (x coordinate) of a circular area
 	 * @param y the center (y coordinate) of a circular area
 	 * @param radius the distance between circle's center and edge
-	 * @return {@code true} if this box intersects with the given circle, {@code false] otherwise.
+	 * @return {@code true} if the obstacle's area intersects with the given circle, {@code false} otherwise.
 	 */
 	public boolean isWithin(int x, int y, int radius) {
 		return model.getArea().intersects(x, y, radius);
 	}
 	
 	/**
-	 * Checks whether this box collide the other
-	 * @param obstacle the other box
-	 * @return {@code true} if those boxes's intersection is non empty (if they share some common points) false otherwise.
+	 * Checks whether the obstacle's area collides the other's
+	 * @param obstacle the other obstacle
+	 * @return {@code true} if those area's intersection is non empty (if they share some common points) {@code false} otherwise.
 	 */
-	public boolean collide(Obstacle obstacle) {
+	public boolean checkCollision(Obstacle obstacle) {
 		return obstacle.model.getArea().intersects(model.getArea());
 	}
 	
 	/**
-	 * Checks whether this box collide the other (a {@code Player} is just a different kind of box)
+	 * Checks whether this obstacle's area collide the player's area
 	 * @param player the player
-	 * @return {@code true} if those boxes's intersection is non empty (if they share some common points) false otherwise.
+	 * @return {@code true} if those area's intersection is non empty (if they share some common points) {@code false} otherwise.
 	 */
-	public boolean collide(Player player) {
-		return player.collide(model.getArea());
+	public boolean checkCollision(Player player) {
+		return player.checkCollision(model.getArea());
+	}
+
+	/**
+	 * <p>
+	 * A dropped Obstacle cannot be collided
+	 * </p>
+	 * @return whether this Obstacle is dropped or not
+	 * @see game.model.ObstacleModel#isDropped()
+	 */
+	public boolean isDropped() {
+		return model.isDropped();
+	}
+
+	/**
+	 * A deadly obstacle cannot be climbed upon : a collision with such obstacle would kill the player
+	 * @return whether this Obstacle is deadly or not
+	 * @see game.model.ObstacleModel#isDeadly()
+	 */
+	public boolean isDeadly() {
+		return model.isDeadly();
 	}
 
 	@Override
 	public IChildView getChild() {
 		return view;
-	}
-
-	private void updateHeight(int height) {
-		model.getArea().setHeight(height);
-	}
-
-	private void updateWidth(int width) {
-		model.getArea().setWidth(width);
 	}
 
 	@Override

@@ -22,6 +22,14 @@ public class Area implements IChildController, PropertyChangeListener {
 	private AreaModel model;
 	private AreaView view;
 	
+	private void updateWidth(int width) {
+		model.setWidth(width);
+	}
+
+	private void updateHeight(int height) {
+		model.setHeight(height);
+	}
+
 	/**
 	 * Initialize an Area
 	 * @param kind the kind of this area
@@ -57,14 +65,6 @@ public class Area implements IChildController, PropertyChangeListener {
 	@Override
 	public IChildView getChild() {
 		return view;
-	}
-
-	private void updateWidth(int width) {
-		model.setWidth(width);
-	}
-
-	private void updateHeight(int height) {
-		model.setHeight(height);
 	}
 
 	@Override

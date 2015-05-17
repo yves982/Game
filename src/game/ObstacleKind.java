@@ -6,11 +6,11 @@ public enum ObstacleKind {
 	TRUNK("obstacle/trunk.png");
 	
 	private String imagePath;
-	
+
 	ObstacleKind(String imagePath) {
 		this.imagePath = imagePath;
 	}
-	
+
 	public String getImagePath() {
 		return imagePath;
 	}

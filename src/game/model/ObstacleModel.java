@@ -23,6 +23,7 @@ public class ObstacleModel{
 	private int dx;
 	private int dy;
 	private boolean dropped;
+	private boolean deadly;
 	private PropertyChangeSupport propertyChange;
 	
 	public ObstacleModel() {
@@ -97,6 +98,9 @@ public class ObstacleModel{
 	}
 
 	/**
+	 * <p>
+	 * A dropped Obstacle cannot be climbed upon if it's not deadly, and it cannot be collided.
+	 * </p>
 	 * @return the dropped
 	 */
 	public boolean isDropped() {
@@ -109,6 +113,22 @@ public class ObstacleModel{
 		boolean oldDropped = this.dropped;
 		this.dropped = dropped;
 		propertyChange.firePropertyChange("dropped", oldDropped, dropped);
+	}
+
+	/**
+	 * <p>
+	 * A deadly obstacle cannot be climbed upon, it'd kill the player on contact
+	 * </p>
+	 * @return the deadly
+	 */
+	public boolean isDeadly() {
+		return deadly;
+	}
+	/**
+	 * @param deadly the deadly to set
+	 */
+	public void setDeadly(boolean deadly) {
+		this.deadly = deadly;
 	}
 
 	/**
