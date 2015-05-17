@@ -62,6 +62,22 @@ public class Area implements IChildController, PropertyChangeListener {
 		model.setY(y);
 	}
 
+	/**
+	 * @return the area's width
+	 * @see game.model.AreaModel#getWidth()
+	 */
+	public int getWidth() {
+		return model.getWidth();
+	}
+
+	/**
+	 * @return the area's height
+	 * @see game.model.AreaModel#getHeight()
+	 */
+	public int getHeight() {
+		return model.getHeight();
+	}
+
 	@Override
 	public IChildView getChild() {
 		return view;

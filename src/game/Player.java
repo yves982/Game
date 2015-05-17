@@ -172,6 +172,20 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 		return lifeLess;
 	}
 
+	/**
+	 * @return the player's width
+	 */
+	public int getWidth() {
+		return model.getArea().getWidth();
+	}
+	
+	/**
+	 * @return the player's height
+	 */
+	public int getHeight() {
+		return model.getArea().getHeight();
+	}
+	
 	@Override
 	public List<ILayeredChildView> getChildren() {
 		return childrenView;

@@ -129,6 +129,22 @@ public class Obstacle implements IChildController, PropertyChangeListener {
 		return model.isDeadly();
 	}
 
+	/**
+	 * @return the obstacle's width
+	 * @see game.model.ObstacleModel#getWidth()
+	 */
+	public int getWidth() {
+		return model.getWidth();
+	}
+
+	/**
+	 * @return the obstacle's height
+	 * @see game.model.ObstacleModel#getHeight()
+	 */
+	public int getHeight() {
+		return model.getHeight();
+	}
+
 	@Override
 	public IChildView getChild() {
 		return view;

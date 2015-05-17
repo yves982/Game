@@ -49,7 +49,13 @@ public class ObstacleView implements IChildView, PropertyChangeListener {
 	public void setParent(JComponent parent) {
 		this.parent = parent;
 	}
-
+	
+	/**
+	 * Load the image and raise propertyChange for width and height properties:
+	 * <p>
+	 * the ObstacleView has no width and height properties, but that's not a problem for a one time event (per instance)
+	 * </p>
+	 */
 	private void loadImage() {
 		Image image = ImageLoader.LoadImage(model.getImagePath());
 		ImageIcon imageIcon = new ImageIcon(image);
