@@ -194,6 +194,7 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 			SwingUtilities.invokeAndWait(this::buildComponents);
 			built = true;
 		} catch (InterruptedException | InvocationTargetException e) {
+			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
 	}

@@ -22,6 +22,7 @@ public class ImageLoader {
 		{
 			return ImageIO.read(Paths.get(imagePath).toUri().toURL());
 		} catch(IOException ioe) {
+			ioe.printStackTrace();
 			throw new RuntimeException(ioe);
 		}
 	}

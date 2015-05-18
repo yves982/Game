@@ -74,6 +74,7 @@ public class AreaView implements IChildView, PropertyChangeListener {
 					modelChange.firePropertyChange("width", model.getWidth(), areaIcon.getIconWidth());
 					modelChange.firePropertyChange("height", model.getHeight(), areaIcon.getIconHeight());
 				} catch (InterruptedException | ExecutionException e) {
+					e.printStackTrace();
 					throw new RuntimeException(e);
 				}
 			};

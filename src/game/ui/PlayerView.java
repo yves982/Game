@@ -52,6 +52,7 @@ public class PlayerView implements ILayeredChildView, PropertyChangeListener {
 					modelChange.firePropertyChange("width", model.getArea().getWidth(), playerIcon.getIconWidth());
 					modelChange.firePropertyChange("height", model.getArea().getHeight(), playerIcon.getIconHeight());
 				} catch (InterruptedException | ExecutionException e) {
+					e.printStackTrace();
 					throw new RuntimeException(e);
 				}
 			}
@@ -126,6 +127,7 @@ public class PlayerView implements ILayeredChildView, PropertyChangeListener {
 			SwingUtilities.invokeAndWait(this::buildComponents);
 			built = true;
 		} catch (InvocationTargetException | InterruptedException e) {
+			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
 	}

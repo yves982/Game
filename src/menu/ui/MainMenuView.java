@@ -108,6 +108,7 @@ public class MainMenuView implements IParentView, ActionListener {
 				frame.setVisible(true);
 			});
 		} catch (InvocationTargetException | InterruptedException e) {
+			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
 	}
@@ -124,6 +125,7 @@ public class MainMenuView implements IParentView, ActionListener {
 		try {
 			SwingUtilities.invokeAndWait(this::buildComponents);
 		} catch (InvocationTargetException | InterruptedException e) {
+			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
 	}

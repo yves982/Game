@@ -1,7 +1,8 @@
 package main.ui;
 
 /**
- * a view with a childView (sub part)
+ * a view with a childView (sub part)<br/>
+ *  <b>Note: </b> {@code IView#build()} should be the first method ever called on any IView Implementation
  */
 public interface IParentView extends IView {
 	/**

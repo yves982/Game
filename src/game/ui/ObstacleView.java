@@ -101,6 +101,7 @@ public class ObstacleView implements IChildView, PropertyChangeListener {
 			SwingUtilities.invokeAndWait(this::buildComponents);
 			built = true;
 		} catch (InvocationTargetException | InterruptedException e) {
+			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
 	}

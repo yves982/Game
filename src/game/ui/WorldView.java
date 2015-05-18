@@ -91,6 +91,7 @@ public class WorldView implements IChildView, ILayeredParentView {
 				mainPanel.setVisible(true);
 			} );
 		} catch (InvocationTargetException | InterruptedException e) {
+			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
 	}
@@ -176,6 +177,7 @@ public class WorldView implements IChildView, ILayeredParentView {
 			SwingUtilities.invokeAndWait(this::buildComponents);
 			built = true;
 		} catch (InvocationTargetException | InterruptedException e) {
+			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
 		
