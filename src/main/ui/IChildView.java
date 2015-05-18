@@ -5,7 +5,7 @@ import javax.swing.JComponent;
 /**
  * interface for a view with a main component to be added to some parent view.
  */
-public interface IChildView {
+public interface IChildView extends IView {
 	/**
 	 * get the main component of this childView
 	 * <p>

@@ -90,6 +90,7 @@ public class MainMenuController implements PropertyChangeListener {
 	 */
 	public void start() {
 		mainView = new MainMenuView(mainModel);
+		mainView.build();
 		mainView.addPropertyChangeListener("action", this);
 		if(child != null && child.getChild() != null) {
 			mainView.addChild(child.getChild());

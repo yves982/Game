@@ -6,6 +6,7 @@ import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
@@ -13,6 +14,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 
 import main.ui.IChildView;
 import utils.ui.ImageLoader;
@@ -33,11 +35,18 @@ public class AreaView implements IChildView, PropertyChangeListener {
 	private FutureTask<Void> buildTask;
 	private AreaModel model;
 	private PropertyChangeSupport modelChange;
+	private boolean built;
 	
 	
 	private void buildComponents() {
 		areaLabel = new JLabel();
 		areaLabel.setVisible(true);
+	}
+
+	private void checkBuild() {
+		if(!built) {
+			throw new RuntimeException("you should call build() before using this view.");
+		}
 	}
 
 	private void updateX() {
@@ -51,12 +60,28 @@ public class AreaView implements IChildView, PropertyChangeListener {
 	}
 
 	private void loadImage() {
-		Image areaImage = ImageLoader.LoadImage(model.getImagePath());
-		ImageIcon areaIcon = new ImageIcon(areaImage);
-		areaLabel.setIcon(areaIcon);
-		areaLabel.setVisible(true);
-		modelChange.firePropertyChange("width", model.getWidth(), areaImage.getWidth(null));
-		modelChange.firePropertyChange("height", model.getHeight(), areaImage.getHeight(null));
+		SwingWorker<ImageIcon, Void> worker = new SwingWorker<ImageIcon, Void>() {
+			@Override
+			protected ImageIcon doInBackground() throws Exception {
+				Image areaImage = ImageLoader.LoadImage(model.getImagePath());
+				ImageIcon areaIcon = new ImageIcon(areaImage);
+				return areaIcon;
+			}
+			
+			protected void done() {
+				try {
+					ImageIcon areaIcon = get();
+					areaLabel.setIcon(areaIcon);
+					areaLabel.setVisible(true);
+					modelChange.firePropertyChange("width", model.getWidth(), areaIcon.getIconWidth());
+					modelChange.firePropertyChange("height", model.getHeight(), areaIcon.getIconHeight());
+				} catch (InterruptedException | ExecutionException e) {
+					throw new RuntimeException(e);
+				}
+			};
+		};
+		
+		worker.execute();
 	}
 
 	/**
@@ -65,40 +90,46 @@ public class AreaView implements IChildView, PropertyChangeListener {
 	 */
 	public AreaView(AreaModel model) {
 		this.model = model;
+		built = false;
 		modelChange = new PropertyChangeSupport(model);
 		model.addPropertyChangeListener(this);
-		buildTask = new FutureTask<Void>( () -> buildComponents(), null );
-		SwingUtilities.invokeLater(buildTask);
 	}
 
 	@Override
 	public JComponent getComponent() {
+		checkBuild();
+		return areaLabel;
+	}
+
+	@Override
+	public void setParent(JComponent parent) {
+		checkBuild();
+		this.parent = parent;
+	}
+
+	public void build() {
 		try {
-			buildTask.get();
-			return areaLabel;
-		} catch(InterruptedException | ExecutionException e) {
+			SwingUtilities.invokeAndWait(this::buildComponents);
+			built = true;
+		} catch (InvocationTargetException | InterruptedException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
 	@Override
-	public void setParent(JComponent parent) {
-		this.parent = parent;
-	}
-
-	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
+		checkBuild();
 		String propertyName = evt.getPropertyName();
 		
 		switch(propertyName) {
 			case "x":
-				updateX();
+				SwingUtilities.invokeLater(this::updateX);
 				break;
 			case "y":
-				updateY();
+				SwingUtilities.invokeLater(this::updateY);
 				break;
 			case "imagePath":
-				loadImage();
+				SwingUtilities.invokeLater(this::loadImage);
 				break;
 		}
 	}

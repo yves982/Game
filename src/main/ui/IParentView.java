@@ -3,7 +3,7 @@ package main.ui;
 /**
  * a view with a childView (sub part)
  */
-public interface IParentView {
+public interface IParentView extends IView {
 	/**
 	 * Adds a childView to this view
 	 * <p>

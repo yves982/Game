@@ -45,8 +45,9 @@ public class World implements IRunnableChildController, PropertyChangeListener {
 		List<Integer> rowXSteps = new ArrayList<Integer>(rowsCount);
 		fillRowXSteps(rowXSteps, rowsCount);
 		WorldGenerator generator = new WorldGenerator(this, rowXSteps);
-		//Player player = generator.generatePlayer(3, 1000, 1);
-		//setPlayer(player);
+		Player player = generator.generatePlayer(3, 4000, 1);
+		setPlayer(player);
+		player.lives();
 	}
 
 	/**
@@ -56,6 +57,7 @@ public class World implements IRunnableChildController, PropertyChangeListener {
 		obstacles = new ArrayList<Obstacle>();
 		areas = new ArrayList<Area>();
 		view = new WorldView();
+		view.build();
 		view.addPropertyChangeListener(this);
 	}
 	

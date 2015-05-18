@@ -7,13 +7,14 @@ import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 
 import main.ui.ILayeredChildView;
 import utils.ui.ImageLoader;
@@ -29,23 +30,45 @@ import utils.ui.ImageLoader;
  * </p>
  */
 public class PlayerView implements ILayeredChildView, PropertyChangeListener {
-	private FutureTask<Void> buildTask;
 	private PlayerModel model;
 	private JComponent parent;
 	private JLabel playerLabel;
 	private PropertyChangeSupport modelChange;
+	private boolean built;
 	
 	private void loadImage() {
-		Image playerImage = ImageLoader.LoadImage(model.getImagePath());
-		ImageIcon playerIcon = new ImageIcon(playerImage);
-		playerLabel.setIcon(playerIcon);
-		modelChange.firePropertyChange("width", model.getArea().getWidth(), playerImage.getWidth(null));
-		modelChange.firePropertyChange("height", model.getArea().getHeight(), playerImage.getHeight(null));
+		SwingWorker<ImageIcon, Void> worker = new SwingWorker<ImageIcon, Void>() {
+			@Override
+			protected ImageIcon doInBackground() throws Exception {
+				Image playerImage = ImageLoader.LoadImage(model.getImagePath());
+				ImageIcon playerIcon = new ImageIcon(playerImage);
+				return playerIcon;
+			}
+			
+			protected void done() {
+				try {
+					ImageIcon playerIcon = get();
+					playerLabel.setIcon(playerIcon);
+					modelChange.firePropertyChange("width", model.getArea().getWidth(), playerIcon.getIconWidth());
+					modelChange.firePropertyChange("height", model.getArea().getHeight(), playerIcon.getIconHeight());
+				} catch (InterruptedException | ExecutionException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		};
+		worker.execute();
 	}
 
 	private void buildPlayer() {
 		playerLabel = new JLabel();
+		loadImage();
 		playerLabel.setVisible(true);
+	}
+
+	private void checkBuild() {
+		if(!built) {
+			throw new RuntimeException("you should call build() before using this view.");
+		}
 	}
 
 	private void buildComponents() {
@@ -55,6 +78,7 @@ public class PlayerView implements ILayeredChildView, PropertyChangeListener {
 	private void updateX() {
 		MutableRectangle playerArea = model.getArea();
 		playerLabel.setBounds(playerArea.getX(), playerLabel.getY(), playerLabel.getWidth(), playerLabel.getHeight());
+		
 	}
 
 	private void updateY() {
@@ -63,7 +87,7 @@ public class PlayerView implements ILayeredChildView, PropertyChangeListener {
 	}
 
 	private void collide() {
-		Image collisionImage = ImageLoader.LoadImage("player/collision.png");
+		Image collisionImage = ImageLoader.LoadImageWithShortPath("/player/collision.png");
 		ImageIcon collisionIcon = new ImageIcon(collisionImage);
 		playerLabel.setIcon(collisionIcon);
 	}
@@ -74,47 +98,56 @@ public class PlayerView implements ILayeredChildView, PropertyChangeListener {
 	 */
 	public PlayerView(PlayerModel model) {
 		this.model = model;
+		built = false;
 		modelChange = new PropertyChangeSupport(model);
 		model.addPropertyChangeListener(this);
-		buildTask = new FutureTask<Void>( () -> buildComponents(), null);
-		SwingUtilities.invokeLater(buildTask);
 	}
-
+	
 	@Override
 	public JComponent getComponent() {
-		try {
-			buildTask.get();
-			return playerLabel;
-		} catch (InterruptedException | ExecutionException e) {
-			throw new RuntimeException(e);
-		}
+		checkBuild();
+		return playerLabel;
 	}
-
+	
 	@Override
 	public int getLayer() {
+		checkBuild();
 		return 0;
 	}
 
 	@Override
 	public void setParent(JComponent parent) {
+		checkBuild();
 		this.parent = parent;
+	}
+
+	public void build() {
+		try {
+			SwingUtilities.invokeAndWait(this::buildComponents);
+			built = true;
+		} catch (InvocationTargetException | InterruptedException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
+		checkBuild();
 		String propertyName = evt.getPropertyName();
-		
+				
 		switch(propertyName) {
 			case "imagePath":
-				loadImage();
+				SwingUtilities.invokeLater(this::loadImage);
 				break;
 			case "x":
-				updateX();
+				SwingUtilities.invokeLater(this::updateX);
+				break;
 			case "y":
-				updateY();
+				SwingUtilities.invokeLater(this::updateY);
+				break;
 			case "collide":
-				collide();
-				
+				SwingUtilities.invokeLater(this::collide);
+				break;
 		}
 	}
 

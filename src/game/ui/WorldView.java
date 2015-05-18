@@ -3,10 +3,9 @@ package game.ui;
 import java.awt.Color;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
 
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
@@ -27,18 +26,14 @@ import main.ui.ILayeredParentView;
  * </ul>
  * </p>
  */
-/**
- * @author yves
- *
- */
 public class WorldView implements IChildView, ILayeredParentView {
 	private List<IChildView> childViews;
 	private JLayeredPane mainPanel;
 	private JPanel backgroundPanel;
 	private JPanel foregroundPanel;
-	private FutureTask<Void> buildTask;
 	private JComponent parent;
 	private PropertyChangeSupport propertyChange;
+	private boolean built;
 	
 	private void buildComponents() {
 		buildBackground();
@@ -54,7 +49,7 @@ public class WorldView implements IChildView, ILayeredParentView {
 
 	private void buildBackground() {
 		backgroundPanel = new JPanel(true);
-		BoxLayout boxLayout = new BoxLayout(backgroundPanel, BoxLayout.PAGE_AXIS);
+		BoxLayout boxLayout = new BoxLayout(backgroundPanel, BoxLayout.Y_AXIS);
 		backgroundPanel.setLayout(boxLayout);
 		backgroundPanel.setBackground(Color.BLACK);
 		backgroundPanel.setVisible(true);
@@ -71,26 +66,31 @@ public class WorldView implements IChildView, ILayeredParentView {
 		mainPanel.requestFocus();
 	}
 
+	private void checkBuild() {
+		if(!built) {
+			throw new RuntimeException("you should call build() before using this view.");
+		}
+	}
+
 	/**
 	 * Initialize the World view
 	 */
 	public WorldView() {
 		childViews = new ArrayList<IChildView>();
-		buildTask = new FutureTask<Void>(() -> buildComponents(), null);
+		built = false;
 		propertyChange = new PropertyChangeSupport(this);
-		SwingUtilities.invokeLater( buildTask );
 	}
-
 	
 	/**
 	 * Shows this view
-	 * @throws RuntimeException in case the view builds was interrupted or threw an exception
 	 */
 	public void show() {
+		checkBuild();
 		try {
-			buildTask.get();
-			mainPanel.setVisible(true);
-		} catch(InterruptedException | ExecutionException e) {
+			SwingUtilities.invokeAndWait( () -> {
+				mainPanel.setVisible(true);
+			} );
+		} catch (InvocationTargetException | InterruptedException e) {
 			throw new RuntimeException(e);
 		}
 	}
@@ -133,33 +133,26 @@ public class WorldView implements IChildView, ILayeredParentView {
 	
 	@Override
 	public void addChild(IChildView childView, int layer) {
-		try {
-			buildTask.get();
-			childView.setParent(mainPanel);
-			childViews.add(childView);
-			switch(layer) {
-				case 0:
-					backgroundPanel.add(childView.getComponent());
-					break;
-				case 1:
-					foregroundPanel.add(childView.getComponent());
-					break;
-			}
-			mainPanel.repaint();
-		} catch (InterruptedException | ExecutionException e) {
-			throw new RuntimeException(e);
+		checkBuild();
+		childView.setParent(mainPanel);
+		childViews.add(childView);
+		switch(layer) {
+			case 0:
+				backgroundPanel.add(childView.getComponent());
+				backgroundPanel.revalidate();
+				break;
+			case 1:
+				foregroundPanel.add(childView.getComponent());
+				foregroundPanel.revalidate();
+				break;
 		}
+		mainPanel.repaint();
 	}
 
 	@Override
 	public JComponent getComponent() {
-		try {
-			buildTask.get();
-			return mainPanel;
-		} catch (InterruptedException | ExecutionException e) {
-			throw new RuntimeException(e);
-		}
-		
+		checkBuild();
+		return mainPanel;
 	}
 	
 	/**
@@ -169,11 +162,23 @@ public class WorldView implements IChildView, ILayeredParentView {
 	 */
 	@Override
 	public void setParent(JComponent parent) {
+		checkBuild();
 		this.parent = parent;
 		foregroundPanel.setSize(this.parent.getSize());
 		backgroundPanel.setSize(this.parent.getSize());
 		propertyChange.firePropertyChange("width", 0, parent.getWidth());
 		propertyChange.firePropertyChange("height", 0, parent.getHeight());
+	}
+
+	@Override
+	public void build() {
+		try {
+			SwingUtilities.invokeAndWait(this::buildComponents);
+			built = true;
+		} catch (InvocationTargetException | InterruptedException e) {
+			throw new RuntimeException(e);
+		}
+		
 	}
 
 }

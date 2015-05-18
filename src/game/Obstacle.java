@@ -36,6 +36,7 @@ public class Obstacle implements IChildController, PropertyChangeListener {
 		this.kind = kind;
 		model = new ObstacleModel();
 		view = new ObstacleView(model);
+		view.build();
 		model.setImagePath(Paths.get(ResourcesManager.RESOURCES_BASE, kind.getImagePath()).toString());
 		view.addPropertyChangeListener(this);
 	}

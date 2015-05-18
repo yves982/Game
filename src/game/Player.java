@@ -31,7 +31,7 @@ import main.ui.ILayeredChildView;
  */
 public class Player implements ILayeredChildrenController, PropertyChangeListener {
 	private PlayerModel model;
-	private PlayerView mainView;
+	private PlayerView playerView;
 	private PlayerInfosView infosView;
 	private Obstacle collider;
 	private ScheduledFuture<?> countDownFuture;
@@ -42,7 +42,7 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	
 	private void fillChildrenView() {
 		childrenView.add(infosView);
-		childrenView.add(mainView);
+		childrenView.add(playerView);
 	}
 
 	private void builModel(int maxLives, int maxLeftTimeMs) {
@@ -50,10 +50,13 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 		model.setImagePath(Paths.get(ResourcesManager.RESOURCES_BASE, "/player/player.png").toString());
 		model.setLives(maxLives);
 		model.setMaxLiveTimeMs(maxLeftTimeMs);
+		model.setRemainingLiveTimeMs(maxLeftTimeMs);
 	}
 
 	private void countDown() {
 		int remainingLiveTimeMs = model.getRemainingLiveTimeMs();
+		remainingLiveTimeMs -= 50;
+		model.setRemainingLiveTimeMs(remainingLiveTimeMs);
 		if(remainingLiveTimeMs == 0) {
 			countDownFuture.cancel(true);
 			dies();
@@ -62,7 +65,7 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	}
 
 	private void restartCountDown() {
-		countDownFuture = scheduled.scheduleAtFixedRate(this::countDown, 0, 1000, TimeUnit.MILLISECONDS);
+		countDownFuture = scheduled.scheduleAtFixedRate(this::countDown, 0, 50, TimeUnit.MILLISECONDS);
 	}
 
 	private void dies() {
@@ -76,7 +79,8 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 			propertyChange.firePropertyChange("lifeLess", oldLifeLess , true);
 			try {
 				scheduled.shutdown();
-				scheduled.awaitTermination(600, TimeUnit.MILLISECONDS);
+				countDownFuture.cancel(true);
+				scheduled.awaitTermination(1100, TimeUnit.MILLISECONDS);
 			} catch (InterruptedException e) {
 				throw new RuntimeException(e);
 			}
@@ -100,11 +104,13 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 		childrenView = new ArrayList<ILayeredChildView>();
 		builModel(maxLives, maxLeftTimeMs);
 		infosView = new PlayerInfosView(model);
-		mainView = new PlayerView(model);
+		infosView.build();
+		playerView = new PlayerView(model);
+		playerView.build();
 		fillChildrenView();
 		propertyChange = new PropertyChangeSupport(this);
 		scheduled = Executors.newSingleThreadScheduledExecutor();
-		mainView.addPropertyChangeListener(this);
+		playerView.addPropertyChangeListener(this);
 	}
 	
 	/**

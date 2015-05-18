@@ -7,8 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -41,23 +40,11 @@ public class MainMenuView implements IParentView, ActionListener {
 	private JMenuItem highScoreMenuItem;
 	private JMenuItem settingsMenuItem;
 	private JMenuItem quitMenuItem;
-	private Object buildAwaiter;
 	
-	public MainMenuView(MainMenuModel viewModel) {
-		this.viewModel = viewModel;
-		buildAwaiter = new Object();
-		propertyChange = new PropertyChangeSupport(this);
-		SwingUtilities.invokeLater(() -> buildComponents());
-	}
-
 	private void buildComponents() {
-		synchronized(buildAwaiter) {
-			buildMenu();
-			buildMenuBar();
-			buildFrame();
-			
-			buildAwaiter.notifyAll();
-		}
+		buildMenu();
+		buildMenuBar();
+		buildFrame();
 	}
 	
 	private void addHandlers(JMenuItem startMenuItem, JMenuItem highScoreMenuItem, JMenuItem settingsMenuItem, JMenuItem quitMenuItem) {
@@ -110,23 +97,34 @@ public class MainMenuView implements IParentView, ActionListener {
 		frame.setLocation(ComponentLocation.getCenteredLocation(frame));
 	}
 
+	public MainMenuView(MainMenuModel viewModel) {
+		this.viewModel = viewModel;
+		propertyChange = new PropertyChangeSupport(this);
+	}
+
 	public void show() {
-		SwingUtilities.invokeLater( () -> {
-				frame.setVisible(true); 
-		});
+		try {
+			SwingUtilities.invokeAndWait( () -> {
+				frame.setVisible(true);
+			});
+		} catch (InvocationTargetException | InterruptedException e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 	@Override
 	public void addChild(IChildView child){
-		synchronized(buildAwaiter) {
-			try {
-				buildAwaiter.wait();
-				child.setParent(frame.getRootPane());
-				frame.add(child.getComponent());
-				frame.pack();
-			} catch (InterruptedException e) {
-				throw new RuntimeException(e);
-			}
+		child.setParent(frame.getRootPane());
+		frame.add(child.getComponent());
+		frame.pack();
+	}
+
+	@Override
+	public void build() {
+		try {
+			SwingUtilities.invokeAndWait(this::buildComponents);
+		} catch (InvocationTargetException | InterruptedException e) {
+			throw new RuntimeException(e);
 		}
 	}
 

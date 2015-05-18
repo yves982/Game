@@ -10,10 +10,9 @@ import java.awt.Image;
 import java.awt.LayoutManager;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -34,13 +33,12 @@ import utils.ui.ImageLoader;
 public class PlayerInfosView implements ILayeredChildView, PropertyChangeListener {
 	private JComponent parent;
 	private JPanel infosPanel;
-	private JLabel livesLabel;
+	private JPanel livesPanel;
 	private JLabel scoresLabel;
 	private JLabel timeLabel;
 	private JLabel timeLeftLabel;
 	private GridBagConstraintsBuilder gridBagConstraintsBuilder;
 	private PlayerModel model;
-	private FutureTask<Void> buildTask;
 	
 	private static final String TIME = "time";
 	private static final String TIME_LEFT = "timeLeft";
@@ -48,26 +46,27 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 	private static final String SCORE = "score";
 	private ImageIcon livesIcon;
 	private int timeLeftMaxSize;
+	private boolean built;
 	
 	private void updateLives() {
-		livesLabel.removeAll();
+		livesPanel.removeAll();
 		
 		for(int i=0; i < model.getLives(); i++) {
 			JLabel liveLabel = new JLabel(livesIcon);
-			livesLabel.add(liveLabel);
 			liveLabel.setVisible(true);
+			livesPanel.add(liveLabel);
 		}
-		livesLabel.repaint();
+		livesPanel.revalidate();
 	}
 
 	private void buildLives() {
-		livesLabel = new JLabel();
-		BoxLayout boxLayout = new BoxLayout(livesLabel, BoxLayout.LINE_AXIS);
-		livesLabel.setLayout(boxLayout);
-		Image livesImage = ImageLoader.LoadImage("player/infos/lives.gif");
+		livesPanel = new JPanel(true);
+		BoxLayout boxLayout = new BoxLayout(livesPanel, BoxLayout.LINE_AXIS);
+		livesPanel.setLayout(boxLayout);
+		Image livesImage = ImageLoader.LoadImageWithShortPath("/player/infos/lives.gif");
 		livesIcon = new ImageIcon(livesImage);
-		livesLabel.setVisible(true);
 		updateLives();
+		livesPanel.setVisible(true);
 	}
 
 	private void buildScore() {
@@ -81,6 +80,7 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 		timeLabel.setText(LocaleManager.getString(PlayerInfosStrings.TIME.getKey()));
 		timeLeftLabel = new JLabel();
 		timeLeftLabel.setBackground(Color.green);
+		timeLeftLabel.setVisible(true);
 	}
 
 	private Map<String, GridBagConstraints> buildConstraints() {
@@ -126,7 +126,7 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 		
 		
 		
-		infosPanel.add(livesLabel, constraints.get(LIVES));
+		infosPanel.add(livesPanel, constraints.get(LIVES));
 		infosPanel.add(scoresLabel, constraints.get(SCORE));
 		infosPanel.add(timeLeftLabel, constraints.get(TIME_LEFT));
 		infosPanel.add(timeLabel, constraints.get(TIME));
@@ -140,6 +140,12 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 		buildInfos();
 	}
 
+	private void checkBuild() {
+		if(!built) {
+			throw new RuntimeException("you should call build() before using this view.");
+		}
+	}
+	
 	private void updateScore() {
 		scoresLabel.setText(String.format("%s %i", 
 				LocaleManager.getString(PlayerInfosStrings.SCORE.getKey()), 
@@ -159,47 +165,52 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 	 */
 	public PlayerInfosView(PlayerModel model) {
 		this.model = model;
+		built = false;
 		model.addPropertyChangeListener(this);
 		gridBagConstraintsBuilder = new GridBagConstraintsBuilder();
-		buildTask = new FutureTask<Void>(() -> buildComponents(), null);
-		SwingUtilities.invokeLater(buildTask);
 	}
 
 	@Override
 	public JComponent getComponent() {
-		try {
-			buildTask.get();
-			return infosPanel;
-		} catch (InterruptedException | ExecutionException e) {
-			throw new RuntimeException(e);
-		}
+		checkBuild();
+		return infosPanel;
 	}
 	
 	@Override
 	public int getLayer() {
+		checkBuild();
 		return 0;
 	}
 
 	@Override
 	public void setParent(JComponent parent) {
+		checkBuild();
 		this.parent = parent;
 		timeLeftMaxSize = (int)Math.ceil(0.04 * this.parent.getWidth());
+	}
+
+	public void build() {
+		try {
+			SwingUtilities.invokeAndWait(this::buildComponents);
+			built = true;
+		} catch (InterruptedException | InvocationTargetException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		String propertyName = evt.getPropertyName();
-		
-		switch(propertyName) {
-			case "score":
-				updateScore();
-				break;
-			case "lives":
-				updateLives();
-				break;
-			case "remainingLiveTimeMs":
-				updateTimeLeft();
-				break;
+		switch (propertyName) {
+		case "score":
+			updateScore();
+			break;
+		case "lives":
+			updateLives();
+			break;
+		case "remainingLiveTimeMs":
+			updateTimeLeft();
+			break;
 		}
 	}
 }

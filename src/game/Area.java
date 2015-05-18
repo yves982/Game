@@ -38,6 +38,7 @@ public class Area implements IChildController, PropertyChangeListener {
 		this.kind = kind;
 		model = new AreaModel();
 		view = new AreaView(model);
+		view.build();
 		model.setImagePath(Paths.get(ResourcesManager.RESOURCES_BASE, kind.getImagePath()).toString());
 		view.addPropertyChangeListener(this);
 	}

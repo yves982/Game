@@ -6,10 +6,12 @@ import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
 
 import main.ui.IChildView;
 import utils.ui.ImageLoader;
@@ -29,6 +31,18 @@ public class ObstacleView implements IChildView, PropertyChangeListener {
 	private ObstacleModel model;
 	private JLabel obstacleLabel;
 	private PropertyChangeSupport modelChange;
+	private boolean built;
+
+	private void buildComponents() {
+		obstacleLabel = new JLabel();
+		obstacleLabel.setVisible(true);
+	}
+
+	private void checkBuild() {
+		if(!built) {
+			throw new RuntimeException("you should call build() before using this view.");
+		}
+	}
 
 	/**
 	 * Load the image and raise propertyChange for width and height properties:
@@ -65,19 +79,30 @@ public class ObstacleView implements IChildView, PropertyChangeListener {
 	 */
 	public ObstacleView(ObstacleModel model) {
 		this.model = model;
-		obstacleLabel = new JLabel();
+		built = false;
 		modelChange = new PropertyChangeSupport(model);
 		model.addPropertyChangeListener(this);
 	}
 
 	@Override
 	public JComponent getComponent() {
+		checkBuild();
 		return obstacleLabel;
 	}
 
 	@Override
 	public void setParent(JComponent parent) {
+		checkBuild();
 		this.parent = parent;
+	}
+
+	public void build() {
+		try {
+			SwingUtilities.invokeAndWait(this::buildComponents);
+			built = true;
+		} catch (InvocationTargetException | InterruptedException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override
