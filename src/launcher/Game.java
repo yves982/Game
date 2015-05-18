@@ -3,7 +3,6 @@ package launcher;
 import game.World;
 
 import java.util.Locale;
-import java.util.concurrent.ExecutionException;
 
 import lang.LocaleManager;
 import menu.MainMenuController;

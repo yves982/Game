@@ -8,7 +8,6 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -32,7 +31,6 @@ import utils.ui.ImageLoader;
 public class AreaView implements IChildView, PropertyChangeListener {
 	private JComponent parent;
 	private JLabel areaLabel;
-	private FutureTask<Void> buildTask;
 	private AreaModel model;
 	private PropertyChangeSupport modelChange;
 	private boolean built;
