@@ -8,7 +8,6 @@ import game.ui.PlayerView;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -17,7 +16,6 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import main.ILayeredChildrenController;
-import main.ResourcesManager;
 import main.ui.ILayeredChildView;
 
 /**
@@ -41,13 +39,13 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	private PropertyChangeSupport propertyChange;
 	
 	private void fillChildrenView() {
-		childrenView.add(infosView);
 		childrenView.add(playerView);
+		childrenView.add(infosView);
 	}
 
 	private void builModel(int maxLives, int maxLeftTimeMs) {
 		model = new PlayerModel();
-		model.setImagePath(Paths.get(ResourcesManager.RESOURCES_BASE, "/player/player.png").toString());
+		model.setImagePath("/player/player.png");
 		model.setLives(maxLives);
 		model.setMaxLiveTimeMs(maxLeftTimeMs);
 		model.setRemainingLiveTimeMs(maxLeftTimeMs);

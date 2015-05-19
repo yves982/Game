@@ -63,9 +63,10 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 		livesPanel = new JPanel(true);
 		BoxLayout boxLayout = new BoxLayout(livesPanel, BoxLayout.LINE_AXIS);
 		livesPanel.setLayout(boxLayout);
-		Image livesImage = ImageLoader.LoadImageWithShortPath("/player/infos/lives.gif");
+		Image livesImage = ImageLoader.LoadImage("/player/infos/lives.gif");
 		livesIcon = new ImageIcon(livesImage);
 		updateLives();
+		livesPanel.setOpaque(false);
 		livesPanel.setVisible(true);
 	}
 
@@ -130,6 +131,7 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 		infosPanel.add(scoresLabel, constraints.get(SCORE));
 		infosPanel.add(timeLeftLabel, constraints.get(TIME_LEFT));
 		infosPanel.add(timeLabel, constraints.get(TIME));
+		infosPanel.setOpaque(false);
 		infosPanel.setVisible(true);
 	}
 
@@ -179,7 +181,7 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 	@Override
 	public int getLayer() {
 		checkBuild();
-		return 0;
+		return 1;
 	}
 
 	@Override

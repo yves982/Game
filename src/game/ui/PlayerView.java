@@ -88,7 +88,7 @@ public class PlayerView implements ILayeredChildView, PropertyChangeListener {
 	}
 
 	private void collide() {
-		Image collisionImage = ImageLoader.LoadImageWithShortPath("/player/collision.png");
+		Image collisionImage = ImageLoader.LoadImage("/player/collision.png");
 		ImageIcon collisionIcon = new ImageIcon(collisionImage);
 		playerLabel.setIcon(collisionIcon);
 	}

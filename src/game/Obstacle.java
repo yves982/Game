@@ -6,10 +6,8 @@ import game.ui.ObstacleView;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.nio.file.Paths;
 
 import main.IChildController;
-import main.ResourcesManager;
 import main.ui.IChildView;
 
 /**
@@ -37,7 +35,7 @@ public class Obstacle implements IChildController, PropertyChangeListener {
 		model = new ObstacleModel();
 		view = new ObstacleView(model);
 		view.build();
-		model.setImagePath(Paths.get(ResourcesManager.RESOURCES_BASE, kind.getImagePath()).toString());
+		model.setImagePath(kind.getImagePath());
 		view.addPropertyChangeListener(this);
 	}
 	

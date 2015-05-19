@@ -5,10 +5,8 @@ import game.ui.AreaView;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.nio.file.Paths;
 
 import main.IChildController;
-import main.ResourcesManager;
 import main.ui.IChildView;
 
 /**
@@ -39,7 +37,7 @@ public class Area implements IChildController, PropertyChangeListener {
 		model = new AreaModel();
 		view = new AreaView(model);
 		view.build();
-		model.setImagePath(Paths.get(ResourcesManager.RESOURCES_BASE, kind.getImagePath()).toString());
+		model.setImagePath(kind.getImagePath());
 		view.addPropertyChangeListener(this);
 	}
 	

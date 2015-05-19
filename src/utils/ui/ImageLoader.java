@@ -2,7 +2,7 @@ package utils.ui;
 
 import java.awt.Image;
 import java.io.IOException;
-import java.nio.file.Paths;
+import java.net.URL;
 
 import javax.imageio.ImageIO;
 
@@ -20,15 +20,11 @@ public class ImageLoader {
 	public static Image LoadImage(String imagePath) {
 		try
 		{
-			return ImageIO.read(Paths.get(imagePath).toUri().toURL());
-		} catch(IOException ioe) {
-			ioe.printStackTrace();
-			throw new RuntimeException(ioe);
+			URL fileUrl = ImageLoader.class.getClass().getResource(ResourcesManager.RESOURCES_BASE + imagePath);
+			return ImageIO.read(fileUrl);
+		} catch(IOException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
-	}
-
-	public static Image LoadImageWithShortPath(String shortPath) {
-		String fullPath = Paths.get(ResourcesManager.RESOURCES_BASE, shortPath).toString();
-		return LoadImage(fullPath);
 	}
 }

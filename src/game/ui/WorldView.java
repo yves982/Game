@@ -59,8 +59,8 @@ public class WorldView implements IChildView, ILayeredParentView {
 		mainPanel = new JLayeredPane();
 		mainPanel.setLayout(null);
 		mainPanel.setDoubleBuffered(true);
-		mainPanel.add(backgroundPanel, 1);
 		mainPanel.add(foregroundPanel, 0);
+		mainPanel.add(backgroundPanel, 1);
 		mainPanel.setVisible(true);
 		mainPanel.setFocusable(true);
 		mainPanel.requestFocus();
@@ -139,15 +139,15 @@ public class WorldView implements IChildView, ILayeredParentView {
 		childViews.add(childView);
 		switch(layer) {
 			case 0:
-				backgroundPanel.add(childView.getComponent());
-				backgroundPanel.revalidate();
-				break;
-			case 1:
 				foregroundPanel.add(childView.getComponent());
 				foregroundPanel.revalidate();
 				break;
+			case 1:
+				backgroundPanel.add(childView.getComponent());
+				backgroundPanel.revalidate();
+				break;
 		}
-		mainPanel.repaint();
+		mainPanel.revalidate();
 	}
 
 	@Override
