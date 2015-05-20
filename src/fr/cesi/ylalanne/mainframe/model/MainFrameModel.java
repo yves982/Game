@@ -1,7 +1,7 @@
 package fr.cesi.ylalanne.mainframe.model;
 
 
-public class MainMenuModel {
+public class MainFrameModel {
 	private MainMenuItemModel start;
 	private MainMenuItemModel highScores;
 	private MainMenuItemModel settings;

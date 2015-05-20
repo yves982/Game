@@ -2,6 +2,7 @@ package fr.cesi.ylalanne.game.ui;
 
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.lang.reflect.InvocationTargetException;
@@ -134,7 +135,7 @@ public class WorldView implements IChildView, ILayeredParentView {
 	@Override
 	public void addChild(IChildView childView, int layer) {
 		checkBuild();
-		childView.setParent(mainPanel);
+		childView.setParent(mainPanel, mainPanel.getSize());
 		childViews.add(childView);
 		switch(layer) {
 			case 0:
@@ -155,20 +156,15 @@ public class WorldView implements IChildView, ILayeredParentView {
 		return mainPanel;
 	}
 	
-	/**
-	 * <p>
-	 * the WorldView has no width and height properties, but that's not a problem for a one time event (per instance)
-	 * </p>
-	 */
 	@Override
-	public void setParent(Container container) {
+	public void setParent(Container container, Dimension availableSize) {
 		checkBuild();
 		this.parent = container;
-		foregroundPanel.setSize(this.parent.getSize());
-		backgroundPanel.setSize(this.parent.getSize());
-		mainPanel.setSize(this.parent.getSize());
-		propertyChange.firePropertyChange("width", 0, this.parent.getWidth());
-		propertyChange.firePropertyChange("height", 0, this.parent.getHeight());
+		foregroundPanel.setSize(availableSize);
+		backgroundPanel.setSize(availableSize);
+		mainPanel.setSize(availableSize);
+		propertyChange.firePropertyChange("width", 0, availableSize.width);
+		propertyChange.firePropertyChange("height", 0, availableSize.height);
 	}
 
 	@Override

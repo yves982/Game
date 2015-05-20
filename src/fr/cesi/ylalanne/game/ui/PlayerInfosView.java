@@ -1,16 +1,8 @@
 package fr.cesi.ylalanne.game.ui;
 
-import fr.cesi.ylalanne.contracts.ui.ILayeredChildView;
-import fr.cesi.ylalanne.game.model.PlayerInfosStrings;
-import fr.cesi.ylalanne.game.model.PlayerModel;
-import fr.cesi.ylalanne.lang.LocaleManager;
-import fr.cesi.ylalanne.utils.ui.GridBagConstraintsAnchor;
-import fr.cesi.ylalanne.utils.ui.GridBagConstraintsBuilder;
-import fr.cesi.ylalanne.utils.ui.GridBagConstraintsFill;
-import fr.cesi.ylalanne.utils.ui.ImageLoader;
-
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
@@ -21,12 +13,21 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+
+import fr.cesi.ylalanne.contracts.ui.ILayeredChildView;
+import fr.cesi.ylalanne.game.model.PlayerInfosStrings;
+import fr.cesi.ylalanne.game.model.PlayerModel;
+import fr.cesi.ylalanne.lang.LocaleManager;
+import fr.cesi.ylalanne.utils.ui.GridBagConstraintsAnchor;
+import fr.cesi.ylalanne.utils.ui.GridBagConstraintsBuilder;
+import fr.cesi.ylalanne.utils.ui.ImageLoader;
 
 /**
  * a view for player infos, this one does not raise events as it's inputless
@@ -108,8 +109,9 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 		
 		GridBagConstraints timeLeftConstraint = gridBagConstraintsBuilder
 				.position(1, 1)
-				.weight(1, 1)
+				.weight(26, 1)
 				.margins(0, 0, 4, 0)
+				.anchor(GridBagConstraintsAnchor.LAST_LINE_END)
 				.build();
 		constraints.put(TIME_LEFT, timeLeftConstraint);
 		
@@ -164,7 +166,13 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 		double timeLeftMs = model.getRemainingLiveTimeMs();
 		double totalTimeMs = model.getMaxLiveTimeMs();
 		int currentWidth = (int)Math.ceil(timeLeftMaxSize * (timeLeftMs / totalTimeMs));
-		timeLeftLabel.setSize(currentWidth , 12);
+		timeLeftLabel.setPreferredSize(new Dimension(currentWidth , 12));
+		timeLeftLabel.setSize(currentWidth, 12);
+	}
+
+	private void updateLiveless() {
+		infosPanel.remove(timeLeftLabel);
+		infosPanel.revalidate();
 	}
 
 	/**
@@ -191,7 +199,7 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 	}
 
 	@Override
-	public void setParent(Container container) {
+	public void setParent(Container container, Dimension availableSize) {
 		checkBuild();
 		this.parent = container;
 		timeLeftMaxSize = (int)Math.ceil(0.04 * this.parent.getWidth());
@@ -220,6 +228,8 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 		case "remainingLiveTimeMs":
 			updateTimeLeft();
 			break;
+		case "liveless":
+			updateLiveless();
 		}
 	}
 }

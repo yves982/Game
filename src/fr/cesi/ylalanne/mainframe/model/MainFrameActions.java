@@ -1,6 +1,6 @@
 package fr.cesi.ylalanne.mainframe.model;
 
-public enum MainMenuActions {
+public enum MainFrameActions {
 	
 	START("MainFrame.menu_start"),
 	HIGH_SCORE("MainFrame.menu_highscores"),
@@ -9,7 +9,7 @@ public enum MainMenuActions {
 	
 	private String key;
 	
-	MainMenuActions(String key) {
+	MainFrameActions(String key) {
 		this.key = key;
 	}
 	

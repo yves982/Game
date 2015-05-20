@@ -1,10 +1,7 @@
 package fr.cesi.ylalanne.game.ui;
 
-import fr.cesi.ylalanne.contracts.ui.IChildView;
-import fr.cesi.ylalanne.game.model.AreaModel;
-import fr.cesi.ylalanne.utils.ui.ImageLoader;
-
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -17,6 +14,10 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
+
+import fr.cesi.ylalanne.contracts.ui.IChildView;
+import fr.cesi.ylalanne.game.model.AreaModel;
+import fr.cesi.ylalanne.utils.ui.ImageLoader;
 
 /**
  * A view for an Area, inputless, but generate data by loading model's image
@@ -99,7 +100,7 @@ public class AreaView implements IChildView, PropertyChangeListener {
 	}
 
 	@Override
-	public void setParent(Container container) {
+	public void setParent(Container container, Dimension availableSize) {
 		checkBuild();
 		this.parent = container;
 	}

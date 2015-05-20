@@ -6,7 +6,7 @@ public class MainMenuItemModel extends DefaultButtonModel {
 	private static final long serialVersionUID = -987726507584486451L;
 	private String value;
 	private int mnemonic;
-	private MainMenuActions action;
+	private MainFrameActions action;
 	
 	
 	/**
@@ -36,13 +36,13 @@ public class MainMenuItemModel extends DefaultButtonModel {
 	/**
 	 * @return the action
 	 */
-	public MainMenuActions getAction() {
+	public MainFrameActions getAction() {
 		return action;
 	}
 	/**
 	 * @param action the action to set
 	 */
-	public void setAction(MainMenuActions action) {
+	public void setAction(MainFrameActions action) {
 		this.action = action;
 	}
 }

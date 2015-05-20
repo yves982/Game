@@ -74,6 +74,7 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 			Object oldLifeLess = lifeLess;
 			lifeLess = true;
 			propertyChange.firePropertyChange("lifeLess", oldLifeLess , true);
+			model.setRemainingLiveTimeMs(0);
 			scheduled.shutdown();
 			countDownFuture.cancel(true);
 		}

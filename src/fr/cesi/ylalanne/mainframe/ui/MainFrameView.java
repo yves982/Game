@@ -1,6 +1,7 @@
 package fr.cesi.ylalanne.mainframe.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
@@ -17,22 +18,22 @@ import javax.swing.SwingUtilities;
 
 import fr.cesi.ylalanne.contracts.ui.IChildView;
 import fr.cesi.ylalanne.contracts.ui.IParentView;
+import fr.cesi.ylalanne.mainframe.model.MainFrameModel;
 import fr.cesi.ylalanne.mainframe.model.MainMenuItemModel;
-import fr.cesi.ylalanne.mainframe.model.MainMenuModel;
 import fr.cesi.ylalanne.utils.ui.ComponentLocation;
 
 /**
- * The fr.cesi.ylalanne.contracts fr.cesi.ylalanne.mainframe View
+ * The main frame View
  * <p>It has the following bound properties:</p>
  * <ul>
  * 	<li>action</li>
  * </ul>
  */
-public class MainMenuView implements IParentView, ActionListener {
+public class MainFrameView implements IParentView, ActionListener {
 	private JFrame frame;
 	private JMenuBar menuBar;
 	private JMenu menu;
-	private MainMenuModel viewModel;
+	private MainFrameModel viewModel;
 	private PropertyChangeSupport propertyChange;
 	private JMenuItem startMenuItem;
 	private JMenuItem highScoreMenuItem;
@@ -95,7 +96,7 @@ public class MainMenuView implements IParentView, ActionListener {
 		frame.setLocation(ComponentLocation.getCenteredLocation(frame));
 	}
 
-	public MainMenuView(MainMenuModel viewModel) {
+	public MainFrameView(MainFrameModel viewModel) {
 		this.viewModel = viewModel;
 		propertyChange = new PropertyChangeSupport(this);
 	}
@@ -113,7 +114,9 @@ public class MainMenuView implements IParentView, ActionListener {
 	
 	@Override
 	public void addChild(IChildView child){
-		child.setParent(frame.getContentPane());
+		Container contentPane = frame.getContentPane();
+		Dimension availableSize = new Dimension(contentPane.getWidth(), contentPane.getHeight() - menuBar.getHeight());
+		child.setParent(contentPane, availableSize);
 		frame.add(child.getComponent());
 		frame.pack();
 	}

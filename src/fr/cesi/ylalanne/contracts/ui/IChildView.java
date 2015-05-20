@@ -1,6 +1,7 @@
 package fr.cesi.ylalanne.contracts.ui;
 
 import java.awt.Container;
+import java.awt.Dimension;
 
 import javax.swing.JComponent;
 
@@ -28,6 +29,7 @@ public interface IChildView extends IView {
 	 * <b>Note:</b> {@code setParent} should be called before {@code getComponent}.
 	 * </p>
 	 * @param container the container that'll contains this view.
+	 * @param availableSize the available size for this view
 	 */
-	void setParent(Container container);
+	void setParent(Container container, Dimension availableSize);
 }

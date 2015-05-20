@@ -5,6 +5,7 @@ import fr.cesi.ylalanne.game.model.ObstacleModel;
 import fr.cesi.ylalanne.utils.ui.ImageLoader;
 
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -89,7 +90,7 @@ public class ObstacleView implements IChildView, PropertyChangeListener {
 	}
 
 	@Override
-	public void setParent(Container container) {
+	public void setParent(Container container, Dimension availableSize) {
 		checkBuild();
 		this.parent = container;
 	}
