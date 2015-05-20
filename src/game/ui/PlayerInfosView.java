@@ -4,6 +4,7 @@ import game.model.PlayerInfosStrings;
 import game.model.PlayerModel;
 
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
@@ -25,13 +26,14 @@ import lang.LocaleManager;
 import main.ui.ILayeredChildView;
 import utils.ui.GridBagConstraintsAnchor;
 import utils.ui.GridBagConstraintsBuilder;
+import utils.ui.GridBagConstraintsFill;
 import utils.ui.ImageLoader;
 
 /**
  * a view for player infos, this one does not raise events as it's inputless
  */
 public class PlayerInfosView implements ILayeredChildView, PropertyChangeListener {
-	private JComponent parent;
+	private Container parent;
 	private JPanel infosPanel;
 	private JPanel livesPanel;
 	private JLabel scoresLabel;
@@ -79,8 +81,10 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 	private void buildTime() {
 		timeLabel = new JLabel();
 		timeLabel.setText(LocaleManager.getString(PlayerInfosStrings.TIME.getKey()));
+		timeLabel.setVisible(true);
 		timeLeftLabel = new JLabel();
 		timeLeftLabel.setBackground(Color.green);
+		timeLeftLabel.setOpaque(true);
 		timeLeftLabel.setVisible(true);
 	}
 
@@ -89,29 +93,33 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 		
 		GridBagConstraints livesConstraint = gridBagConstraintsBuilder
 				.position(0, 0)
-				.weight(1, 1)
-				.anchor(GridBagConstraintsAnchor.FIRST_LINE_START)
+				.weight(1, 32)
+				.margins(0, 0, 2, 4)
+				.anchor(GridBagConstraintsAnchor.LAST_LINE_START)
 				.build();
 		constraints.put(LIVES, livesConstraint);
 		
 		GridBagConstraints scoreConstraint = gridBagConstraintsBuilder
 				.position(0, 1)
 				.weight(1, 1)
-				.anchor(GridBagConstraintsAnchor.BELOW_BASELINE_TRAILING)
+				.margins(0, 0, 4, 4)
+				.anchor(GridBagConstraintsAnchor.LAST_LINE_START)
 				.build();
 		constraints.put(SCORE, scoreConstraint);
 		
 		GridBagConstraints timeLeftConstraint = gridBagConstraintsBuilder
 				.position(1, 1)
 				.weight(1, 1)
-				.anchor(GridBagConstraintsAnchor.BASELINE)
+				.margins(0, 4, 4, 0)
+				.anchor(GridBagConstraintsAnchor.LAST_LINE_END)
 				.build();
 		constraints.put(TIME_LEFT, timeLeftConstraint);
 		
 		GridBagConstraints timeConstraint = gridBagConstraintsBuilder
 				.position(2, 1)
 				.weight(1, 1)
-				.anchor(GridBagConstraintsAnchor.FIRST_LINE_END)
+				.margins(0, 4, 4, 0)
+				.anchor(GridBagConstraintsAnchor.LAST_LINE_END)
 				.build();
 		constraints.put(TIME, timeConstraint);
 		
@@ -158,7 +166,7 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 		double timeLeftMs = model.getRemainingLiveTimeMs();
 		double totalTimeMs = model.getMaxLiveTimeMs();
 		int currentWidth = (int)Math.ceil(timeLeftMaxSize * (timeLeftMs / totalTimeMs));
-		timeLeftLabel.setSize(currentWidth , timeLeftLabel.getHeight());
+		timeLeftLabel.setSize(currentWidth , 12);
 	}
 
 	/**
@@ -185,9 +193,9 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 	}
 
 	@Override
-	public void setParent(JComponent parent) {
+	public void setParent(Container container) {
 		checkBuild();
-		this.parent = parent;
+		this.parent = container;
 		timeLeftMaxSize = (int)Math.ceil(0.04 * this.parent.getWidth());
 	}
 

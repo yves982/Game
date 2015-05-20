@@ -1,4 +1,4 @@
-package menu.ui;
+package mainframe.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -17,12 +17,12 @@ import javax.swing.SwingUtilities;
 
 import main.ui.IChildView;
 import main.ui.IParentView;
-import menu.model.MainMenuItemModel;
-import menu.model.MainMenuModel;
+import mainframe.model.MainMenuItemModel;
+import mainframe.model.MainMenuModel;
 import utils.ui.ComponentLocation;
 
 /**
- * The main menu View
+ * The main mainframe View
  * <p>
  * It has the following bound properties:
  * <ul>
@@ -115,7 +115,7 @@ public class MainMenuView implements IParentView, ActionListener {
 	
 	@Override
 	public void addChild(IChildView child){
-		child.setParent(frame.getRootPane());
+		child.setParent(frame.getContentPane());
 		frame.add(child.getComponent());
 		frame.pack();
 	}

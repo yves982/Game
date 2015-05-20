@@ -1,5 +1,7 @@
 package main.ui;
 
+import java.awt.Container;
+
 import javax.swing.JComponent;
 
 /**
@@ -25,7 +27,7 @@ public interface IChildView extends IView {
 	 * <p>
 	 * <b>Note:</b> {@code setParent} should be called before {@code getComponent}.
 	 * </p>
-	 * @param parent the component that'll contains this view.
+	 * @param container the container that'll contains this view.
 	 */
-	void setParent(JComponent parent);
+	void setParent(Container container);
 }

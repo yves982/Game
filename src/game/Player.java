@@ -53,17 +53,19 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 
 	private void countDown() {
 		int remainingLiveTimeMs = model.getRemainingLiveTimeMs();
-		remainingLiveTimeMs -= 50;
-		model.setRemainingLiveTimeMs(remainingLiveTimeMs);
-		if(remainingLiveTimeMs == 0) {
+		remainingLiveTimeMs -= 300;
+		
+		if(remainingLiveTimeMs < 300) {
 			countDownFuture.cancel(true);
 			dies();
 			restartCountDown();
+		} else {
+			model.setRemainingLiveTimeMs(remainingLiveTimeMs);
 		}
 	}
 
 	private void restartCountDown() {
-		countDownFuture = scheduled.scheduleAtFixedRate(this::countDown, 0, 50, TimeUnit.MILLISECONDS);
+		countDownFuture = scheduled.scheduleAtFixedRate(this::countDown, 0, 300, TimeUnit.MILLISECONDS);
 	}
 
 	private void dies() {

@@ -1,4 +1,4 @@
-package menu;
+package mainframe;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -7,11 +7,11 @@ import javax.swing.JOptionPane;
 
 import lang.LocaleManager;
 import main.IRunnableChildController;
-import menu.model.MainMenuActions;
-import menu.model.MainMenuItemModel;
-import menu.model.MainMenuModel;
-import menu.model.MainMenuStrings;
-import menu.ui.MainMenuView;
+import mainframe.model.MainMenuActions;
+import mainframe.model.MainMenuItemModel;
+import mainframe.model.MainMenuModel;
+import mainframe.model.MainMenuStrings;
+import mainframe.ui.MainMenuView;
 import settings.SettingsController;
 
 public class MainMenuController implements PropertyChangeListener {

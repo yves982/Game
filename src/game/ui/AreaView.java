@@ -2,6 +2,7 @@ package game.ui;
 
 import game.model.AreaModel;
 
+import java.awt.Container;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -29,7 +30,7 @@ import utils.ui.ImageLoader;
  * </p>
  */
 public class AreaView implements IChildView, PropertyChangeListener {
-	private JComponent parent;
+	private Container parent;
 	private JLabel areaLabel;
 	private AreaModel model;
 	private PropertyChangeSupport modelChange;
@@ -101,9 +102,9 @@ public class AreaView implements IChildView, PropertyChangeListener {
 	}
 
 	@Override
-	public void setParent(JComponent parent) {
+	public void setParent(Container container) {
 		checkBuild();
-		this.parent = parent;
+		this.parent = container;
 	}
 
 	public void build() {

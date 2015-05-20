@@ -5,7 +5,7 @@ import game.World;
 import java.util.Locale;
 
 import lang.LocaleManager;
-import menu.MainMenuController;
+import mainframe.MainMenuController;
 
 public class Game {
 

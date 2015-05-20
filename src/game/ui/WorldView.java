@@ -1,6 +1,7 @@
 package game.ui;
 
 import java.awt.Color;
+import java.awt.Container;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.lang.reflect.InvocationTargetException;
@@ -31,7 +32,7 @@ public class WorldView implements IChildView, ILayeredParentView {
 	private JLayeredPane mainPanel;
 	private JPanel backgroundPanel;
 	private JPanel foregroundPanel;
-	private JComponent parent;
+	private Container parent;
 	private PropertyChangeSupport propertyChange;
 	private boolean built;
 	
@@ -162,13 +163,14 @@ public class WorldView implements IChildView, ILayeredParentView {
 	 * </p>
 	 */
 	@Override
-	public void setParent(JComponent parent) {
+	public void setParent(Container container) {
 		checkBuild();
-		this.parent = parent;
+		this.parent = container;
 		foregroundPanel.setSize(this.parent.getSize());
 		backgroundPanel.setSize(this.parent.getSize());
-		propertyChange.firePropertyChange("width", 0, parent.getWidth());
-		propertyChange.firePropertyChange("height", 0, parent.getHeight());
+		mainPanel.setSize(this.parent.getSize());
+		propertyChange.firePropertyChange("width", 0, this.parent.getWidth());
+		propertyChange.firePropertyChange("height", 0, this.parent.getHeight());
 	}
 
 	@Override

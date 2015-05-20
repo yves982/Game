@@ -1,4 +1,4 @@
-package menu.model;
+package mainframe.model;
 
 import javax.swing.DefaultButtonModel;
 

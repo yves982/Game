@@ -2,6 +2,7 @@ package game.ui;
 
 import game.model.ObstacleModel;
 
+import java.awt.Container;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -27,7 +28,7 @@ import utils.ui.ImageLoader;
  * </p>
  */
 public class ObstacleView implements IChildView, PropertyChangeListener {
-	private JComponent parent;
+	private Container parent;
 	private ObstacleModel model;
 	private JLabel obstacleLabel;
 	private PropertyChangeSupport modelChange;
@@ -91,9 +92,9 @@ public class ObstacleView implements IChildView, PropertyChangeListener {
 	}
 
 	@Override
-	public void setParent(JComponent parent) {
+	public void setParent(Container container) {
 		checkBuild();
-		this.parent = parent;
+		this.parent = container;
 	}
 
 	public void build() {

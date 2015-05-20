@@ -3,6 +3,7 @@ package game.ui;
 import game.model.PlayerModel;
 import game.model.geom.MutableRectangle;
 
+import java.awt.Container;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -31,7 +32,7 @@ import utils.ui.ImageLoader;
  */
 public class PlayerView implements ILayeredChildView, PropertyChangeListener {
 	private PlayerModel model;
-	private JComponent parent;
+	private Container parent;
 	private JLabel playerLabel;
 	private PropertyChangeSupport modelChange;
 	private boolean built;
@@ -117,9 +118,9 @@ public class PlayerView implements ILayeredChildView, PropertyChangeListener {
 	}
 
 	@Override
-	public void setParent(JComponent parent) {
+	public void setParent(Container container) {
 		checkBuild();
-		this.parent = parent;
+		this.parent = container;
 	}
 
 	public void build() {
