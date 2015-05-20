@@ -1,0 +1,19 @@
+package fr.cesi.ylalanne.mainframe.model;
+
+public enum MainMenuActions {
+	
+	START("MainFrame.menu_start"),
+	HIGH_SCORE("MainFrame.menu_highscores"),
+	SETTINGS("MainFrame.menu_options"),
+	QUIT("MainFrame.menu_quit");
+	
+	private String key;
+	
+	MainMenuActions(String key) {
+		this.key = key;
+	}
+	
+	public String getKey() {
+		return key;
+	}
+}
