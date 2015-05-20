@@ -4,6 +4,8 @@ import fr.cesi.ylalanne.contracts.ILayeredChildrenController;
 import fr.cesi.ylalanne.contracts.ui.ILayeredChildView;
 import fr.cesi.ylalanne.game.model.PlayerModel;
 import fr.cesi.ylalanne.game.model.geom.MutableRectangle;
+import fr.cesi.ylalanne.game.ui.MoveRequestEvent;
+import fr.cesi.ylalanne.game.ui.MovesListener;
 import fr.cesi.ylalanne.game.ui.PlayerInfosView;
 import fr.cesi.ylalanne.game.ui.PlayerView;
 
@@ -27,6 +29,7 @@ import java.util.concurrent.TimeUnit;
 public class Player implements ILayeredChildrenController, PropertyChangeListener {
 	private PlayerModel model;
 	private PlayerView playerView;
+	private MovesListener movesListener;
 	private PlayerInfosView infosView;
 	private Obstacle collider;
 	private ScheduledFuture<?> countDownFuture;
@@ -40,11 +43,12 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 		childrenView.add(infosView);
 	}
 
-	private void builModel(int maxLives, int maxLeftTimeMs) {
+	private void builModel(int maxLives, int maxLeftTimeMs, int movesStep) {
 		model.setImagePath("/player/player.png");
 		model.setLives(maxLives);
 		model.setMaxLiveTimeMs(maxLeftTimeMs);
 		model.setRemainingLiveTimeMs(maxLeftTimeMs);
+		model.setMovesStep(movesStep);
 	}
 
 	private void countDown() {
@@ -87,19 +91,35 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 		model.getArea().setHeight(height);
 	}
 
+	private void handleMoves() {
+		int movesStep = model.getMovesStep();
+		movesListener.defineHandler(MoveRequestEvent.UP, () -> move(0, -movesStep));
+		movesListener.defineHandler(MoveRequestEvent.UP, () -> move(0, 0), false);
+		movesListener.defineHandler(MoveRequestEvent.DOWN, () -> move(0, movesStep));
+		movesListener.defineHandler(MoveRequestEvent.DOWN, () -> move(0, 0));
+		movesListener.defineHandler(MoveRequestEvent.RIGHT, () -> move(movesStep, 0));
+		movesListener.defineHandler(MoveRequestEvent.RIGHT, () -> move(0, 0), false);
+		movesListener.defineHandler(MoveRequestEvent.LEFT, () -> move(-movesStep, 0));
+		movesListener.defineHandler(MoveRequestEvent.LEFT, () -> move(0, 0));
+		
+		playerView.addKeyListener(movesListener);
+	}
+
 	/**
 	 * Initialize a Player
 	 * @param maxLives the maximum number of lives before the fr.cesi.ylalanne.game is over
 	 * @param maxLeftTimeMs the maximum time every life can last (in milliseconds)
+	 * @param movesStep the step for all moves
 	 */
-	public Player(int maxLives, int maxLeftTimeMs) {
+	public Player(int maxLives, int maxLeftTimeMs, int movesStep) {
 		childrenView = new ArrayList<ILayeredChildView>();
+		movesListener = new MovesListener();
 		model = new PlayerModel();
 		infosView = new PlayerInfosView(model);
 		infosView.build();
 		playerView = new PlayerView(model);
 		playerView.build();
-		builModel(maxLives, maxLeftTimeMs);
+		builModel(maxLives, maxLeftTimeMs, movesStep);
 		fillChildrenView();
 		propertyChange = new PropertyChangeSupport(this);
 		scheduled = Executors.newSingleThreadScheduledExecutor();
@@ -124,6 +144,7 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	 */
 	public void lives() {
 		restartCountDown();
+		handleMoves();
 	}
 	
 	/**

@@ -3,6 +3,7 @@ package fr.cesi.ylalanne.game.ui;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Image;
+import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -130,6 +131,22 @@ public class PlayerView implements ILayeredChildView, PropertyChangeListener {
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
+	}
+
+	/**
+	 * @param l the {@code KeyListener} to add
+	 * @see java.awt.Component#addKeyListener(java.awt.event.KeyListener)
+	 */
+	public void addKeyListener(KeyListener l) {
+		parent.addKeyListener(l);
+	}
+
+	/**
+	 * @param l the {@code KeyListener} to remove
+	 * @see java.awt.Component#removeKeyListener(java.awt.event.KeyListener)
+	 */
+	public void removeKeyListener(KeyListener l) {
+		parent.removeKeyListener(l);
 	}
 
 	@Override

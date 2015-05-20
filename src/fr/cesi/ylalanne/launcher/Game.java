@@ -17,7 +17,12 @@ public class Game {
 		
 		try {
 			controller.start();
-			generator.spawnWorld();
+			int [] xSteps = new int[] {
+					5,5,5,5,
+					5,5,5,5,
+					5,5,5
+			};
+			generator.spawnWorld(xSteps);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

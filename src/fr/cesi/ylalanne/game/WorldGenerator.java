@@ -22,8 +22,8 @@ public class WorldGenerator {
 		rows = new ArrayList<Range<Integer>>(rowCount);
 		int worldHeight = world.getHeight();
 		double freeHeightPerRow = (worldHeight - areasSpace) / rowCount;
-		int rowSpace = (int)Math.ceil( 0.95 * freeHeightPerRow );
-		int interRowSpace = (int)Math.ceil(0.04 * freeHeightPerRow);
+		int rowSpace = (int)Math.ceil( 0.78 * freeHeightPerRow );
+		int interRowSpace = (int)Math.ceil(0.12 * freeHeightPerRow);
 		int start=0, end=rowSpace;
 		
 		for(int i=0; i<rowCount; i++) {
@@ -35,10 +35,10 @@ public class WorldGenerator {
 		}
 	}
 
-	private void buildRowXSteps(int rowCount) {
-		rowXSteps = new ArrayList<Integer>(rowCount);
-		for(int i=0; i < rowCount; i++) {
-			rowXSteps.add(5);
+	private void buildRowXSteps(int ... xSteps) {
+		rowXSteps = new ArrayList<Integer>(xSteps.length);
+		for(int i=0; i < xSteps.length; i++) {
+			rowXSteps.add(xSteps[i]);
 		}
 	}
 
@@ -87,20 +87,25 @@ public class WorldGenerator {
 	 * @return the generated {@link Player}
 	 */
 	public Player generatePlayer(int maxLives, int maxLeftTimeMs, int row) {
-		Player player = new Player(maxLives, maxLeftTimeMs);
+		Player player = new Player(maxLives, maxLeftTimeMs, 5);
 		int startX = world.getWidth()/2 - player.getWidth()/2;
-		int startY = (int)(Math.floor(rows.get(row - 1).size())) / 2 - player.getHeight()/2;
+		int startY = (int)Math.ceil(
+				rows.get(row -1).getStart() 
+				+ (rows.get(row -1).size() / 6.5d) 
+				+ (player.getHeight()/2.0d));
+		
 		player.startPosition(startX, startY);
 		return player;
 	}
 	
 	/**
 	 * Spawn this world
+	 * @param xSteps steps for automatic obstacle moves : we need one int per row
 	 */
-	public void spawnWorld() {
-		buildRowXSteps(11);
+	public void spawnWorld(int ... xSteps) {
+		buildRowXSteps(xSteps); 
 		buildRows();
-		Player player = generatePlayer(3, 4000, 1);
+		Player player = generatePlayer(3, 4000, 11);
 		world.setPlayer(player);
 		player.lives();
 	}

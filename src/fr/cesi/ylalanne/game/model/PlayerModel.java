@@ -26,6 +26,7 @@ public class PlayerModel {
 	private int lives;
 	private int remainingLiveTimeMs;
 	private int maxLiveTimeMs;
+	private int movesStep;
 	private PropertyChangeSupport propertyChange;
 	
 	public PlayerModel() {
@@ -130,6 +131,19 @@ public class PlayerModel {
 	 */
 	public void setMaxLiveTimeMs(int maxLiveTimeMs) {
 		this.maxLiveTimeMs = maxLiveTimeMs;
+	}
+
+	/**
+	 * @return the movesStep
+	 */
+	public int getMovesStep() {
+		return movesStep;
+	}
+	/**
+	 * @param movesStep the movesStep to set
+	 */
+	public void setMovesStep(int movesStep) {
+		this.movesStep = movesStep;
 	}
 
 	/**
