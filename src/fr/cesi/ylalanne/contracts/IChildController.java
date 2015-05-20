@@ -1,5 +1,5 @@
-package fr.cesi.ylalanne.main;
-import fr.cesi.ylalanne.main.ui.IChildView;
+package fr.cesi.ylalanne.contracts;
+import fr.cesi.ylalanne.contracts.ui.IChildView;
 
 /**
  * a Controller with an {@code IChildView}

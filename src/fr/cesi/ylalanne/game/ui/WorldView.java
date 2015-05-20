@@ -14,8 +14,8 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import fr.cesi.ylalanne.main.ui.IChildView;
-import fr.cesi.ylalanne.main.ui.ILayeredParentView;
+import fr.cesi.ylalanne.contracts.ui.IChildView;
+import fr.cesi.ylalanne.contracts.ui.ILayeredParentView;
 
 /**
  * A world view

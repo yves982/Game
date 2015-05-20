@@ -1,8 +1,8 @@
 package fr.cesi.ylalanne.game.ui;
 
+import fr.cesi.ylalanne.contracts.ui.ILayeredChildView;
 import fr.cesi.ylalanne.game.model.PlayerModel;
 import fr.cesi.ylalanne.game.model.geom.MutableRectangle;
-import fr.cesi.ylalanne.main.ui.ILayeredChildView;
 import fr.cesi.ylalanne.utils.ui.ImageLoader;
 
 import java.awt.Container;

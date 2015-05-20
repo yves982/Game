@@ -1,11 +1,11 @@
 package fr.cesi.ylalanne.game;
 
+import fr.cesi.ylalanne.contracts.ILayeredChildrenController;
+import fr.cesi.ylalanne.contracts.ui.ILayeredChildView;
 import fr.cesi.ylalanne.game.model.PlayerModel;
 import fr.cesi.ylalanne.game.model.geom.MutableRectangle;
 import fr.cesi.ylalanne.game.ui.PlayerInfosView;
 import fr.cesi.ylalanne.game.ui.PlayerView;
-import fr.cesi.ylalanne.main.ILayeredChildrenController;
-import fr.cesi.ylalanne.main.ui.ILayeredChildView;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;

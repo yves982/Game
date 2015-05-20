@@ -1,9 +1,9 @@
 package fr.cesi.ylalanne.game.ui;
 
+import fr.cesi.ylalanne.contracts.ui.ILayeredChildView;
 import fr.cesi.ylalanne.game.model.PlayerInfosStrings;
 import fr.cesi.ylalanne.game.model.PlayerModel;
 import fr.cesi.ylalanne.lang.LocaleManager;
-import fr.cesi.ylalanne.main.ui.ILayeredChildView;
 import fr.cesi.ylalanne.utils.ui.GridBagConstraintsAnchor;
 import fr.cesi.ylalanne.utils.ui.GridBagConstraintsBuilder;
 import fr.cesi.ylalanne.utils.ui.GridBagConstraintsFill;

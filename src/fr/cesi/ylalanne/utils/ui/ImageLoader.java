@@ -6,8 +6,6 @@ import java.net.URL;
 
 import javax.imageio.ImageIO;
 
-import fr.cesi.ylalanne.main.ResourcesManager;
-
 /**
  * Utility class to load images
  */

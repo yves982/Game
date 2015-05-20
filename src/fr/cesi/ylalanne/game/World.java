@@ -1,8 +1,8 @@
 package fr.cesi.ylalanne.game;
 
+import fr.cesi.ylalanne.contracts.IRunnableChildController;
+import fr.cesi.ylalanne.contracts.ui.IChildView;
 import fr.cesi.ylalanne.game.ui.WorldView;
-import fr.cesi.ylalanne.main.IRunnableChildController;
-import fr.cesi.ylalanne.main.ui.IChildView;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;

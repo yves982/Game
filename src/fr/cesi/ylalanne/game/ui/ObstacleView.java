@@ -1,7 +1,7 @@
 package fr.cesi.ylalanne.game.ui;
 
+import fr.cesi.ylalanne.contracts.ui.IChildView;
 import fr.cesi.ylalanne.game.model.ObstacleModel;
-import fr.cesi.ylalanne.main.ui.IChildView;
 import fr.cesi.ylalanne.utils.ui.ImageLoader;
 
 import java.awt.Container;

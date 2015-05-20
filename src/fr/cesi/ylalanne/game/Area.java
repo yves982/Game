@@ -1,9 +1,9 @@
 package fr.cesi.ylalanne.game;
 
+import fr.cesi.ylalanne.contracts.IChildController;
+import fr.cesi.ylalanne.contracts.ui.IChildView;
 import fr.cesi.ylalanne.game.model.AreaModel;
 import fr.cesi.ylalanne.game.ui.AreaView;
-import fr.cesi.ylalanne.main.IChildController;
-import fr.cesi.ylalanne.main.ui.IChildView;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;

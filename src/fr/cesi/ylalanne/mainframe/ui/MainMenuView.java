@@ -15,14 +15,14 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
 
-import fr.cesi.ylalanne.main.ui.IChildView;
-import fr.cesi.ylalanne.main.ui.IParentView;
+import fr.cesi.ylalanne.contracts.ui.IChildView;
+import fr.cesi.ylalanne.contracts.ui.IParentView;
 import fr.cesi.ylalanne.mainframe.model.MainMenuItemModel;
 import fr.cesi.ylalanne.mainframe.model.MainMenuModel;
 import fr.cesi.ylalanne.utils.ui.ComponentLocation;
 
 /**
- * The fr.cesi.ylalanne.main fr.cesi.ylalanne.mainframe View
+ * The fr.cesi.ylalanne.contracts fr.cesi.ylalanne.mainframe View
  * <p>It has the following bound properties:</p>
  * <ul>
  * 	<li>action</li>

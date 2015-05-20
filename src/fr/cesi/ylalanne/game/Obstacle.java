@@ -1,10 +1,10 @@
 package fr.cesi.ylalanne.game;
 
+import fr.cesi.ylalanne.contracts.IChildController;
+import fr.cesi.ylalanne.contracts.ui.IChildView;
 import fr.cesi.ylalanne.game.model.ObstacleModel;
 import fr.cesi.ylalanne.game.model.geom.MutableRectangle;
 import fr.cesi.ylalanne.game.ui.ObstacleView;
-import fr.cesi.ylalanne.main.IChildController;
-import fr.cesi.ylalanne.main.ui.IChildView;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;

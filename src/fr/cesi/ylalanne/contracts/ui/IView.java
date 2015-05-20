@@ -1,4 +1,4 @@
-package fr.cesi.ylalanne.main.ui;
+package fr.cesi.ylalanne.contracts.ui;
 
 /**
  * a view interface : all views are required to implement it<br>

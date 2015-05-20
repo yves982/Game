@@ -5,8 +5,8 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.JOptionPane;
 
+import fr.cesi.ylalanne.contracts.IRunnableChildController;
 import fr.cesi.ylalanne.lang.LocaleManager;
-import fr.cesi.ylalanne.main.IRunnableChildController;
 import fr.cesi.ylalanne.mainframe.model.MainMenuActions;
 import fr.cesi.ylalanne.mainframe.model.MainMenuItemModel;
 import fr.cesi.ylalanne.mainframe.model.MainMenuModel;
