@@ -1,20 +1,20 @@
 package fr.cesi.ylalanne.game;
 
-import fr.cesi.ylalanne.contracts.IRunnableChildController;
-import fr.cesi.ylalanne.contracts.ui.IChildView;
-import fr.cesi.ylalanne.game.ui.WorldView;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.cesi.ylalanne.contracts.IChildController;
+import fr.cesi.ylalanne.contracts.ui.IChildView;
+import fr.cesi.ylalanne.game.ui.WorldView;
+
 
 
 /**
- * 
+ * The world containing the entire game
  */
-public class World implements IRunnableChildController, PropertyChangeListener {
+public class World implements IChildController, PropertyChangeListener {
 	private List<Obstacle> obstacles;
 	private List<Area> areas;
 	private Player player;
@@ -28,25 +28,6 @@ public class World implements IRunnableChildController, PropertyChangeListener {
 
 	private void updateHeight(int height) {
 		this.height = height;
-	}
-
-	private void fillRowXSteps(List<Integer> rowXSteps, int rowCount) {
-		for(int i=0; i < rowCount; i++) {
-			rowXSteps.add(5);
-		}
-	}
-
-	/**
-	 * Spawns this world and start the fr.cesi.ylalanne.game
-	 */
-	private void spawn() {
-		int rowsCount = 11;
-		List<Integer> rowXSteps = new ArrayList<Integer>(rowsCount);
-		fillRowXSteps(rowXSteps, rowsCount);
-		WorldGenerator generator = new WorldGenerator(this, rowXSteps);
-		Player player = generator.generatePlayer(3, 4000, 1);
-		setPlayer(player);
-		player.lives();
 	}
 
 	/**
@@ -124,10 +105,5 @@ public class World implements IRunnableChildController, PropertyChangeListener {
 				updateHeight((int)newValue);
 				break;
 		}
-	}
-
-	@Override
-	public void run() {
-		spawn();
 	}
 }

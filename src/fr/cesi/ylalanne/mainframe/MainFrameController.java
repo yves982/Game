@@ -5,19 +5,19 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.JOptionPane;
 
-import fr.cesi.ylalanne.contracts.IRunnableChildController;
+import fr.cesi.ylalanne.contracts.IChildController;
 import fr.cesi.ylalanne.lang.LocaleManager;
 import fr.cesi.ylalanne.mainframe.model.MainFrameActions;
-import fr.cesi.ylalanne.mainframe.model.MainMenuItemModel;
 import fr.cesi.ylalanne.mainframe.model.MainFrameModel;
 import fr.cesi.ylalanne.mainframe.model.MainFrameStrings;
+import fr.cesi.ylalanne.mainframe.model.MainMenuItemModel;
 import fr.cesi.ylalanne.mainframe.ui.MainFrameView;
 import fr.cesi.ylalanne.settings.SettingsController;
 
 public class MainFrameController implements PropertyChangeListener {
 
 	private MainFrameView mainView;
-	private IRunnableChildController child;
+	private IChildController child;
 	private MainFrameModel mainModel;
 	
 	private MainMenuItemModel buildMenuItemModel(MainFrameActions action) {
@@ -65,9 +65,9 @@ public class MainFrameController implements PropertyChangeListener {
 
 	/**
 	 * Initialize the MainFrameController
-	 * @param child the IRunnableChildController to run on start
+	 * @param child the IChildController to run on start
 	 */
-	public MainFrameController(IRunnableChildController child) {
+	public MainFrameController(IChildController child) {
 		this.child = child;
 		buildMainModel();
 	}
@@ -96,7 +96,6 @@ public class MainFrameController implements PropertyChangeListener {
 			mainView.addChild(child.getChild());
 		}
 		mainView.show();
-		child.run();
 	}
 
 }

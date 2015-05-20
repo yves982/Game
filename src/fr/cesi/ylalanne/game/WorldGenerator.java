@@ -35,16 +35,20 @@ public class WorldGenerator {
 		}
 	}
 
+	private void buildRowXSteps(int rowCount) {
+		rowXSteps = new ArrayList<Integer>(rowCount);
+		for(int i=0; i < rowCount; i++) {
+			rowXSteps.add(5);
+		}
+	}
+
 	/**
 	 * Initialize an ObstacleGenerator
 	 * @param world the {@code World}
-	 * @param rowXSteps the dx steps along X axis for obstacles moves
 	 */
-	public WorldGenerator(World world, List<Integer> rowXSteps) {
+	public WorldGenerator(World world) {
 		this.world = world;
-		this.rowXSteps = rowXSteps;
 		areasSpace = 0;
-		buildRows();
 	}
 	
 	/**
@@ -88,5 +92,16 @@ public class WorldGenerator {
 		int startY = (int)(Math.floor(rows.get(row - 1).size())) / 2 - player.getHeight()/2;
 		player.startPosition(startX, startY);
 		return player;
+	}
+	
+	/**
+	 * Spawn this world
+	 */
+	public void spawnWorld() {
+		buildRowXSteps(11);
+		buildRows();
+		Player player = generatePlayer(3, 4000, 1);
+		world.setPlayer(player);
+		player.lives();
 	}
 }

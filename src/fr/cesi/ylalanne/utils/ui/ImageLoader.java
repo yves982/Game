@@ -18,7 +18,7 @@ public class ImageLoader {
 	public static Image LoadImage(String imagePath) {
 		try
 		{
-			URL fileUrl = ImageLoader.class.getClass().getResource(ResourcesManager.RESOURCES_BASE + imagePath);
+			URL fileUrl = ImageLoader.class.getResource(ResourcesManager.RESOURCES_BASE + imagePath);
 			return ImageIO.read(fileUrl);
 		} catch(IOException e) {
 			e.printStackTrace();

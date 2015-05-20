@@ -48,6 +48,7 @@ public class PlayerView implements ILayeredChildView, PropertyChangeListener {
 				try {
 					ImageIcon playerIcon = get();
 					playerLabel.setIcon(playerIcon);
+					playerLabel.setSize(playerIcon.getIconWidth(), playerIcon.getIconHeight());
 					modelChange.firePropertyChange("width", model.getArea().getWidth(), playerIcon.getIconWidth());
 					modelChange.firePropertyChange("height", model.getArea().getHeight(), playerIcon.getIconHeight());
 				} catch (InterruptedException | ExecutionException e) {
