@@ -16,6 +16,7 @@ public class WorldGenerator {
 	private List<Range<Integer>> rows;
 	private List<Integer> rowXSteps;
 	private int areasSpace;
+	private boolean hasSpawn;
 	
 	private void buildRows() {
 		int rowCount = rowXSteps.size();
@@ -49,6 +50,7 @@ public class WorldGenerator {
 	public WorldGenerator(World world) {
 		this.world = world;
 		areasSpace = 0;
+		hasSpawn = false;
 	}
 	
 	/**
@@ -106,7 +108,16 @@ public class WorldGenerator {
 		buildRowXSteps(xSteps); 
 		buildRows();
 		Player player = generatePlayer(3, 4000, 11);
+		//world.reset();
 		world.setPlayer(player);
+		
+//		if(!player.isLifeLess()) {
+//			player.kill();
+//		}
 		player.lives();
+		
+		if(! hasSpawn) {
+			hasSpawn = true;
+		}
 	}
 }

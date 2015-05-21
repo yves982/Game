@@ -1,12 +1,12 @@
 package fr.cesi.ylalanne.game;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 import fr.cesi.ylalanne.contracts.IChildController;
 import fr.cesi.ylalanne.contracts.ui.IChildView;
 import fr.cesi.ylalanne.game.model.AreaModel;
 import fr.cesi.ylalanne.game.ui.AreaView;
-
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 /**
  * An Area which does not handle collision nor provide any input

@@ -1,14 +1,5 @@
 package fr.cesi.ylalanne.game;
 
-import fr.cesi.ylalanne.contracts.ILayeredChildrenController;
-import fr.cesi.ylalanne.contracts.ui.ILayeredChildView;
-import fr.cesi.ylalanne.game.model.PlayerModel;
-import fr.cesi.ylalanne.game.model.geom.MutableRectangle;
-import fr.cesi.ylalanne.game.ui.MoveRequestEvent;
-import fr.cesi.ylalanne.game.ui.MovesListener;
-import fr.cesi.ylalanne.game.ui.PlayerInfosView;
-import fr.cesi.ylalanne.game.ui.PlayerView;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -19,11 +10,20 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import fr.cesi.ylalanne.contracts.ILayeredChildrenController;
+import fr.cesi.ylalanne.contracts.ui.ILayeredChildView;
+import fr.cesi.ylalanne.game.model.PlayerModel;
+import fr.cesi.ylalanne.game.model.geom.MutableRectangle;
+import fr.cesi.ylalanne.game.ui.MoveRequestEvent;
+import fr.cesi.ylalanne.game.ui.MovesListener;
+import fr.cesi.ylalanne.game.ui.PlayerInfosView;
+import fr.cesi.ylalanne.game.ui.PlayerView;
+
 /**
  * The Player : a moving area which can be checked for collisions and moves on command
  * <p>It has the following bound properties:</p>
  * <ul>
- * 	<li>lifeLess</li>
+ * 	<li>liveLess</li>
  * </ul>
  */
 public class Player implements ILayeredChildrenController, PropertyChangeListener {
@@ -33,17 +33,20 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	private PlayerInfosView infosView;
 	private Obstacle collider;
 	private ScheduledFuture<?> countDownFuture;
+	private ScheduledFuture<?> moveXFuture;
+	private ScheduledFuture<?> moveYFuture;
 	private List<ILayeredChildView> childrenView;
-	private ScheduledExecutorService scheduled;
-	private boolean lifeLess;
+	private ScheduledExecutorService countDownExecutor;
+	private ScheduledExecutorService movesExecutor;
+	private boolean liveLess;
 	private PropertyChangeSupport propertyChange;
 	
 	private void fillChildrenView() {
-		childrenView.add(playerView);
 		childrenView.add(infosView);
+		childrenView.add(playerView);
 	}
 
-	private void builModel(int maxLives, int maxLeftTimeMs, int movesStep) {
+	private void fillModel(int maxLives, int maxLeftTimeMs, int movesStep) {
 		model.setImagePath("/player/player.png");
 		model.setLives(maxLives);
 		model.setMaxLiveTimeMs(maxLeftTimeMs);
@@ -65,7 +68,10 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	}
 
 	private void restartCountDown() {
-		countDownFuture = scheduled.scheduleAtFixedRate(this::countDown, 0, 300, TimeUnit.MILLISECONDS);
+		if(countDownExecutor.isTerminated()) {
+			countDownExecutor = Executors.newSingleThreadScheduledExecutor();
+		}
+		countDownFuture = countDownExecutor.scheduleAtFixedRate(this::countDown, 0, 300, TimeUnit.MILLISECONDS);
 	}
 
 	private void dies() {
@@ -74,12 +80,15 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 		model.setRemainingLiveTimeMs(model.getMaxLiveTimeMs());
 		
 		if(model.getLives() <= 0) {
-			Object oldLifeLess = lifeLess;
-			lifeLess = true;
-			propertyChange.firePropertyChange("lifeLess", oldLifeLess , true);
+			Object oldLifeLess = liveLess;
+			liveLess = true;
+			propertyChange.firePropertyChange("liveLess", oldLifeLess , true);
 			model.setRemainingLiveTimeMs(0);
-			scheduled.shutdown();
+			countDownExecutor.shutdown();
 			countDownFuture.cancel(true);
+			movesExecutor.shutdown();
+			moveXFuture.cancel(true);
+			moveYFuture.cancel(true);
 		}
 	}
 
@@ -90,19 +99,96 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	private void updateHeight(int height) {
 		model.getArea().setHeight(height);
 	}
+	
+	
+	private void move(MoveRequestEvent moveRequest) {
+		if(liveLess) {
+			return;
+		}
+		
+		int movesStep = model.getMovesStep();
+		MutableRectangle playerArea = model.getArea();
+		switch(moveRequest) {
+			case UP:
+				if((moveYFuture == null || moveYFuture.isDone())) {
+					moveYFuture = movesExecutor.scheduleAtFixedRate(() -> moveY(-movesStep, playerArea),
+						0, 300, TimeUnit.MILLISECONDS);
+				}
+				break;
+			case DOWN:
+				if((moveYFuture == null || moveYFuture.isDone())) {
+					moveYFuture = movesExecutor.scheduleAtFixedRate(() -> moveY(movesStep, playerArea),
+						0, 300, TimeUnit.MILLISECONDS);
+				}
+				break;
+			case LEFT:
+				if((moveXFuture == null || moveXFuture.isDone())) {
+					moveXFuture = movesExecutor.scheduleAtFixedRate(() -> moveX(-movesStep, playerArea),
+						0, 300, TimeUnit.MILLISECONDS);
+				}
+				break;
+			case RIGHT:
+				if((moveXFuture == null || moveXFuture.isDone())) {
+					moveXFuture = movesExecutor.scheduleAtFixedRate(() -> moveX(movesStep, playerArea),
+						0, 300, TimeUnit.MILLISECONDS);
+				}
+				break;
+		}
+	}
+
+	private void moveX(int movesStep, MutableRectangle playerArea) {
+		playerArea.setX(playerArea.getX() + movesStep);
+	}
+
+	private void moveY(int movesStep, MutableRectangle playerArea) {
+		playerArea.setY(playerArea.getY() + movesStep);
+	}
+	
+
+
+	private void stopMoving(MoveRequestEvent moveRequest) {
+		if(liveLess) {
+			return;
+		}
+		switch(moveRequest) {
+			case UP:
+			case DOWN:
+					moveYFuture.cancel(true);
+				break;
+			case RIGHT:
+			case LEFT:
+					moveXFuture.cancel(true);
+				break;
+		}
+		
+		
+		try {
+			movesExecutor.shutdown();
+			movesExecutor.awaitTermination(500, TimeUnit.MILLISECONDS);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} finally {
+			if(!liveLess) {
+				movesExecutor = Executors.newSingleThreadScheduledExecutor();
+			}
+		}
+		
+	}
 
 	private void handleMoves() {
-		int movesStep = model.getMovesStep();
-		movesListener.defineHandler(MoveRequestEvent.UP, () -> move(0, -movesStep));
-		movesListener.defineHandler(MoveRequestEvent.UP, () -> move(0, 0), false);
-		movesListener.defineHandler(MoveRequestEvent.DOWN, () -> move(0, movesStep));
-		movesListener.defineHandler(MoveRequestEvent.DOWN, () -> move(0, 0));
-		movesListener.defineHandler(MoveRequestEvent.RIGHT, () -> move(movesStep, 0));
-		movesListener.defineHandler(MoveRequestEvent.RIGHT, () -> move(0, 0), false);
-		movesListener.defineHandler(MoveRequestEvent.LEFT, () -> move(-movesStep, 0));
-		movesListener.defineHandler(MoveRequestEvent.LEFT, () -> move(0, 0));
+		movesListener.defineHandler(this::move);
+		movesListener.defineHandler(this::stopMoving, false);
 		
 		playerView.addKeyListener(movesListener);
+	}
+
+	// we can't call this within live as we'd loose view parents, defined through dependency injection
+	private void initChildren() {
+		infosView = new PlayerInfosView(model);
+		infosView.build();
+		playerView = new PlayerView(model);
+		playerView.build();
+		fillChildrenView();
 	}
 
 	/**
@@ -115,14 +201,12 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 		childrenView = new ArrayList<ILayeredChildView>();
 		movesListener = new MovesListener();
 		model = new PlayerModel();
-		infosView = new PlayerInfosView(model);
-		infosView.build();
-		playerView = new PlayerView(model);
-		playerView.build();
-		builModel(maxLives, maxLeftTimeMs, movesStep);
-		fillChildrenView();
+		liveLess = true;
+		initChildren();
+		fillModel(maxLives, maxLeftTimeMs, movesStep);
 		propertyChange = new PropertyChangeSupport(this);
-		scheduled = Executors.newSingleThreadScheduledExecutor();
+		countDownExecutor = Executors.newSingleThreadScheduledExecutor();
+		movesExecutor = Executors.newSingleThreadScheduledExecutor();
 		playerView.addPropertyChangeListener(this);
 	}
 	
@@ -143,8 +227,28 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	 * Starts living (starts live time countdown)
 	 */
 	public void lives() {
+		liveLess = false;
 		restartCountDown();
 		handleMoves();
+	}
+
+	/**
+	 * Kill this player (clean resources) not tested...
+	 */
+	public void kill() {
+		try {
+			movesExecutor.shutdown();
+			movesExecutor.awaitTermination(500, TimeUnit.MILLISECONDS);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			countDownExecutor.shutdown();
+			countDownExecutor.awaitTermination(500, TimeUnit.MILLISECONDS);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -154,17 +258,6 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	public void collides(Obstacle obstacle) {
 		collider = obstacle;
 		dies();
-	}
-
-	/**
-	 * Moves this player along both axis (X and Y)
-	 * @param dx the X axis step
-	 * @param dy the Y axis step
-	 */
-	public void move(int dx, int dy) {
-		MutableRectangle playerArea = model.getArea();
-		playerArea.setX(playerArea.getX() + dx);
-		playerArea.setY(playerArea.getY() + dy);
 	}
 
 	/**
@@ -191,10 +284,10 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	 * <p>
 	 * a lifeless player cannot keep on player, the party should end
 	 * </p>
-	 * @return the lifeLess state
+	 * @return the liveLess state
 	 */
 	public boolean isLifeLess() {
-		return lifeLess;
+		return liveLess;
 	}
 
 	/**

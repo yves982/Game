@@ -87,6 +87,19 @@ public class World implements IChildController, PropertyChangeListener {
 		return height;
 	}
 
+	/**
+	 * Reset this world
+	 */
+	public void reset() {
+		obstacles.clear();
+		areas.clear();
+		
+		view = new WorldView();
+		view.build();
+		
+		view.addPropertyChangeListener(this);
+	}
+	
 	@Override
 	public IChildView getChild() {
 		return view;

@@ -1,9 +1,9 @@
 package fr.cesi.ylalanne.game.model;
 
-import fr.cesi.ylalanne.game.model.geom.MutableRectangle;
-
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+
+import fr.cesi.ylalanne.game.model.geom.MutableRectangle;
 
 /**
  * Player model

@@ -1,21 +1,19 @@
 package fr.cesi.ylalanne.game.ui;
 
-import fr.cesi.ylalanne.contracts.ui.IChildView;
-import fr.cesi.ylalanne.game.model.ObstacleModel;
-import fr.cesi.ylalanne.utils.ui.ImageLoader;
-
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.SwingUtilities;
+
+import fr.cesi.ylalanne.contracts.ui.IChildView;
+import fr.cesi.ylalanne.game.model.ObstacleModel;
+import fr.cesi.ylalanne.utils.ui.ImageLoader;
 
 /**
  * An obstacle view, inputless, but generate data by loading model's image
@@ -96,13 +94,8 @@ public class ObstacleView implements IChildView, PropertyChangeListener {
 	}
 
 	public void build() {
-		try {
-			SwingUtilities.invokeAndWait(this::buildComponents);
-			built = true;
-		} catch (InvocationTargetException | InterruptedException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		}
+		buildComponents();
+		built=true;
 	}
 
 	@Override

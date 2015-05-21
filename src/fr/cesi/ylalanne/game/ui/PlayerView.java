@@ -7,7 +7,6 @@ import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.ImageIcon;
@@ -63,7 +62,6 @@ public class PlayerView implements ILayeredChildView, PropertyChangeListener {
 
 	private void buildPlayer() {
 		playerLabel = new JLabel();
-		loadImage();
 		playerLabel.setVisible(true);
 	}
 
@@ -124,13 +122,8 @@ public class PlayerView implements ILayeredChildView, PropertyChangeListener {
 	}
 
 	public void build() {
-		try {
-			SwingUtilities.invokeAndWait(this::buildComponents);
-			built = true;
-		} catch (InvocationTargetException | InterruptedException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		}
+		buildComponents();
+		built = true;
 	}
 
 	/**
@@ -156,7 +149,7 @@ public class PlayerView implements ILayeredChildView, PropertyChangeListener {
 				
 		switch(propertyName) {
 			case "imagePath":
-				SwingUtilities.invokeLater(this::loadImage);
+				loadImage();
 				break;
 			case "x":
 				SwingUtilities.invokeLater(this::updateX);
@@ -203,5 +196,4 @@ public class PlayerView implements ILayeredChildView, PropertyChangeListener {
 	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
 		modelChange.removePropertyChangeListener(propertyName, listener);
 	}
-
 }

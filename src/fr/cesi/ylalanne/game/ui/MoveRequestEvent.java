@@ -1,7 +1,6 @@
 package fr.cesi.ylalanne.game.ui;
 
 import java.awt.event.KeyEvent;
-import java.util.Map;
 
 public enum MoveRequestEvent {
 	UP(KeyEvent.VK_UP),
@@ -10,7 +9,6 @@ public enum MoveRequestEvent {
 	LEFT(KeyEvent.VK_LEFT);
 	
 	private int keyCode;
-	private static Map<Integer, MoveRequestEvent> events;
 	
 	private MoveRequestEvent(int keyCode) {
 		this.keyCode = keyCode;
@@ -21,6 +19,16 @@ public enum MoveRequestEvent {
 	}
 	
 	public static MoveRequestEvent parseInt(int keyCode) {
-		return events.get(keyCode);
+		MoveRequestEvent [] events = values();
+		MoveRequestEvent seekedEvent = null;
+		
+		for(int i=0; i<events.length; i++) {
+			if(events[i].getKeyCode() == keyCode) {
+				seekedEvent = events[i];
+				break;
+			}
+		}
+		
+		return seekedEvent;
 	}
 }

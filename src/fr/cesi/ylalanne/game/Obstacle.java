@@ -1,13 +1,13 @@
 package fr.cesi.ylalanne.game;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 import fr.cesi.ylalanne.contracts.IChildController;
 import fr.cesi.ylalanne.contracts.ui.IChildView;
 import fr.cesi.ylalanne.game.model.ObstacleModel;
 import fr.cesi.ylalanne.game.model.geom.MutableRectangle;
 import fr.cesi.ylalanne.game.ui.ObstacleView;
-
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 /**
  * An Obstacle : basically, a moving area, which can be checked for collisions

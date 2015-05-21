@@ -2,8 +2,7 @@ package fr.cesi.ylalanne.mainframe;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-
-import javax.swing.JOptionPane;
+import java.util.function.Consumer;
 
 import fr.cesi.ylalanne.contracts.IChildController;
 import fr.cesi.ylalanne.lang.LocaleManager;
@@ -12,13 +11,13 @@ import fr.cesi.ylalanne.mainframe.model.MainFrameModel;
 import fr.cesi.ylalanne.mainframe.model.MainFrameStrings;
 import fr.cesi.ylalanne.mainframe.model.MainMenuItemModel;
 import fr.cesi.ylalanne.mainframe.ui.MainFrameView;
-import fr.cesi.ylalanne.settings.SettingsController;
 
 public class MainFrameController implements PropertyChangeListener {
 
 	private MainFrameView mainView;
 	private IChildController child;
 	private MainFrameModel mainModel;
+	private Consumer<MainFrameActions> actionsHandler;
 	
 	private MainMenuItemModel buildMenuItemModel(MainFrameActions action) {
 		MainMenuItemModel itemModel = new MainMenuItemModel();
@@ -45,31 +44,17 @@ public class MainFrameController implements PropertyChangeListener {
 		mainModel.setFrameTitle(frameTitle);
 	}
 
-	private void handleAction(MainFrameActions action) {
-		switch(action) {
-			case START:
-				JOptionPane.showMessageDialog(null, "start was clicked", "Info", JOptionPane.INFORMATION_MESSAGE);
-				break;
-			case QUIT:
-				System.exit(0);
-				break;
-		case HIGH_SCORE:
-			JOptionPane.showMessageDialog(null, "high scores was clicked", "Info", JOptionPane.INFORMATION_MESSAGE);
-			break;
-		case SETTINGS:
-			SettingsController settingsController = new SettingsController();
-			settingsController.start();
-			break;
-		}
-	}
+
 
 	/**
 	 * Initialize the MainFrameController
 	 * @param child the IChildController to run on start
+	 * @param actionsHandler the handler for menu Actions
 	 */
-	public MainFrameController(IChildController child) {
+	public MainFrameController(IChildController child, Consumer<MainFrameActions> actionsHandler) {
 		this.child = child;
 		buildMainModel();
+		this.actionsHandler = actionsHandler;
 	}
 
 	@Override
@@ -80,7 +65,7 @@ public class MainFrameController implements PropertyChangeListener {
 		switch(propertyName) {
 			case "action":
 				MainFrameActions action = Enum.valueOf(MainFrameActions.class, newValue.toString());
-				handleAction(action);
+				actionsHandler.accept(action);
 				break;
 		}
 	}

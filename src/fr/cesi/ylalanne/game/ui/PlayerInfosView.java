@@ -9,17 +9,14 @@ import java.awt.Image;
 import java.awt.LayoutManager;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
 import fr.cesi.ylalanne.contracts.ui.ILayeredChildView;
 import fr.cesi.ylalanne.game.model.PlayerInfosStrings;
@@ -65,6 +62,7 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 		livesPanel = new JPanel(true);
 		BoxLayout boxLayout = new BoxLayout(livesPanel, BoxLayout.LINE_AXIS);
 		livesPanel.setLayout(boxLayout);
+		
 		Image livesImage = ImageLoader.LoadImage("/player/infos/lives.gif");
 		livesIcon = new ImageIcon(livesImage);
 		updateLives();
@@ -132,8 +130,6 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 		infosPanel.setLayout(gridBagLayout);
 		
 		Map<String, GridBagConstraints> constraints = buildConstraints();
-		
-		
 		
 		infosPanel.add(livesPanel, constraints.get(LIVES));
 		infosPanel.add(scoresLabel, constraints.get(SCORE));
@@ -206,14 +202,10 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 	}
 
 	public void build() {
-		try {
-			SwingUtilities.invokeAndWait(this::buildComponents);
-			built = true;
-		} catch (InterruptedException | InvocationTargetException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		}
+		buildComponents();
+		built = true;
 	}
+	
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {

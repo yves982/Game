@@ -9,7 +9,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JLayeredPane;
@@ -170,14 +169,7 @@ public class WorldView implements IChildView, ILayeredParentView {
 
 	@Override
 	public void build() {
-		try {
-			SwingUtilities.invokeAndWait(this::buildComponents);
-			built = true;
-		} catch (InvocationTargetException | InterruptedException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		}
-		
+		buildComponents();
+		built = true;
 	}
-
 }
