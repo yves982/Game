@@ -4,6 +4,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.function.Consumer;
 
+import fr.cesi.ylalanne.contracts.IBoundChildController;
 import fr.cesi.ylalanne.contracts.IChildController;
 import fr.cesi.ylalanne.lang.LocaleManager;
 import fr.cesi.ylalanne.mainframe.model.MainFrameActions;
@@ -45,16 +46,16 @@ public class MainFrameController implements PropertyChangeListener {
 	}
 
 
-
 	/**
 	 * Initialize the MainFrameController
 	 * @param child the IChildController to run on start
 	 * @param actionsHandler the handler for menu Actions
 	 */
-	public MainFrameController(IChildController child, Consumer<MainFrameActions> actionsHandler) {
+	public MainFrameController(IBoundChildController child, Consumer<MainFrameActions> actionsHandler) {
 		this.child = child;
 		buildMainModel();
 		this.actionsHandler = actionsHandler;
+		child.addPropertyChangeListener("reseted", this);
 	}
 
 	@Override
@@ -67,6 +68,10 @@ public class MainFrameController implements PropertyChangeListener {
 				MainFrameActions action = Enum.valueOf(MainFrameActions.class, newValue.toString());
 				actionsHandler.accept(action);
 				break;
+			case "reseted":
+				mainView.removeLastChild();
+				mainView.addChild(child.getChild(), true);
+				break;
 		}
 	}
 
@@ -78,7 +83,7 @@ public class MainFrameController implements PropertyChangeListener {
 		mainView.build();
 		mainView.addPropertyChangeListener("action", this);
 		if(child != null && child.getChild() != null) {
-			mainView.addChild(child.getChild());
+			mainView.addChild(child.getChild(), true);
 		}
 		mainView.show();
 	}

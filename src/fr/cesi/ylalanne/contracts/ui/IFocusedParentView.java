@@ -1,10 +1,10 @@
 package fr.cesi.ylalanne.contracts.ui;
 
 /**
- * a view with a childView (sub part)<br>
- *  <b>Note: </b> {@link IView#build()} should be the first method ever called on any IView Implementation
+ * An {@link IParentView} with the ability to manage focus (generally one with a top level container)
  */
-public interface IParentView extends IView {
+public interface IFocusedParentView extends IParentView {
+	
 	/**
 	 * Adds a childView to this view
 	 * <p>
@@ -13,6 +13,7 @@ public interface IParentView extends IView {
 	 * <b>Implementors must call {@link IChildView#setParent} before {@link IChildView#getComponent()}.</b>
 	 * </p>
 	 * @param childView the childView to add
+	 * @param requestFocus {@code true} if the child should have the focus, {@code false} otherwise
 	 */
-	void addChild(IChildView childView);
+	void addChild(IChildView childView, boolean requestFocus);
 }

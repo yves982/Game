@@ -152,17 +152,6 @@ public class PlayerView implements ILayeredChildView, PropertyChangeListener {
 			e.printStackTrace();
 		}
 	}
-	
-	/**
-	 * Reset this view
-	 */
-	public void reset() {
-		model.removePropertyChangeListener(this);
-		built = false;
-		build();
-		model.addPropertyChangeListener(this);
-		playerLabel.revalidate();
-	}
 
 	/**
 	 * @param l the {@code KeyListener} to add

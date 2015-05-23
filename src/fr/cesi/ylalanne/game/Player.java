@@ -41,6 +41,8 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	private boolean liveLess;
 	private PropertyChangeSupport propertyChange;
 	private int maxLives;
+	private int maxLeftTimeMs;
+	private int movesStep;
 	
 	private void fillChildrenView() {
 		childrenView.add(infosView);
@@ -60,7 +62,6 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 		remainingLiveTimeMs -= 300;
 		
 		if(remainingLiveTimeMs < 300) {
-			countDownFuture.cancel(true);
 			dies();
 			restartCountDown();
 		} else {
@@ -69,9 +70,16 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	}
 
 	private void restartCountDown() {
-		if(countDownExecutor.isTerminated()) {
-			countDownExecutor = Executors.newSingleThreadScheduledExecutor();
+		if(!countDownExecutor.isTerminated()) {
+			try {
+				countDownExecutor.shutdown();
+				countDownExecutor.awaitTermination(500, TimeUnit.MILLISECONDS);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}
 		}
+		countDownExecutor = Executors.newSingleThreadScheduledExecutor();
 		countDownFuture = countDownExecutor.scheduleAtFixedRate(this::countDown, 0, 300, TimeUnit.MILLISECONDS);
 	}
 
@@ -86,10 +94,13 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 			propertyChange.firePropertyChange("liveLess", oldLifeLess , true);
 			model.setRemainingLiveTimeMs(0);
 			countDownExecutor.shutdown();
-			countDownFuture.cancel(true);
 			movesExecutor.shutdown();
-			moveXFuture.cancel(true);
-			moveYFuture.cancel(true);
+			try {
+				countDownExecutor.awaitTermination(500, TimeUnit.MILLISECONDS);
+				movesExecutor.awaitTermination(500, TimeUnit.MILLISECONDS);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -154,11 +165,11 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 		switch(moveRequest) {
 			case UP:
 			case DOWN:
-					moveYFuture.cancel(true);
+					moveYFuture.cancel(false);
 				break;
 			case RIGHT:
 			case LEFT:
-					moveXFuture.cancel(true);
+					moveXFuture.cancel(false);
 				break;
 		}
 		
@@ -184,12 +195,24 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	}
 
 	// we can't call this within live as we'd loose view parents, defined through dependency injection
-	private void initChildren() {
+	private void setupViews() {
 		infosView = new PlayerInfosView(model);
 		infosView.build();
 		playerView = new PlayerView(model);
 		playerView.build();
 		fillChildrenView();
+	}
+
+	private void setupViewAndModel(int maxLives, int maxLeftTimeMs, int movesStep) {
+		model = new PlayerModel();
+		liveLess = true;
+		setupViews();
+		fillModel(maxLives, maxLeftTimeMs, movesStep);
+	}
+
+	private void setupExecutors() {
+		countDownExecutor = Executors.newSingleThreadScheduledExecutor();
+		movesExecutor = Executors.newSingleThreadScheduledExecutor();
 	}
 
 	/**
@@ -201,17 +224,15 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	public Player(int maxLives, int maxLeftTimeMs, int movesStep) {
 		childrenView = new ArrayList<ILayeredChildView>();
 		this.maxLives = maxLives;
+		this.maxLeftTimeMs = maxLeftTimeMs;
+		this.movesStep = movesStep;
 		movesListener = new MovesListener();
-		model = new PlayerModel();
-		liveLess = true;
-		initChildren();
-		fillModel(maxLives, maxLeftTimeMs, movesStep);
+		setupViewAndModel(maxLives, maxLeftTimeMs, movesStep);
 		propertyChange = new PropertyChangeSupport(this);
-		countDownExecutor = Executors.newSingleThreadScheduledExecutor();
-		movesExecutor = Executors.newSingleThreadScheduledExecutor();
+		setupExecutors();
 		playerView.addPropertyChangeListener(this);
 	}
-	
+
 	/**
 	 * Places the player in the world
 	 * <p>
@@ -229,16 +250,26 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	 * Starts living (starts live time countdown)
 	 */
 	public void lives() {
-		liveLess = false;
 		model.setLives(maxLives);
+		if(movesExecutor != null) {
+			try {
+				movesExecutor.shutdown();
+				movesExecutor.awaitTermination(500,  TimeUnit.MILLISECONDS);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}
+		}
+		movesExecutor = Executors.newSingleThreadScheduledExecutor();
 		restartCountDown();
 		handleMoves();
+		liveLess = false;
 	}
 
 	/**
 	 * Reset the player to his original state
 	 */
-	public void reset() {
+	public void kill() {
 		try {
 			movesExecutor.shutdown();
 			movesExecutor.awaitTermination(500, TimeUnit.MILLISECONDS);
@@ -253,8 +284,9 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 			e.printStackTrace();
 		}
 		
-		playerView.reset();
-		infosView.reset();
+		playerView.removeKeyListener(movesListener);
+		playerView.removePropertyChangeListener(this);
+		liveLess = true;
 	}
 	
 	/**

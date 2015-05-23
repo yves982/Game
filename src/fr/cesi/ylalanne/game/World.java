@@ -2,10 +2,11 @@ package fr.cesi.ylalanne.game;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.cesi.ylalanne.contracts.IChildController;
+import fr.cesi.ylalanne.contracts.IBoundChildController;
 import fr.cesi.ylalanne.contracts.ui.IChildView;
 import fr.cesi.ylalanne.game.ui.WorldView;
 
@@ -13,14 +14,20 @@ import fr.cesi.ylalanne.game.ui.WorldView;
 
 /**
  * The world containing the entire game
+ * <p>It has the following bound properties:</p>
+ * <ul>
+ *   <li>reseted</li>
+ * </ul>
  */
-public class World implements IChildController, PropertyChangeListener {
+public class World implements IBoundChildController, PropertyChangeListener {
 	private List<Obstacle> obstacles;
 	private List<Area> areas;
 	private Player player;
 	private WorldView view;
 	private int width;
 	private int height;
+	private boolean reseted;
+	private PropertyChangeSupport propertyChange;
 	
 	private void updateWidth(int width) {
 		this.width = width;
@@ -36,6 +43,8 @@ public class World implements IChildController, PropertyChangeListener {
 	public World() {
 		obstacles = new ArrayList<Obstacle>();
 		areas = new ArrayList<Area>();
+		reseted = false;
+		propertyChange = new PropertyChangeSupport(this);
 		view = new WorldView();
 		view.build();
 		view.addPropertyChangeListener(this);
@@ -88,6 +97,13 @@ public class World implements IChildController, PropertyChangeListener {
 	}
 
 	/**
+	 * @return the reseted state
+	 */
+	public boolean isReseted() {
+		return reseted;
+	}
+
+	/**
 	 * Reset this world
 	 */
 	public void reset() {
@@ -95,11 +111,15 @@ public class World implements IChildController, PropertyChangeListener {
 		areas.clear();
 		view.removePropertyChangeListener(this);
 		
-		player = null;
-		
-		view.reset();
+		if(player != null) {
+			player.kill();
+		}
+		view = new WorldView();
+		view.build();
 		
 		view.addPropertyChangeListener(this);
+		reseted = true;
+		propertyChange.firePropertyChange("reseted", false, true);
 	}
 	
 	@Override
@@ -120,5 +140,36 @@ public class World implements IChildController, PropertyChangeListener {
 				updateHeight((int)newValue);
 				break;
 		}
+	}
+
+	/**
+	 * @param listener
+	 * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.beans.PropertyChangeListener)
+	 */
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		propertyChange.addPropertyChangeListener(listener);
+	}
+	/**
+	 * @param listener
+	 * @see java.beans.PropertyChangeSupport#removePropertyChangeListener(java.beans.PropertyChangeListener)
+	 */
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		propertyChange.removePropertyChangeListener(listener);
+	}
+	/**
+	 * @param propertyName
+	 * @param listener
+	 * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
+	 */
+	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+		propertyChange.addPropertyChangeListener(propertyName, listener);
+	}
+	/**
+	 * @param propertyName
+	 * @param listener
+	 * @see java.beans.PropertyChangeSupport#removePropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
+	 */
+	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+		propertyChange.removePropertyChangeListener(propertyName, listener);
 	}
 }

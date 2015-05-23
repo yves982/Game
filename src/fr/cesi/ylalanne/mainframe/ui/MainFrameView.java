@@ -17,6 +17,7 @@ import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
 
 import fr.cesi.ylalanne.contracts.ui.IChildView;
+import fr.cesi.ylalanne.contracts.ui.IFocusedParentView;
 import fr.cesi.ylalanne.contracts.ui.IParentView;
 import fr.cesi.ylalanne.mainframe.model.MainFrameModel;
 import fr.cesi.ylalanne.mainframe.model.MainMenuItemModel;
@@ -29,7 +30,7 @@ import fr.cesi.ylalanne.utils.ui.ComponentLocation;
  * 	<li>action</li>
  * </ul>
  */
-public class MainFrameView implements IParentView, ActionListener {
+public class MainFrameView implements IFocusedParentView, ActionListener {
 	private JFrame frame;
 	private JMenuBar menuBar;
 	private JMenu menu;
@@ -39,6 +40,7 @@ public class MainFrameView implements IParentView, ActionListener {
 	private JMenuItem highScoreMenuItem;
 	private JMenuItem settingsMenuItem;
 	private JMenuItem quitMenuItem;
+	private IChildView child;
 	
 	private void buildComponents() {
 		buildMenu();
@@ -113,12 +115,27 @@ public class MainFrameView implements IParentView, ActionListener {
 	}
 	
 	@Override
-	public void addChild(IChildView child){
+	public void addChild(IChildView childView) {
+		addChild(childView, false);
+	}
+	
+	@Override
+	public void addChild(IChildView childView, boolean requestFocus){
 		Container contentPane = frame.getContentPane();
 		Dimension availableSize = new Dimension(contentPane.getWidth(), contentPane.getHeight() - menuBar.getHeight());
-		child.setParent(contentPane, availableSize);
-		frame.add(child.getComponent());
+		childView.setParent(contentPane, availableSize);
+		frame.add(childView.getComponent());
 		frame.pack();
+		this.child = childView;
+		
+		if(requestFocus) {
+			childView.getComponent().requestFocus();
+		}
+	}
+
+	public void removeLastChild() {
+		frame.remove(child.getComponent());
+		frame.revalidate();
 	}
 
 	@Override

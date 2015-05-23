@@ -253,18 +253,4 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 			SwingUtilities.invokeLater(this::updateLiveless);
 		}
 	}
-	
-	/**
-	 * Reset this view
-	 */
-	public void reset() {
-		model.removePropertyChangeListener(this);
-		built = false;
-		Dimension availableSize = infosPanel.getSize();
-		infosPanel.removeAll();
-		build();
-		model.addPropertyChangeListener(this);
-		infosPanel.revalidate();
-		setParent(parent, availableSize);
-	}
 }

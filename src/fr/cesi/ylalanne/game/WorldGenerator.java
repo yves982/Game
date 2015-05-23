@@ -107,7 +107,9 @@ public class WorldGenerator {
 	public void spawnWorld(int ... xSteps) {
 		buildRowXSteps(xSteps); 
 		buildRows();
-		
+		if(hasSpawn) {
+			world.reset();
+		}
 		Player player = generatePlayer(3, 4000, 11);
 		world.setPlayer(player);
 		player.lives();

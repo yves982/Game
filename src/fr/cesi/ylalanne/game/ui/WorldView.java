@@ -63,7 +63,6 @@ public class WorldView implements IChildView, ILayeredParentView {
 		mainPanel.add(backgroundPanel, 1);
 		mainPanel.setVisible(true);
 		mainPanel.setFocusable(true);
-		mainPanel.requestFocus();
 	}
 
 	private void checkBuild() {
@@ -160,11 +159,20 @@ public class WorldView implements IChildView, ILayeredParentView {
 	public void setParent(Container container, Dimension availableSize) {
 		checkBuild();
 		this.parent = container;
-		foregroundPanel.setSize(availableSize);
-		backgroundPanel.setSize(availableSize);
-		mainPanel.setSize(availableSize);
-		propertyChange.firePropertyChange("width", 0, availableSize.width);
-		propertyChange.firePropertyChange("height", 0, availableSize.height);
+		
+		try {
+			SwingUtilities.invokeAndWait(() -> {
+				foregroundPanel.setSize(availableSize);
+				backgroundPanel.setSize(availableSize);
+				mainPanel.setSize(availableSize);
+			});
+			
+			propertyChange.firePropertyChange("width", 0, availableSize.width);
+			propertyChange.firePropertyChange("height", 0, availableSize.height);
+		} catch (InvocationTargetException | InterruptedException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
 	}
 
 	@Override
@@ -175,15 +183,5 @@ public class WorldView implements IChildView, ILayeredParentView {
 		} catch (InvocationTargetException | InterruptedException e) {
 			e.printStackTrace();
 		}
-	}
-
-	public void reset() {
-		built = false;
-		Dimension availableSize = mainPanel.getSize();
-		mainPanel.removeAll();
-		buildComponents();
-		built = true;
-		setParent(parent, availableSize);
-		mainPanel.revalidate();
 	}
 }
