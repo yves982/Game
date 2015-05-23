@@ -7,6 +7,7 @@ import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.ImageIcon;
@@ -87,9 +88,31 @@ public class PlayerView implements ILayeredChildView, PropertyChangeListener {
 	}
 
 	private void collide() {
-		Image collisionImage = ImageLoader.LoadImage("/player/collision.png");
-		ImageIcon collisionIcon = new ImageIcon(collisionImage);
-		playerLabel.setIcon(collisionIcon);
+		SwingWorker<ImageIcon, Void> worker = new SwingWorker<ImageIcon, Void>() {
+			@Override
+			protected ImageIcon doInBackground() throws Exception {
+				Image collisionImage = ImageLoader.LoadImage("/player/collision.png");
+				ImageIcon collisionIcon = new ImageIcon(collisionImage);
+				return collisionIcon;
+			}
+			@Override
+			protected void done() {
+				try {
+					ImageIcon collisionIcon = get();
+					playerLabel.setIcon(collisionIcon);
+				} catch (InterruptedException | ExecutionException e) {
+					e.printStackTrace();
+					throw new RuntimeException(e);
+				}
+			}
+		};
+		
+		try {
+			worker.get();
+		} catch (InterruptedException | ExecutionException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
 	}
 
 	/**
@@ -122,8 +145,23 @@ public class PlayerView implements ILayeredChildView, PropertyChangeListener {
 	}
 
 	public void build() {
-		buildComponents();
-		built = true;
+		try {
+			SwingUtilities.invokeAndWait(this::buildComponents);
+			built = true;
+		} catch (InvocationTargetException | InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Reset this view
+	 */
+	public void reset() {
+		model.removePropertyChangeListener(this);
+		built = false;
+		build();
+		model.addPropertyChangeListener(this);
+		playerLabel.revalidate();
 	}
 
 	/**

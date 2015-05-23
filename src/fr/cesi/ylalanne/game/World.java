@@ -93,9 +93,11 @@ public class World implements IChildController, PropertyChangeListener {
 	public void reset() {
 		obstacles.clear();
 		areas.clear();
+		view.removePropertyChangeListener(this);
 		
-		view = new WorldView();
-		view.build();
+		player = null;
+		
+		view.reset();
 		
 		view.addPropertyChangeListener(this);
 	}

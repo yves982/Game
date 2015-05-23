@@ -79,7 +79,12 @@ public class AreaView implements IChildView, PropertyChangeListener {
 			};
 		};
 		
-		worker.execute();
+		try {
+			worker.get();
+		} catch (InterruptedException | ExecutionException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
 	}
 
 	/**
@@ -110,7 +115,7 @@ public class AreaView implements IChildView, PropertyChangeListener {
 			SwingUtilities.invokeAndWait(this::buildComponents);
 			built = true;
 		} catch (InvocationTargetException | InterruptedException e) {
-			throw new RuntimeException(e);
+			e.printStackTrace();
 		}
 	}
 
@@ -127,7 +132,7 @@ public class AreaView implements IChildView, PropertyChangeListener {
 				SwingUtilities.invokeLater(this::updateY);
 				break;
 			case "imagePath":
-				SwingUtilities.invokeLater(this::loadImage);
+				loadImage();
 				break;
 		}
 	}

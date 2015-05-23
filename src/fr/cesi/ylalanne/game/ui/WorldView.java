@@ -169,7 +169,21 @@ public class WorldView implements IChildView, ILayeredParentView {
 
 	@Override
 	public void build() {
+		try {
+			SwingUtilities.invokeAndWait(this::buildComponents);
+			built = true;
+		} catch (InvocationTargetException | InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void reset() {
+		built = false;
+		Dimension availableSize = mainPanel.getSize();
+		mainPanel.removeAll();
 		buildComponents();
 		built = true;
+		setParent(parent, availableSize);
+		mainPanel.revalidate();
 	}
 }

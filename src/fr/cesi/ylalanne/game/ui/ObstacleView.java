@@ -6,10 +6,14 @@ import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.lang.reflect.InvocationTargetException;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 
 import fr.cesi.ylalanne.contracts.ui.IChildView;
 import fr.cesi.ylalanne.game.model.ObstacleModel;
@@ -48,11 +52,34 @@ public class ObstacleView implements IChildView, PropertyChangeListener {
 	 * </p>
 	 */
 	private void loadImage() {
-		Image image = ImageLoader.LoadImage(model.getImagePath());
-		ImageIcon imageIcon = new ImageIcon(image);
-		obstacleLabel.setIcon(imageIcon);
-		modelChange.firePropertyChange("width", model.getWidth(), image.getWidth(null));
-		modelChange.firePropertyChange("height", model.getHeight(), image.getHeight(null));
+		SwingWorker<ImageIcon, Void> worker = new SwingWorker<ImageIcon, Void>() {
+			@Override
+			protected ImageIcon doInBackground() throws Exception {
+				Image obstacleImage = ImageLoader.LoadImage(model.getImagePath());
+				ImageIcon obstacleIcon = new ImageIcon(obstacleImage);
+				return obstacleIcon;
+			}
+			
+			@Override
+			protected void done() {
+				try {
+					ImageIcon obstacleIcon = get();
+					obstacleLabel.setIcon(obstacleIcon);
+					modelChange.firePropertyChange("width", model.getWidth(), obstacleIcon.getIconWidth());
+					modelChange.firePropertyChange("height", model.getHeight(), obstacleIcon.getIconHeight());
+				} catch (InterruptedException | ExecutionException e) {
+					e.printStackTrace();
+					throw new RuntimeException(e);
+				}
+			}
+		};
+		
+		try {
+			worker.get();
+		} catch (InterruptedException | ExecutionException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
 	}
 
 	private void updateX() {
@@ -94,8 +121,12 @@ public class ObstacleView implements IChildView, PropertyChangeListener {
 	}
 
 	public void build() {
-		buildComponents();
-		built=true;
+		try {
+			SwingUtilities.invokeAndWait(this::buildComponents);
+			built=true;
+		} catch (InvocationTargetException | InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -106,13 +137,13 @@ public class ObstacleView implements IChildView, PropertyChangeListener {
 				loadImage();
 				break;
 			case "x":
-				updateX();
+				SwingUtilities.invokeLater(this::updateX);
 				break;
 			case "y":
-				updateY();
+				SwingUtilities.invokeLater(this::updateY);
 				break;
 			case "dropped":
-				handleDrop();
+				SwingUtilities.invokeLater(this::handleDrop);
 				break;
 		}
 		

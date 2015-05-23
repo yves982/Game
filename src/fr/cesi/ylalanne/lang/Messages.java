@@ -5,7 +5,7 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 public class Messages {
-	private static final String BUNDLE_NAME = "fr.cesi.ylalanne.lang.messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "fr.cesi.ylalanne.lang.messages";
 	private final ResourceBundle RESOURCE_BUNDLE;
 	
 	public Messages(Locale locale) {

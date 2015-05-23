@@ -11,7 +11,7 @@ import fr.cesi.ylalanne.mainframe.MainFrameController;
 public class Game {
 	
 	public static void main(String[] args) {
-		LocaleManager.setLocale(Locale.FRENCH);
+		LocaleManager.setLocale(Locale.FRANCE);
 		World world = new World();
 		WorldGenerator generator = new WorldGenerator(world);
 		

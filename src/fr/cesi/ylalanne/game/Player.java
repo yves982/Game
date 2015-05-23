@@ -40,6 +40,7 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	private ScheduledExecutorService movesExecutor;
 	private boolean liveLess;
 	private PropertyChangeSupport propertyChange;
+	private int maxLives;
 	
 	private void fillChildrenView() {
 		childrenView.add(infosView);
@@ -102,7 +103,7 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	
 	
 	private void move(MoveRequestEvent moveRequest) {
-		if(liveLess) {
+		if(liveLess || moveRequest == null) {
 			return;
 		}
 		
@@ -147,7 +148,7 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 
 
 	private void stopMoving(MoveRequestEvent moveRequest) {
-		if(liveLess) {
+		if(liveLess || moveRequest == null) {
 			return;
 		}
 		switch(moveRequest) {
@@ -199,6 +200,7 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	 */
 	public Player(int maxLives, int maxLeftTimeMs, int movesStep) {
 		childrenView = new ArrayList<ILayeredChildView>();
+		this.maxLives = maxLives;
 		movesListener = new MovesListener();
 		model = new PlayerModel();
 		liveLess = true;
@@ -228,14 +230,15 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	 */
 	public void lives() {
 		liveLess = false;
+		model.setLives(maxLives);
 		restartCountDown();
 		handleMoves();
 	}
 
 	/**
-	 * Kill this player (clean resources) not tested...
+	 * Reset the player to his original state
 	 */
-	public void kill() {
+	public void reset() {
 		try {
 			movesExecutor.shutdown();
 			movesExecutor.awaitTermination(500, TimeUnit.MILLISECONDS);
@@ -249,6 +252,9 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		
+		playerView.reset();
+		infosView.reset();
 	}
 	
 	/**

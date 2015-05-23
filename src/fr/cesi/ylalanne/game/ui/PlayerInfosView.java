@@ -9,14 +9,18 @@ import java.awt.Image;
 import java.awt.LayoutManager;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 
 import fr.cesi.ylalanne.contracts.ui.ILayeredChildView;
 import fr.cesi.ylalanne.game.model.PlayerInfosStrings;
@@ -58,16 +62,36 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 		livesPanel.revalidate();
 	}
 
-	private void buildLives() {
+	private void initLives() {
 		livesPanel = new JPanel(true);
 		BoxLayout boxLayout = new BoxLayout(livesPanel, BoxLayout.LINE_AXIS);
 		livesPanel.setLayout(boxLayout);
+	}
+
+	private void buildLives() {
+		SwingWorker<ImageIcon, Void> worker = new SwingWorker<ImageIcon, Void>() {
+			@Override
+			protected ImageIcon doInBackground() throws Exception {
+				Image livesImage = ImageLoader.LoadImage("/player/infos/lives.gif");
+				livesIcon = new ImageIcon(livesImage);
+				return livesIcon;
+			}
+			
+			@Override
+			protected void done() {
+				updateLives();
+				livesPanel.setOpaque(false);
+				livesPanel.setVisible(true);
+			}
+		};
 		
-		Image livesImage = ImageLoader.LoadImage("/player/infos/lives.gif");
-		livesIcon = new ImageIcon(livesImage);
-		updateLives();
-		livesPanel.setOpaque(false);
-		livesPanel.setVisible(true);
+		try {
+			initLives();
+			worker.execute();
+			worker.get();
+		} catch (InterruptedException | ExecutionException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void buildScore() {
@@ -144,6 +168,7 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 		buildScore();
 		buildTime();
 		buildInfos();
+		
 	}
 
 	private void checkBuild() {
@@ -202,8 +227,12 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 	}
 
 	public void build() {
-		buildComponents();
-		built = true;
+		try {
+			SwingUtilities.invokeAndWait(this::buildComponents);
+			built = true;
+		} catch (InvocationTargetException | InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 	
 
@@ -212,16 +241,30 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 		String propertyName = evt.getPropertyName();
 		switch (propertyName) {
 		case "score":
-			updateScore();
+			SwingUtilities.invokeLater(this::updateScore);
 			break;
 		case "lives":
-			updateLives();
+			SwingUtilities.invokeLater(this::updateLives);
 			break;
 		case "remainingLiveTimeMs":
-			updateTimeLeft();
+			SwingUtilities.invokeLater(this::updateTimeLeft);
 			break;
 		case "liveless":
-			updateLiveless();
+			SwingUtilities.invokeLater(this::updateLiveless);
 		}
+	}
+	
+	/**
+	 * Reset this view
+	 */
+	public void reset() {
+		model.removePropertyChangeListener(this);
+		built = false;
+		Dimension availableSize = infosPanel.getSize();
+		infosPanel.removeAll();
+		build();
+		model.addPropertyChangeListener(this);
+		infosPanel.revalidate();
+		setParent(parent, availableSize);
 	}
 }

@@ -66,6 +66,7 @@ public class SettingsController implements PropertyChangeListener {
 		view = new SettingsView(model);
 		view.addPropertyChangeListener(this);
 		buildModel();
+		view.build();
 	}
 
 	public void start() {

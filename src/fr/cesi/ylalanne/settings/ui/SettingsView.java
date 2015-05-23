@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -23,6 +24,7 @@ import javax.swing.JRadioButton;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 
+import fr.cesi.ylalanne.contracts.ui.IView;
 import fr.cesi.ylalanne.settings.model.Actions;
 import fr.cesi.ylalanne.settings.model.Difficulties;
 import fr.cesi.ylalanne.settings.model.Resolutions;
@@ -32,7 +34,7 @@ import fr.cesi.ylalanne.utils.ui.ComponentLocation;
 import fr.cesi.ylalanne.utils.ui.GridBagConstraintsAnchor;
 import fr.cesi.ylalanne.utils.ui.GridBagConstraintsBuilder;
 
-public class SettingsView implements PropertyChangeListener, ActionListener {
+public class SettingsView implements PropertyChangeListener, ActionListener, IView {
 	private JDialog settingsDialog;
 	private JPanel difficultyPanel;
 	private JPanel resolutionPanel;
@@ -56,7 +58,6 @@ public class SettingsView implements PropertyChangeListener, ActionListener {
 		resolutionButtonGroup = new ButtonGroup();
 		actionHandlers = new HashMap<JComponent, Consumer<Void>>();
 		propertyChange = new PropertyChangeSupport(this);
-		SwingUtilities.invokeLater( () -> buildComponents() );
 	}
 
 	private void buildComponents() {
@@ -255,6 +256,16 @@ public class SettingsView implements PropertyChangeListener, ActionListener {
 		actionHandlers.get(source).accept(null);
 	}
 
+	@Override
+	public void build() {
+		try {
+			SwingUtilities.invokeAndWait( () -> buildComponents() );
+		} catch (InvocationTargetException | InterruptedException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+	}
+	
 	/**
 	 * @param listener
 	 * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.beans.PropertyChangeListener)
