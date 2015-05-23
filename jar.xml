@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project Game with Jar-in-Jar Loader">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <target name="create_run_jar">
+        <jar destfile="D:/Home/Documents/workspace/Game/dist/game.jar">
+            <manifest>
+                <attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
+                <attribute name="Rsrc-Main-Class" value="fr.cesi.ylalanne.launcher.Game"/>
+                <attribute name="Class-Path" value="."/>
+                <attribute name="Rsrc-Class-Path" value="./ jackson-annotations-2.5.3.jar jackson-core-2.5.3.jar jackson-databind-2.5.3.jar"/>
+            </manifest>
+            <zipfileset src="jar-in-jar-loader.zip"/>
+            <fileset dir="D:/Home/Documents/workspace/Game/bin"/>
+            <zipfileset dir="D:\Home\Documents\DevResources\Java\JacksonParser" includes="jackson-annotations-2.5.3.jar"/>
+            <zipfileset dir="D:\Home\Documents\DevResources\Java\JacksonParser" includes="jackson-core-2.5.3.jar"/>
+            <zipfileset dir="D:\Home\Documents\DevResources\Java\JacksonParser" includes="jackson-databind-2.5.3.jar"/>
+        </jar>
+    </target>
+</project>
