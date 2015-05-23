@@ -32,7 +32,6 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	private MovesListener movesListener;
 	private PlayerInfosView infosView;
 	private Obstacle collider;
-	private ScheduledFuture<?> countDownFuture;
 	private ScheduledFuture<?> moveXFuture;
 	private ScheduledFuture<?> moveYFuture;
 	private List<ILayeredChildView> childrenView;
@@ -40,9 +39,6 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	private ScheduledExecutorService movesExecutor;
 	private boolean liveLess;
 	private PropertyChangeSupport propertyChange;
-	private int maxLives;
-	private int maxLeftTimeMs;
-	private int movesStep;
 	
 	private void fillChildrenView() {
 		childrenView.add(infosView);
@@ -80,7 +76,7 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 			}
 		}
 		countDownExecutor = Executors.newSingleThreadScheduledExecutor();
-		countDownFuture = countDownExecutor.scheduleAtFixedRate(this::countDown, 0, 300, TimeUnit.MILLISECONDS);
+		countDownExecutor.scheduleAtFixedRate(this::countDown, 0, 300, TimeUnit.MILLISECONDS);
 	}
 
 	private void dies() {
@@ -223,9 +219,6 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	 */
 	public Player(int maxLives, int maxLeftTimeMs, int movesStep) {
 		childrenView = new ArrayList<ILayeredChildView>();
-		this.maxLives = maxLives;
-		this.maxLeftTimeMs = maxLeftTimeMs;
-		this.movesStep = movesStep;
 		movesListener = new MovesListener();
 		setupViewAndModel(maxLives, maxLeftTimeMs, movesStep);
 		propertyChange = new PropertyChangeSupport(this);
@@ -250,7 +243,6 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	 * Starts living (starts live time countdown)
 	 */
 	public void lives() {
-		model.setLives(maxLives);
 		if(movesExecutor != null) {
 			try {
 				movesExecutor.shutdown();

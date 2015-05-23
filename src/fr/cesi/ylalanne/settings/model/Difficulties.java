@@ -1,5 +1,6 @@
 package fr.cesi.ylalanne.settings.model;
 
+
 public enum Difficulties {
 	EASY("Difficulty_Easy"),
 	NORMAL("Difficulty_Normal"),

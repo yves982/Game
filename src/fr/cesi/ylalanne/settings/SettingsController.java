@@ -2,15 +2,29 @@ package fr.cesi.ylalanne.settings;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JOptionPane;
 
+import com.fasterxml.jackson.core.JsonEncoding;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import fr.cesi.ylalanne.lang.LocaleManager;
 import fr.cesi.ylalanne.settings.model.Actions;
 import fr.cesi.ylalanne.settings.model.Difficulties;
 import fr.cesi.ylalanne.settings.model.Resolutions;
+import fr.cesi.ylalanne.settings.model.Settings;
 import fr.cesi.ylalanne.settings.model.SettingsProperties;
 import fr.cesi.ylalanne.settings.model.SettingsViewModel;
 import fr.cesi.ylalanne.settings.model.Titles;
@@ -19,6 +33,9 @@ import fr.cesi.ylalanne.settings.ui.SettingsView;
 public class SettingsController implements PropertyChangeListener {
 	private SettingsView view;
 	private SettingsViewModel model;
+	private Settings settings;
+	private static final Path settingsPath = Paths.get("./settings.json");
+	private JsonFactory factory;
 	
 	private void fillResolutions(Map<Resolutions, String> resolutions) {
 		resolutions.put(Resolutions.LOW, LocaleManager.getString(Resolutions.LOW.getKey()));
@@ -58,35 +75,78 @@ public class SettingsController implements PropertyChangeListener {
 
 	private void handleChoice(Resolutions resolution) {
 		model.setSelectedResolution(resolution);
-		JOptionPane.showMessageDialog(null, LocaleManager.getString(resolution.getKey()), "Resolution Selected", JOptionPane.OK_OPTION);
+	}
+
+	private void handleChoice(Difficulties difficulty) {
+		model.setSelectedDifficulty(difficulty);
+	}
+
+	private void handleAction(Actions action) {
+			switch(action) {
+				case OK:
+					writeSettings();
+					break;
+				default:
+			}
+			view.close();
+	}
+
+	private void writeSettings() {
+		settings = new Settings();
+		settings.setDifficulty(model.getSelectedDifficulty());
+		settings.setResolution(model.getSelectedResolution());
+		
+		try(
+				OutputStream output = Files.newOutputStream(settingsPath);
+				JsonGenerator generator = factory.createGenerator(output, JsonEncoding.UTF8)
+		) {
+			generator.setCodec(new ObjectMapper(factory));
+			generator.writeObject(settings);
+			generator.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+	}
+
+	private void loadSettings() {
+		if(Files.exists(settingsPath)) {
+			try(
+					InputStream input = Files.newInputStream(settingsPath);
+					JsonParser parser = factory.createParser(input)
+			) {
+				parser.setCodec(new ObjectMapper(factory));
+				settings = parser.readValueAs(Settings.class);
+				model.setSelectedDifficulty(settings.getDifficulty());
+				model.setSelectedResolution(settings.getResolution());
+			} catch (IOException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}
+		}
 	}
 
 	public SettingsController() {
 		model = new SettingsViewModel();
 		view = new SettingsView(model);
+		
+		factory = new JsonFactory();
+		
 		view.addPropertyChangeListener(this);
 		buildModel();
 		view.build();
 	}
 
 	public void start() {
+		loadSettings();
 		view.show();
 	}
 
-	public void handleChoice(Difficulties difficulty) {
-		model.setSelectedDifficulty(difficulty);
-		JOptionPane.showMessageDialog(null, LocaleManager.getString(difficulty.getKey()), "Difficulty Selected", JOptionPane.OK_OPTION);
-	}
-
-	public void handleAction(Actions action) {
-			switch(action) {
-				case OK:
-					JOptionPane.showMessageDialog(null, String.format("Difficulté: %s, Resolution: %s", 
-							model.getSelectedDifficulty(), model.getSelectedResolution()));
-					break;
-				default:
-			}
-			view.close();
+	/**
+	 * @return the settings
+	 */
+	public Settings getSettings() {
+		return settings;
 	}
 
 	@Override

@@ -18,7 +18,6 @@ import javax.swing.SwingUtilities;
 
 import fr.cesi.ylalanne.contracts.ui.IChildView;
 import fr.cesi.ylalanne.contracts.ui.IFocusedParentView;
-import fr.cesi.ylalanne.contracts.ui.IParentView;
 import fr.cesi.ylalanne.mainframe.model.MainFrameModel;
 import fr.cesi.ylalanne.mainframe.model.MainMenuItemModel;
 import fr.cesi.ylalanne.utils.ui.ComponentLocation;
