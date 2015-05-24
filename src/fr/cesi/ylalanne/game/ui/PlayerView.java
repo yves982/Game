@@ -58,7 +58,14 @@ public class PlayerView implements ILayeredChildView, PropertyChangeListener {
 				}
 			}
 		};
-		worker.execute();
+		
+		try {
+			worker.execute();
+			worker.get();
+		} catch (InterruptedException | ExecutionException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
 	}
 
 	private void buildPlayer() {
@@ -142,6 +149,18 @@ public class PlayerView implements ILayeredChildView, PropertyChangeListener {
 	public void setParent(Container container, Dimension availableSize) {
 		checkBuild();
 		this.parent = container;
+	}
+
+	@Override
+	public int getWidth() {
+		checkBuild();
+		return playerLabel.getWidth();
+	}
+
+	@Override
+	public int getHeight() {
+		checkBuild();
+		return playerLabel.getHeight();
 	}
 
 	public void build() {

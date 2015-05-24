@@ -5,9 +5,11 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import fr.cesi.ylalanne.contracts.IBoundChildController;
 import fr.cesi.ylalanne.contracts.ui.IChildView;
+import fr.cesi.ylalanne.contracts.ui.ILayeredChildView;
 import fr.cesi.ylalanne.game.ui.WorldView;
 
 
@@ -27,6 +29,7 @@ public class World implements IBoundChildController, PropertyChangeListener {
 	private int width;
 	private int height;
 	private boolean reseted;
+	private int playerReservedHeight;
 	private PropertyChangeSupport propertyChange;
 	
 	private void updateWidth(int width) {
@@ -81,6 +84,8 @@ public class World implements IBoundChildController, PropertyChangeListener {
 	public void setPlayer(Player player) {
 		this.player = player;
 		player.getChildren().forEach( layeredChildView -> view.addChild(layeredChildView, layeredChildView.getLayer()));
+		Optional<ILayeredChildView> playerBgChildHeight = player.getChildren().stream().filter( layeredChildView -> layeredChildView.getLayer() == 1 ).findFirst();
+		playerReservedHeight = playerBgChildHeight.isPresent() ? playerBgChildHeight.get().getHeight() : 0;
 	}
 
 	/**
@@ -122,6 +127,31 @@ public class World implements IBoundChildController, PropertyChangeListener {
 		propertyChange.firePropertyChange("reseted", false, true);
 	}
 	
+	/**
+	 * @return the obstacles
+	 */
+	public List<Obstacle> getObstacles() {
+		return obstacles;
+	}
+
+	/**
+	 * @return the areas
+	 */
+	public List<Area> getAreas() {
+		return areas;
+	}
+
+	/**
+	 * Gets the player reserved height for starting area
+	 * <p>Note: this is available only when {@link #setPlayer(Player)} has been called.<br>
+	 * This method will always return 0 before setPlayer was called.
+	 * </p>
+	 * @return the playerReservedHeight
+	 */
+	public int getPlayerReservedHeight() {
+		return playerReservedHeight;
+	}
+
 	@Override
 	public IChildView getChild() {
 		return view;

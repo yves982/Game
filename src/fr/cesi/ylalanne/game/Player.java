@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 import fr.cesi.ylalanne.contracts.ILayeredChildrenController;
 import fr.cesi.ylalanne.contracts.ui.ILayeredChildView;
+import fr.cesi.ylalanne.contracts.ui.ILayeredChildView;
 import fr.cesi.ylalanne.game.model.PlayerModel;
 import fr.cesi.ylalanne.game.model.geom.MutableRectangle;
 import fr.cesi.ylalanne.game.ui.MoveRequestEvent;
@@ -227,10 +228,7 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	}
 
 	/**
-	 * Places the player in the world
-	 * <p>
-	 * 	<b>Note: the player must be added to the world before setting its position</b>
-	 * </p>                                                                                   
+	 * Places the player in the world                                                                               
 	 * @param x the x coordinate
 	 * @param y the y coordinate
 	 */

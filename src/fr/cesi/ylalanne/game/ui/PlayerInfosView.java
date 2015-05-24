@@ -226,6 +226,18 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 		timeLeftMaxSize = (int)Math.ceil(0.04 * this.parent.getWidth());
 	}
 
+	@Override
+	public int getWidth() {
+		checkBuild();
+		return infosPanel.getWidth();
+	}
+
+	@Override
+	public int getHeight() {
+		checkBuild();
+		return infosPanel.getHeight();
+	}
+
 	public void build() {
 		try {
 			SwingUtilities.invokeAndWait(this::buildComponents);

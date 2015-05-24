@@ -23,10 +23,6 @@ public class Area implements IChildController, PropertyChangeListener {
 		model.setWidth(width);
 	}
 
-	private void updateHeight(int height) {
-		model.setHeight(height);
-	}
-
 	/**
 	 * Initialize an Area
 	 * @param kind the kind of this area
@@ -37,7 +33,22 @@ public class Area implements IChildController, PropertyChangeListener {
 		view = new AreaView(model);
 		view.build();
 		model.setImagePath(kind.getImagePath());
+		if(kind.getSecondImagePath() !=  null) {
+			model.setSecondImagePath(kind.getSecondImagePath());
+		}
 		view.addPropertyChangeListener(this);
+	}
+	
+	/**
+	 * Sets the bounds of this area
+	 * @param width the area's width
+	 * @param height the area's filled height
+	 * @param usedHeight the area's height within which some rules will apply
+	 */
+	public void setBounds(int width, int height, int usedHeight) {
+		model.setWidth(width);
+		model.setHeight(height);
+		model.setUsedHeight(usedHeight);
 	}
 	
 	/**
@@ -46,20 +57,15 @@ public class Area implements IChildController, PropertyChangeListener {
 	public AreaKind getKind() {
 		return kind;
 	}
-	
+
 	/**
-	 * Places this area in the world
-	 * <p>
-	 * 	<b>Note: the area must be added to the world before setting its position</b>
-	 * </p>
-	 * @param x the x coordinate
-	 * @param y the y coordinate
+	 * Gives this area her position in the {@link World}
+	 * @param y the y coordinate of this area (depends on its row)
 	 */
-	public void startPosition(int x, int y) {
-		model.setX(x);
+	public void startPosition(int y) {
 		model.setY(y);
 	}
-
+	
 	/**
 	 * @return the area's width
 	 * @see fr.cesi.ylalanne.game.model.AreaModel#getWidth()
@@ -76,6 +82,14 @@ public class Area implements IChildController, PropertyChangeListener {
 		return model.getHeight();
 	}
 
+	/**
+	 * @return the area's height
+	 * @see fr.cesi.ylalanne.game.model.AreaModel#getUsedHeight()
+	 */
+	public int getUsedHeight() {
+		return model.getUsedHeight();
+	}
+	
 	@Override
 	public IChildView getChild() {
 		return view;
@@ -89,9 +103,6 @@ public class Area implements IChildController, PropertyChangeListener {
 		switch(propertyName) {
 			case "width":
 				updateWidth((int)newValue);
-				break;
-			case "height":
-				updateHeight((int)newValue);
 				break;
 		}
 	}

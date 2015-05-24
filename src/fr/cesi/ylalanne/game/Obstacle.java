@@ -47,9 +47,6 @@ public class Obstacle implements IChildController, PropertyChangeListener {
 
 	/**
 	 * Places this obstacle in the world
-	 * <p>
-	 * 	<b>Note: the obstacle must be added to the world before setting its position</b>
-	 * </p>
 	 * @param x the x coordinate
 	 * @param y the y coordinate
 	 */
@@ -141,6 +138,20 @@ public class Obstacle implements IChildController, PropertyChangeListener {
 	 */
 	public int getHeight() {
 		return model.getHeight();
+	}
+	
+	/**
+	 * @return the obstacle's x coordinate
+	 */
+	public int getX() {
+		return model.getArea().getX();
+	}
+	
+	/**
+	 * @return the obstacle's y coordinate
+	 */
+	public int getY() {
+		return model.getArea().getY();
 	}
 
 	@Override

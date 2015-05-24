@@ -14,12 +14,17 @@ import java.beans.PropertyChangeSupport;
  * 	<li>width</li>
  * 	<li>height</li>
  * 	<li>imagePath</li>
+ *  <li>secondImagePath</li>
+ *  <li>usedHeight</li>
  * </ul>
  */
 public class AreaModel {
 	private Rectangle rectangle;
 	private String imagePath;
+	private String secondImagePath;
+	private int usedHeight;
 	private PropertyChangeSupport propertyChange;
+	
 	
 	/**
 	 * Initialize an AreaModel
@@ -44,6 +49,22 @@ public class AreaModel {
 		this.imagePath = imagePath;
 		propertyChange.firePropertyChange("imagePath", oldImagePath, imagePath);
 	}
+
+	/**
+	 * @return the secondImagePath
+	 */
+	public String getSecondImagePath() {
+		return secondImagePath;
+	}
+	/**
+	 * @param secondImagePath the secondImagePath to set
+	 */
+	public void setSecondImagePath(String secondImagePath) {
+		String oldSecondImagePath = this.secondImagePath;
+		this.secondImagePath = secondImagePath;
+		propertyChange.firePropertyChange("secondImagePath", oldSecondImagePath, secondImagePath);
+	}
+
 
 	/**
 	 * @return the x coordinate
@@ -103,6 +124,21 @@ public class AreaModel {
 		int oldHeight = rectangle.height;
 		rectangle.height = height;
 		propertyChange.firePropertyChange("height", oldHeight, height);
+	}
+
+	/**
+	 * @return the usedHeight
+	 */
+	public int getUsedHeight() {
+		return usedHeight;
+	}
+	/**
+	 * @param usedHeight the usedHeight to set
+	 */
+	public void setUsedHeight(int usedHeight) {
+		int oldUsedHeight = this.usedHeight;
+		this.usedHeight = usedHeight;
+		propertyChange.firePropertyChange("usedHeight", oldUsedHeight, usedHeight);
 	}
 
 

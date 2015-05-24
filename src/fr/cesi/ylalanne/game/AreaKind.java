@@ -4,14 +4,16 @@ package fr.cesi.ylalanne.game;
  * The kind of an {@link Area}, determines the image and associated business rule for an {@link Area}
  */
 public enum AreaKind {
-	START("/area/start.png"),
-	WAIT("/area/wait.png"),
-	FINISH("/area/finish.png");
+	START("/area/start.png", null),
+	WAIT("/area/wait.png", null),
+	FINISH("/area/finish.png", null);
 	
 	private String imagePath;
+	private String secondImagePath;
 	
-	AreaKind(String imagePath) {
+	AreaKind(String imagePath, String secondImagePath) {
 		this.imagePath = imagePath;
+		this.secondImagePath = secondImagePath;
 	}
 	
 	/**
@@ -19,5 +21,9 @@ public enum AreaKind {
 	 */
 	public String getImagePath() {
 		return imagePath;
+	}
+	
+	public String getSecondImagePath() {
+		return secondImagePath;
 	}
 }

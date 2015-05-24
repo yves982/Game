@@ -75,6 +75,7 @@ public class ObstacleView implements IChildView, PropertyChangeListener {
 		};
 		
 		try {
+			worker.execute();
 			worker.get();
 		} catch (InterruptedException | ExecutionException e) {
 			e.printStackTrace();
