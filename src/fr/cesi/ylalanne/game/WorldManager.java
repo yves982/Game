@@ -24,11 +24,16 @@ public class WorldManager implements PropertyChangeListener {
 	private void updateY(int y) {
 		playerY = y;
 		Optional<GameRow> currentRow = rows.stream()
-			.filter( gameRow -> gameRow.getBounds().isIn(y + (int)Math.ceil(player.getHeight() /2.0d)) )
+			.filter( gameRow -> gameRow.getBounds().isIn(y + (int)Math.ceil(player.getHeight() / 2.0d)) )
 			.findFirst();
 		
 		if(currentRow.isPresent()) {
-			playerRow = rows.indexOf(currentRow.get());
+			playerRow = rows.indexOf(currentRow.get()) +1;
+			int playerCenterX = player.getX() + (int)Math.ceil(player.getWidth() / 2.0d);
+			if(playerRow == 1 && currentRow.get().getWinningAreas().stream().anyMatch( area -> area.isIn(playerCenterX))) {
+				player.win();
+				world.end(true);
+			}
 		}
 		
 		checkPlayer();
@@ -36,13 +41,12 @@ public class WorldManager implements PropertyChangeListener {
 
 	private void checkPlayer() {
 		Optional<Obstacle> collider = world.getObstacles()
-				.parallelStream()
+				.stream()
 				.filter( obstacle -> obstacle.isWithin(playerX, playerY, 30) )
 				.filter( closeObstacle -> closeObstacle.checkCollision(player) )
 				.findFirst();
 		if(collider.isPresent()) {
 			player.collides(collider.get());
-			JOptionPane.showMessageDialog(null, "collision detected 2");
 		}
 	}
 
@@ -56,7 +60,6 @@ public class WorldManager implements PropertyChangeListener {
 			obstacle.move();
 			if(!player.isCollided() && obstacle.isWithin(playerX, playerY, 30) && obstacle.checkCollision(player)) {
 				player.collides(obstacle);
-				JOptionPane.showMessageDialog(null, "collision detected");
 			}
 		}
 	}
@@ -65,12 +68,11 @@ public class WorldManager implements PropertyChangeListener {
 		try {
 			moveExecutor.shutdown();
 			moveExecutor.awaitTermination(500, TimeUnit.MILLISECONDS);
-			JOptionPane.showMessageDialog(null, LocaleManager.getString(WorldManagerStrings.END_GAME.getKey()));
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		} finally {
-			world.end();
+			world.end(false);
 		}
 	}
 

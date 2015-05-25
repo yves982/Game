@@ -12,11 +12,14 @@ import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import fr.cesi.ylalanne.contracts.ui.IChildView;
 import fr.cesi.ylalanne.contracts.ui.ILayeredParentView;
+import fr.cesi.ylalanne.game.WorldManagerStrings;
+import fr.cesi.ylalanne.lang.LocaleManager;
 
 /**
  * A world view
@@ -99,7 +102,7 @@ public class WorldView implements IChildView, ILayeredParentView {
 	 * Tell the user the world has ended and there's nothing to do about it
 	 */
 	public void showEnd() {
-		
+		JOptionPane.showMessageDialog(null, LocaleManager.getString(WorldManagerStrings.END_GAME.getKey()));
 	}
 	
 	/**

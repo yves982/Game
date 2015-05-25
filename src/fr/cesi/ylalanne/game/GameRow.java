@@ -7,6 +7,7 @@ import fr.cesi.ylalanne.utils.Range;
 
 public class GameRow {
 	private Range<Integer> bounds;
+	private List<Range<Integer>> winningAreas;
 	private int xStep;
 	private List<Obstacle> obstacles;
 	private Area area;
@@ -75,5 +76,25 @@ public class GameRow {
 	 */
 	public void setArea(Area area) {
 		this.area = area;
+	}
+
+	/**
+	 * @return true if this GameRow has the option to end the game on certain spots
+	 */
+	public boolean isFinal() {
+		return winningAreas != null &&  winningAreas.size() > 0;
+	}
+	
+	/**
+	 * @return the winningAreas (the range of x coordinates within which the Player wins the game : if his center gets in)
+	 */
+	public List<Range<Integer>> getWinningAreas() {
+		return winningAreas;
+	}
+	/**
+	 * @param winningAreas the winningAreas to set
+	 */
+	public void setWinningAreas(List<Range<Integer>> winningAreas) {
+		this.winningAreas = winningAreas;
 	}
 }

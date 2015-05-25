@@ -126,8 +126,14 @@ public class World implements IBoundChildController, PropertyChangeListener {
 		propertyChange.firePropertyChange("reseted", false, true);
 	}
 
-	public void end() {
-		view.showEnd();
+	/**
+	 * Ends this World
+	 * @param playerWon true if the player has won, false otherwise
+	 */
+	public void end(boolean playerWon) {
+		if(!playerWon) {
+			view.showEnd();
+		}
 		clean();
 	}
 

@@ -18,11 +18,13 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
 import fr.cesi.ylalanne.contracts.ui.ILayeredChildView;
+import fr.cesi.ylalanne.game.WorldManagerStrings;
 import fr.cesi.ylalanne.game.model.PlayerInfosStrings;
 import fr.cesi.ylalanne.game.model.PlayerModel;
 import fr.cesi.ylalanne.lang.LocaleManager;
@@ -266,5 +268,9 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 		case "liveless":
 			SwingUtilities.invokeLater(this::updateLiveless);
 		}
+	}
+
+	public void showWin() {
+		JOptionPane.showMessageDialog(null, LocaleManager.getString(WorldManagerStrings.WIN_GAME.getKey()));
 	}
 }

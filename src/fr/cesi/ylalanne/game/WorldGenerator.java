@@ -22,6 +22,16 @@ public class WorldGenerator {
 	private int areasSpace;
 	private Settings settings;
 	
+	private void defineWinningAreas() {
+		List<Range<Integer>> winningAreas = new ArrayList<Range<Integer>>();
+		winningAreas.add(new Range<Integer>(30, 58));
+		winningAreas.add(new Range<Integer>(190, 222));
+		winningAreas.add(new Range<Integer>(366, 398));
+		winningAreas.add(new Range<Integer>(522, 555));
+		winningAreas.add(new Range<Integer>(700, 727));
+		rows.get(0).setWinningAreas(winningAreas);
+	}
+
 	private void buildRows(int ... xSteps) {
 		int rowCount = xSteps.length;
 		rows = new ArrayList<GameRow>(rowCount);
@@ -42,6 +52,8 @@ public class WorldGenerator {
 			row.setObstacles(new ArrayList<Obstacle>());
 			rows.add(row);
 		}
+		
+		defineWinningAreas();
 	}
 
 	/**

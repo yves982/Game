@@ -421,6 +421,11 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
 		propertyChange.removePropertyChangeListener(propertyName, listener);
 	}
+
+	public void win() {
+		infosView.showWin();
+		kill();
+	}
 	
 	
 }
