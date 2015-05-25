@@ -36,13 +36,13 @@ public class MainFrameModel {
 	}
 	
 	/**
-	 * @return the fr.cesi.ylalanne.settings
+	 * @return the settings
 	 */
 	public MainMenuItemModel getSettings() {
 		return settings;
 	}
 	/**
-	 * @param fr.cesi.ylalanne.settings the fr.cesi.ylalanne.settings to set
+	 * @param settings the settings to set
 	 */
 	public void setSettings(MainMenuItemModel settings) {
 		this.settings = settings;
