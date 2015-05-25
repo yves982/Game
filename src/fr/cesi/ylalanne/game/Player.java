@@ -231,6 +231,7 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 		reservedHeight = infosView.getHeight();
 		propertyChange = new PropertyChangeSupport(this);
 		setupExecutors();
+		collider = null;
 		playerView.addPropertyChangeListener(this);
 	}
 
@@ -292,7 +293,9 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	 */
 	public void collides(Obstacle obstacle) {
 		collider = obstacle;
-		dies();
+		if(collider.isDeadly()) {
+			dies();
+		}
 	}
 
 	/**
@@ -325,6 +328,13 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 		return liveLess;
 	}
 
+	/**
+	 * @return true if the Player is at least partially within an Obstacle, false otherwise
+	 */
+	public boolean isCollided() {
+		return collider == null;
+	}
+	
 	/**
 	 * @return the x coordinate of the player
 	 */

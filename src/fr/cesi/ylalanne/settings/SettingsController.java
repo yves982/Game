@@ -33,6 +33,7 @@ public class SettingsController implements PropertyChangeListener {
 	private Settings settings;
 	private static final Path settingsPath = Paths.get("./settings.json");
 	private JsonFactory factory;
+	private boolean initialized;
 	
 	private void fillResolutions(Map<Resolutions, String> resolutions) {
 		resolutions.put(Resolutions.LOW, LocaleManager.getString(Resolutions.LOW.getKey()));
@@ -123,6 +124,14 @@ public class SettingsController implements PropertyChangeListener {
 		}
 	}
 
+	/**
+	 * Initialize the SettingsController (load existing settings if any)
+	 */
+	private void init() {
+		loadSettings();
+		initialized = true;
+	}
+
 	public SettingsController() {
 		model = new SettingsViewModel();
 		view = new SettingsView(model);
@@ -133,9 +142,14 @@ public class SettingsController implements PropertyChangeListener {
 		buildModel();
 		view.build();
 	}
-
+	
+	/**
+	 * Start the SettingsController (shows its view)
+	 */
 	public void start() {
-		loadSettings();
+		if(!initialized) {
+			init();
+		}
 		view.show();
 	}
 
@@ -143,6 +157,14 @@ public class SettingsController implements PropertyChangeListener {
 	 * @return the settings
 	 */
 	public Settings getSettings() {
+		if(!initialized) {
+			init();
+		}
+		
+		if(settings == null) {
+			settings.setDifficulty(model.getSelectedDifficulty());
+			settings.setResolution(model.getSelectedResolution());
+		}
 		return settings;
 	}
 

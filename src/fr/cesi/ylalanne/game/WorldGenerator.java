@@ -3,6 +3,8 @@ package fr.cesi.ylalanne.game;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.cesi.ylalanne.settings.SettingsController;
+import fr.cesi.ylalanne.settings.model.Settings;
 import fr.cesi.ylalanne.utils.Range;
 
 /**
@@ -18,6 +20,7 @@ public class WorldGenerator {
 	private boolean hasSpawn;
 	private int interRowSpace;
 	private int areasSpace;
+	private Settings settings;
 	
 	private void buildRows(int ... xSteps) {
 		int rowCount = xSteps.length;
@@ -55,17 +58,11 @@ public class WorldGenerator {
 		boolean hasPrevious = obstaclesCount > 0;
 		Obstacle previousObstacle = hasPrevious ? obstacles.get(obstaclesCount -1) : null;
 				
-		if(gameRow.getxStep() > 0) {
-			startX = hasPrevious ? 
-					previousObstacle.getX() + previousObstacle.getWidth() + spaceAfterPrevious 
-					: 0;
-		} else {
-			startX = hasPrevious ?
-					previousObstacle.getX() - spaceAfterPrevious - obstacle.getWidth()
-					: world.getWidth() -  obstacle.getWidth();
-		}
+		startX = hasPrevious ? 
+				previousObstacle.getX() + previousObstacle.getWidth() + spaceAfterPrevious 
+				: 0;
 		
-		if(startX < 0 || startX >= world.getWidth() - obstacle.getWidth()) {
+		if(startX < 0 || startX > world.getWidth() - obstacle.getWidth()) {
 			startX = -1;
 		}
 		
@@ -83,7 +80,8 @@ public class WorldGenerator {
 	}
 
 	private Player buildPlayer(int row) {
-		Player player = generatePlayer(3, 4000, row);
+		int maxLiveTimeMs = settings.getDifficulty().getMaxLivetimeMs();
+		Player player = generatePlayer(3, maxLiveTimeMs, row);
 		playerReservedHeight = player.getReservedHeight();
 		
 		world.setPlayer(player);
@@ -103,7 +101,7 @@ public class WorldGenerator {
 	private void buildBottomRows() {
 		int rowCount = rows.size();
 		for(int i = 1; i < 4; i++) {
-			int space = (int)Math.ceil(Math.random() * 12) + 7;
+			int space = (int)Math.ceil(Math.random() * 17) + 80;
 			ObstacleKind kind = i%2 == 0 ? ObstacleKind.TRUCK : ObstacleKind.CAR;
 			fillObstacleRow(kind, rowCount -i, space);
 		}
@@ -111,7 +109,7 @@ public class WorldGenerator {
 
 	private void buildTopRows() {
 		for(int i = 1; i < 4; i++) {
-			int space = (int)Math.ceil(Math.random() * 12) + 7;
+			int space = (int)Math.ceil(Math.random() * 17) + 80;
 			ObstacleKind kind = i == 1 ? ObstacleKind.TRUNK : ObstacleKind.TURTLE;
 			fillObstacleRow(kind, i + 1, space);
 		}
@@ -201,12 +199,14 @@ public class WorldGenerator {
 	 */
 	public void spawnWorld() {
 		int [] xSteps = new int[] {
-				5,5,5,5,
-				5,5,5,5,
+				5,3,5,7,
+				5,-5,5,-5,
 				5
 		};
 		
 		buildRows(xSteps);
+		SettingsController settingsController = new SettingsController();
+		settings = settingsController.getSettings();
 		
 		if(hasSpawn) {
 			world.reset();
