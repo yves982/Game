@@ -96,6 +96,13 @@ public class WorldView implements IChildView, ILayeredParentView {
 	}
 	
 	/**
+	 * Tell the user the world has ended and there's nothing to do about it
+	 */
+	public void showEnd() {
+		
+	}
+	
+	/**
 	 * @param listener
 	 * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.beans.PropertyChangeListener)
 	 */

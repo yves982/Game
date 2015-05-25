@@ -62,7 +62,7 @@ public class WorldGenerator {
 		} else {
 			startX = hasPrevious ?
 					previousObstacle.getX() - spaceAfterPrevious - obstacle.getWidth()
-					: 0;
+					: world.getWidth() -  obstacle.getWidth();
 		}
 		
 		if(startX < 0 || startX >= world.getWidth() - obstacle.getWidth()) {
@@ -70,6 +70,56 @@ public class WorldGenerator {
 		}
 		
 		return startX;
+	}
+
+	private void buildAreas() {
+		Area finish = generateArea(AreaKind.FINISH, 1);
+		Area wait = generateArea(AreaKind.WAIT, 5);
+		Area start = generateArea(AreaKind.START, 9);
+		
+		world.addArea(finish);
+		world.addArea(wait);
+		world.addArea(start);
+	}
+
+	private Player buildPlayer(int row) {
+		Player player = generatePlayer(3, 4000, row);
+		playerReservedHeight = player.getReservedHeight();
+		
+		world.setPlayer(player);
+		return player;
+	}
+
+	private void fillObstacleRow(ObstacleKind kind, int row, int spaceAfterPrevious) {
+		Obstacle obstacle = generateObstacle(kind, row, spaceAfterPrevious);
+		while(obstacle != null) {
+			obstacle.waitUntilReady();
+			world.addObstacle(obstacle);
+			rows.get(row -1).getObstacles().add(obstacle);
+			obstacle = generateObstacle(kind, row, spaceAfterPrevious);
+		}
+	}
+
+	private void buildBottomRows() {
+		int rowCount = rows.size();
+		for(int i = 1; i < 4; i++) {
+			int space = (int)Math.ceil(Math.random() * 12) + 7;
+			ObstacleKind kind = i%2 == 0 ? ObstacleKind.TRUCK : ObstacleKind.CAR;
+			fillObstacleRow(kind, rowCount -i, space);
+		}
+	}
+
+	private void buildTopRows() {
+		for(int i = 1; i < 4; i++) {
+			int space = (int)Math.ceil(Math.random() * 12) + 7;
+			ObstacleKind kind = i == 1 ? ObstacleKind.TRUNK : ObstacleKind.TURTLE;
+			fillObstacleRow(kind, i + 1, space);
+		}
+	}
+
+	private void buildObstacles() {
+		buildBottomRows();
+		buildTopRows();
 	}
 
 	/**
@@ -98,6 +148,9 @@ public class WorldGenerator {
 		
 		area.setBounds(width, height, usedHeight);
 		areasSpace += height;
+		
+		rows.get(row -1).setArea(area);
+		
 		return area;
 	}
 	
@@ -110,15 +163,12 @@ public class WorldGenerator {
 	 */
 	public Obstacle generateObstacle(ObstacleKind kind, int row, int spaceAfterPrevious) {
 		Obstacle obstacle = new Obstacle(kind);
-		Range<Integer> bounds = rows.get(row -1).getBounds();
-		obstacle.defineSteps(rows.get(row -1).getxStep(), 0);
+		GameRow gameRow = rows.get(row -1);
+		Range<Integer> bounds = gameRow.getBounds();
+		obstacle.defineSteps(gameRow.getxStep(), 0);
 		
-		int startY = (int)Math.ceil(
-				bounds.getStart() 
-				+ (bounds.size() / 6.5d) 
-				+ (obstacle.getHeight()/2.0d));
-		
-		int startX = findObstacleStartX(rows.get(row -1), obstacle, spaceAfterPrevious);
+		int startX = findObstacleStartX(gameRow, obstacle, spaceAfterPrevious);
+		int startY = bounds.getStart();
 		
 		if(startX != -1) {
 			obstacle.startPosition(startX, startY);
@@ -163,22 +213,12 @@ public class WorldGenerator {
 			areasSpace = 0;
 		}
 		
-		Area finish = generateArea(AreaKind.FINISH, 1);
-		Area wait = generateArea(AreaKind.WAIT, 5);
-		Area start = generateArea(AreaKind.START, 9);
+		buildAreas();
+		Player player = buildPlayer(xSteps.length);
+		buildObstacles();
 		
-		
-		Player player = generatePlayer(3, 4000, xSteps.length);
-		playerReservedHeight = player.getReservedHeight();
-		
-		world.addArea(finish);
-		world.addArea(wait);
-		world.addArea(start);
-		
-		world.setPlayer(player);
-		player.lives();
-		
-		
+		WorldManager manager = new WorldManager(world, player, xSteps.length, rows);
+		manager.start();
 		
 		if(! hasSpawn) {
 			hasSpawn = true;

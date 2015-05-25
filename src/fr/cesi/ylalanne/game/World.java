@@ -37,6 +37,16 @@ public class World implements IBoundChildController, PropertyChangeListener {
 		this.height = height;
 	}
 
+	private void clean() {
+		obstacles.clear();
+		areas.clear();
+		view.removePropertyChangeListener(this);
+		
+		if(player != null) {
+			player.kill();
+		}
+	}
+
 	/**
 	 * Initialize the World
 	 */
@@ -107,13 +117,7 @@ public class World implements IBoundChildController, PropertyChangeListener {
 	 * Reset this world
 	 */
 	public void reset() {
-		obstacles.clear();
-		areas.clear();
-		view.removePropertyChangeListener(this);
-		
-		if(player != null) {
-			player.kill();
-		}
+		clean();
 		view = new WorldView();
 		view.build();
 		
@@ -121,7 +125,12 @@ public class World implements IBoundChildController, PropertyChangeListener {
 		reseted = true;
 		propertyChange.firePropertyChange("reseted", false, true);
 	}
-	
+
+	public void end() {
+		view.showEnd();
+		clean();
+	}
+
 	/**
 	 * @return the obstacles
 	 */

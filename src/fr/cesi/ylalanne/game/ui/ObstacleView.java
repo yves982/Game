@@ -65,6 +65,7 @@ public class ObstacleView implements IChildView, PropertyChangeListener {
 				try {
 					ImageIcon obstacleIcon = get();
 					obstacleLabel.setIcon(obstacleIcon);
+					obstacleLabel.setSize(obstacleIcon.getIconWidth(), obstacleIcon.getIconHeight());
 					modelChange.firePropertyChange("width", model.getWidth(), obstacleIcon.getIconWidth());
 					modelChange.firePropertyChange("height", model.getHeight(), obstacleIcon.getIconHeight());
 				} catch (InterruptedException | ExecutionException e) {

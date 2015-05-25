@@ -16,13 +16,19 @@ public class Obstacle implements IChildController, PropertyChangeListener {
 	private ObstacleKind kind;
 	private ObstacleModel model;
 	private ObstacleView view;
+	private boolean widthUpdated;
+	private boolean heightUpdated;
 	
-	private void updateWidth(int width) {
+	private synchronized void updateWidth(int width) {
 		model.getArea().setWidth(width);
+		widthUpdated = true;
+		notifyAll();
 	}
 
-	private void updateHeight(int height) {
+	private synchronized void updateHeight(int height) {
 		model.getArea().setHeight(height);
+		heightUpdated = true;
+		notifyAll();
 	}
 
 	/**
@@ -104,6 +110,20 @@ public class Obstacle implements IChildController, PropertyChangeListener {
 		return player.checkCollision(model.getArea());
 	}
 
+	/**
+	 * Waits until this Obstacle is fully loaded
+	 */
+	public synchronized void waitUntilReady() {
+		while(!widthUpdated || !heightUpdated) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}
+		}
+	}
+	
 	/**
 	 * <p>
 	 * A dropped Obstacle cannot be collided

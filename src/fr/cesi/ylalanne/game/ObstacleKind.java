@@ -6,7 +6,8 @@ package fr.cesi.ylalanne.game;
 public enum ObstacleKind {
 	TRUCK("/obstacle/truck.png"),
 	CAR("/obstacle/car.png"),
-	TRUNK("/obstacle/trunk.png");
+	TRUNK("/obstacle/trunk.png"), 
+	TURTLE("/obstacle/turtle.png");
 	
 	private String imagePath;
 

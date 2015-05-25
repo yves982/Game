@@ -24,6 +24,8 @@ import fr.cesi.ylalanne.game.ui.PlayerView;
  * <p>It has the following bound properties:</p>
  * <ul>
  * 	<li>liveLess</li>
+ *  <li>x</li>
+ *  <li>y</li>
  * </ul>
  */
 public class Player implements ILayeredChildrenController, PropertyChangeListener {
@@ -146,11 +148,15 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	}
 
 	private void moveX(int movesStep, MutableRectangle playerArea) {
+		int oldX = playerArea.getX();
 		playerArea.setX(playerArea.getX() + movesStep);
+		propertyChange.firePropertyChange("x", oldX, playerArea.getX());
 	}
 
 	private void moveY(int movesStep, MutableRectangle playerArea) {
+		int oldY = playerArea.getY();
 		playerArea.setY(playerArea.getY() + movesStep);
+		propertyChange.firePropertyChange("y", oldY, playerArea.getY());
 	}
 	
 
@@ -319,6 +325,20 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 		return liveLess;
 	}
 
+	/**
+	 * @return the x coordinate of the player
+	 */
+	public int getX() {
+		return model.getArea().getX();
+	}
+	
+	/**
+	 * @return the y coordinate of the Player
+	 */
+	public int getY() {
+		return model.getArea().getY();
+	}
+	
 	/**
 	 * @return the player's width
 	 */

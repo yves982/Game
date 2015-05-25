@@ -70,4 +70,10 @@ public class GameRow {
 	public Area getArea() {
 		return area;
 	}
+	/**
+	 * @param area the area to set
+	 */
+	public void setArea(Area area) {
+		this.area = area;
+	}
 }
