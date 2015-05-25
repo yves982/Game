@@ -29,6 +29,15 @@ public class WorldManager implements PropertyChangeListener {
 			if(playerRow == 1 && currentRow.get().getWinningAreas().stream().anyMatch( area -> area.isIn(playerCenterX))) {
 				player.win();
 				world.end(true);
+			} else if (playerRow >= 2 && playerRow <= 4) {
+				long potentialColliders = world.getObstacles()
+					.stream()
+					.filter( obstacle -> obstacle.isWithin(playerX, y, 2))
+					.count();
+				
+				if(potentialColliders <= 0) {
+					player.kill();
+				}
 			}
 		}
 		
@@ -54,7 +63,7 @@ public class WorldManager implements PropertyChangeListener {
 	private void moveObstacles() {
 		for(Obstacle obstacle : world.getObstacles()) {
 			obstacle.move();
-			if(!player.isCollided() && obstacle.isWithin(playerX, playerY, 30) && obstacle.checkCollision(player)) {
+			if(obstacle.isWithin(playerX, playerY, 30) && obstacle.checkCollision(player)) {
 				player.collides(obstacle);
 			}
 		}

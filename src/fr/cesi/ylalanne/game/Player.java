@@ -42,6 +42,8 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	private boolean liveLess;
 	private PropertyChangeSupport propertyChange;
 	private int reservedHeight;
+	private int startX;
+	private int startY;
 	
 	private void fillChildrenView() {
 		childrenView.add(infosView);
@@ -243,6 +245,8 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	public void startPosition(int x, int y) {
 		model.getArea().setX(x);
 		model.getArea().setY(y);
+		startX = x;
+		startY = y;
 	}
 
 	/**
@@ -265,9 +269,9 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	}
 
 	/**
-	 * Reset the player to his original state
+	 * Cleans the resources used by the Player
 	 */
-	public void kill() {
+	public void clean() {
 		try {
 			movesExecutor.shutdown();
 			movesExecutor.awaitTermination(500, TimeUnit.MILLISECONDS);
@@ -288,13 +292,29 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	}
 	
 	/**
+	 * Kills the Player
+	 */
+	public void kill() {
+		dies();
+		if(!liveLess) {
+			model.getArea().setX(startX);
+			model.getArea().setY(startY);
+		}
+	}
+	
+	/**
 	 * Collides this player with an {@code Obstacle}
 	 * @param obstacle the collided {@code Obstacle}
 	 */
 	public void collides(Obstacle obstacle) {
+		Obstacle oldCollider = collider;
 		collider = obstacle;
-		if(collider.isDeadly()) {
+		if(collider.isDeadly() && oldCollider == null) {
 			dies();
+			if(!liveLess && collider.isDeadly()) {
+				model.getArea().setX(startX);
+				model.getArea().setY(startY);
+			}
 		}
 	}
 
@@ -424,7 +444,7 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 
 	public void win() {
 		infosView.showWin();
-		kill();
+		clean();
 	}
 	
 	

@@ -43,7 +43,7 @@ public class World implements IBoundChildController, PropertyChangeListener {
 		view.removePropertyChangeListener(this);
 		
 		if(player != null) {
-			player.kill();
+			player.clean();
 		}
 	}
 
