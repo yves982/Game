@@ -2,7 +2,6 @@ package fr.cesi.ylalanne.game;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import fr.cesi.ylalanne.utils.Range;
 
@@ -15,17 +14,18 @@ import fr.cesi.ylalanne.utils.Range;
 public class WorldGenerator {
 	private World world;
 	private List<GameRow> rows;
-	private int areasSpace;
 	private int playerReservedHeight;
 	private boolean hasSpawn;
+	private int interRowSpace;
+	private int areasSpace;
 	
 	private void buildRows(int ... xSteps) {
 		int rowCount = xSteps.length;
 		rows = new ArrayList<GameRow>(rowCount);
 		int worldHeight = world.getHeight();
-		double freeHeightPerRow = (worldHeight - areasSpace) / rowCount;
+		double freeHeightPerRow = worldHeight / rowCount;
 		int rowSpace = (int)Math.ceil( 0.78 * freeHeightPerRow );
-		int interRowSpace = (int)Math.ceil(0.12 * freeHeightPerRow);
+		interRowSpace = (int)Math.ceil(0.08 * freeHeightPerRow);
 		int start=0, end=rowSpace;
 		
 		for(int i=0; i<rowCount; i++) {
@@ -78,37 +78,26 @@ public class WorldGenerator {
 	 */
 	public WorldGenerator(World world) {
 		this.world = world;
-		areasSpace = world.getAreas().stream().collect(Collectors.summingInt(Area::getHeight));
 		hasSpawn = false;
 	}
 	
 	/**
 	 * generate an Area of a given kind in a specified row
 	 * @param kind the kind of Area to generate
+	 * @param row the row to set the generated Area into
 	 * @return the generated {@link Area}
 	 */
-	public Area generateArea(AreaKind kind) {
+	public Area generateArea(AreaKind kind, int row) {
 		Area area = new Area(kind);
 		area.startPosition(areasSpace + playerReservedHeight);
 		
 		int width, height, usedHeight;
 		width = world.getWidth();
-		height = world.getHeight();
-		
-		switch(kind) {
-			case WAIT:
-				height = (int)Math.ceil(height * 7d/15d);
-				break;
-			case START:
-			case FINISH:
-				height = (int)Math.ceil(height * 1d/30d);
-				break;
-		}
-		usedHeight = (int)Math.ceil(height * 1d/30d);
+		height = rows.get(row -1).getBounds().getEnd() - areasSpace;
+		usedHeight = (int)rows.get(0).getBounds().size();
 		
 		area.setBounds(width, height, usedHeight);
-		
-		areasSpace += area.getHeight();
+		areasSpace += height;
 		return area;
 	}
 	
@@ -151,10 +140,7 @@ public class WorldGenerator {
 		Player player = new Player(maxLives, maxLeftTimeMs, 5);
 		Range<Integer> bounds = rows.get(row-1).getBounds();
 		int startX = world.getWidth()/2 - player.getWidth()/2;
-		int startY = (int)Math.ceil(
-				bounds.getStart() 
-				+ (bounds.size() / 6.5d) 
-				+ (player.getHeight()/2.0d));
+		int startY = bounds.getStart();
 		
 		player.startPosition(startX, startY);
 		return player;
@@ -162,19 +148,37 @@ public class WorldGenerator {
 	
 	/**
 	 * Spawn this world
-	 * @param xSteps steps for automatic obstacle moves : we need one int per row
 	 */
-	public void spawnWorld(int ... xSteps) {
+	public void spawnWorld() {
+		int [] xSteps = new int[] {
+				5,5,5,5,
+				5,5,5,5,
+				5
+		};
+		
 		buildRows(xSteps);
 		
 		if(hasSpawn) {
 			world.reset();
+			areasSpace = 0;
 		}
-		Player player = generatePlayer(3, 4000, 11);
-		world.setPlayer(player);
-		playerReservedHeight = world.getPlayerReservedHeight();
 		
+		Area finish = generateArea(AreaKind.FINISH, 1);
+		Area wait = generateArea(AreaKind.WAIT, 5);
+		Area start = generateArea(AreaKind.START, 9);
+		
+		
+		Player player = generatePlayer(3, 4000, xSteps.length);
+		playerReservedHeight = player.getReservedHeight();
+		
+		world.addArea(finish);
+		world.addArea(wait);
+		world.addArea(start);
+		
+		world.setPlayer(player);
 		player.lives();
+		
+		
 		
 		if(! hasSpawn) {
 			hasSpawn = true;

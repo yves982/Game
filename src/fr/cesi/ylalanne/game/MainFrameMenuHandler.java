@@ -43,12 +43,7 @@ public class MainFrameMenuHandler {
 
 	private static void start(WorldGenerator generator) {
 		FutureTask<Void> startTask = new FutureTask<Void>( () -> {
-			int [] xSteps = new int[] {
-					5,5,5,5,
-					5,5,5,5,
-					5,5,5
-			};
-			generator.spawnWorld(xSteps);
+			generator.spawnWorld();
 		}, null);
 		ExecutorService exec = Executors.newSingleThreadExecutor();
 		exec.execute(startTask);

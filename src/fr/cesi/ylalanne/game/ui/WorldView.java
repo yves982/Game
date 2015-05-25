@@ -49,7 +49,7 @@ public class WorldView implements IChildView, ILayeredParentView {
 
 	private void buildBackground() {
 		backgroundPanel = new JPanel(true);
-		BoxLayout boxLayout = new BoxLayout(backgroundPanel, BoxLayout.Y_AXIS);
+		BoxLayout boxLayout = new BoxLayout(backgroundPanel, BoxLayout.PAGE_AXIS);
 		backgroundPanel.setLayout(boxLayout);
 		backgroundPanel.setBackground(Color.BLACK);
 		backgroundPanel.setVisible(true);
@@ -146,7 +146,7 @@ public class WorldView implements IChildView, ILayeredParentView {
 				backgroundPanel.revalidate();
 				break;
 		}
-		mainPanel.revalidate();
+		mainPanel.repaint();
 	}
 
 	@Override

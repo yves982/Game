@@ -9,6 +9,7 @@ public class GameRow {
 	private Range<Integer> bounds;
 	private int xStep;
 	private List<Obstacle> obstacles;
+	private Area area;
 	
 	/**
 	 * Initialize an instance
@@ -54,5 +55,19 @@ public class GameRow {
 	 */
 	public void setObstacles(List<Obstacle> obstacles) {
 		this.obstacles = obstacles;
+	}
+
+	/**
+	 * @return true if this row holds an area, false otherwise
+	 */
+	public boolean hasArea() {
+		return area == null;
+	}
+	
+	/**
+	 * @return the area
+	 */
+	public Area getArea() {
+		return area;
 	}
 }

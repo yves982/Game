@@ -12,7 +12,6 @@ import java.util.concurrent.TimeUnit;
 
 import fr.cesi.ylalanne.contracts.ILayeredChildrenController;
 import fr.cesi.ylalanne.contracts.ui.ILayeredChildView;
-import fr.cesi.ylalanne.contracts.ui.ILayeredChildView;
 import fr.cesi.ylalanne.game.model.PlayerModel;
 import fr.cesi.ylalanne.game.model.geom.MutableRectangle;
 import fr.cesi.ylalanne.game.ui.MoveRequestEvent;
@@ -40,6 +39,7 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	private ScheduledExecutorService movesExecutor;
 	private boolean liveLess;
 	private PropertyChangeSupport propertyChange;
+	private int reservedHeight;
 	
 	private void fillChildrenView() {
 		childrenView.add(infosView);
@@ -222,6 +222,7 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 		childrenView = new ArrayList<ILayeredChildView>();
 		movesListener = new MovesListener();
 		setupViewAndModel(maxLives, maxLeftTimeMs, movesStep);
+		reservedHeight = infosView.getHeight();
 		propertyChange = new PropertyChangeSupport(this);
 		setupExecutors();
 		playerView.addPropertyChangeListener(this);
@@ -332,6 +333,14 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 		return model.getArea().getHeight();
 	}
 	
+	/**
+	 * Gets the player's reserved height (reserved to display its infos)
+	 * @return the reservedHeight
+	 */
+	public int getReservedHeight() {
+		return reservedHeight;
+	}
+
 	@Override
 	public List<ILayeredChildView> getChildren() {
 		return childrenView;

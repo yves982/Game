@@ -89,6 +89,7 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 			initLives();
 			worker.execute();
 			worker.get();
+			livesPanel.setMaximumSize(livesPanel.getSize());
 		} catch (InterruptedException | ExecutionException e) {
 			e.printStackTrace();
 		}
@@ -107,6 +108,7 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 		timeLeftLabel = new JLabel();
 		timeLeftLabel.setBackground(Color.green);
 		timeLeftLabel.setOpaque(true);
+		timeLeftLabel.setSize(0, 0);
 		timeLeftLabel.setVisible(true);
 	}
 

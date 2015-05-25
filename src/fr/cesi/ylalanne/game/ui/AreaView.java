@@ -37,8 +37,6 @@ public class AreaView implements IChildView, PropertyChangeListener {
 	private AreaModel model;
 	private PropertyChangeSupport modelChange;
 	private boolean built;
-	
-	
 	private void buildLabel() {
 		areaLabel = new JLabel();
 		areaLabel.setVisible(true);
@@ -46,9 +44,10 @@ public class AreaView implements IChildView, PropertyChangeListener {
 
 	private void buildPanel() {
 		areaPanel = new JPanel();
-		BoxLayout boxLayout = new BoxLayout(areaPanel, BoxLayout.Y_AXIS);
+		BoxLayout boxLayout = new BoxLayout(areaPanel, BoxLayout.PAGE_AXIS);
 		areaPanel.setLayout(boxLayout);
-		areaPanel.add(areaLabel);
+		areaPanel.setOpaque(false);
+		areaPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 	}
 
 	private void buildComponents() {
@@ -70,37 +69,6 @@ public class AreaView implements IChildView, PropertyChangeListener {
 	private void updateY() {
 		int y = model.getY();
 		areaLabel.setBounds(areaLabel.getX(), y, areaLabel.getWidth(), areaLabel.getHeight());
-	}
-
-	private void loadImage() {
-		SwingWorker<ImageIcon, Void> worker = new SwingWorker<ImageIcon, Void>() {
-			@Override
-			protected ImageIcon doInBackground() throws Exception {
-				Image areaImage = ImageLoader.LoadImage(model.getImagePath());
-				ImageIcon areaIcon = new ImageIcon(areaImage);
-				return areaIcon;
-			}
-			
-			protected void done() {
-				try {
-					ImageIcon areaIcon = get();
-					areaLabel.setIcon(areaIcon);
-					areaLabel.setVisible(true);
-					modelChange.firePropertyChange("width", model.getWidth(), areaIcon.getIconWidth());
-				} catch (InterruptedException | ExecutionException e) {
-					e.printStackTrace();
-					throw new RuntimeException(e);
-				}
-			};
-		};
-		
-		try {
-			worker.execute();
-			worker.get();
-		} catch (InterruptedException | ExecutionException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		}
 	}
 
 	private void loadSecondImage() {
@@ -137,14 +105,14 @@ public class AreaView implements IChildView, PropertyChangeListener {
 		}
 	}
 
-	private void resizeImage() {
+	private void loadSizedImage() {
 		SwingWorker<ImageIcon, Void> worker = new SwingWorker<ImageIcon, Void>() {
 			@Override
 			protected ImageIcon doInBackground() throws Exception {
-				Image areaImage = ((ImageIcon)areaLabel.getIcon()).getImage();
-				Image scaledImage = areaImage.getScaledInstance(model.getWidth(), model.getUsedHeight(), Image.SCALE_FAST);
-				ImageIcon scaledAreaIcon = new ImageIcon(scaledImage);
-				return scaledAreaIcon;
+				Image areaImage = ImageLoader.LoadImage(model.getImagePath());
+				Image scaledAreaImage = areaImage.getScaledInstance(model.getWidth(), model.getUsedHeight(), Image.SCALE_FAST);
+				ImageIcon areaIcon = new ImageIcon(scaledAreaImage);
+				return areaIcon;
 			}
 			
 			@Override
@@ -152,6 +120,8 @@ public class AreaView implements IChildView, PropertyChangeListener {
 				try {
 					ImageIcon scaledAreaIcon = get();
 					areaLabel.setIcon(scaledAreaIcon);
+					areaPanel.add(areaLabel);
+					areaPanel.repaint();
 				} catch (InterruptedException | ExecutionException e) {
 					e.printStackTrace();
 					throw new RuntimeException(e);
@@ -169,9 +139,8 @@ public class AreaView implements IChildView, PropertyChangeListener {
 	}
 
 	private void addsFiller() {
-		int width = model.getWidth();
 		int height = model.getHeight() - model.getUsedHeight();
-		Component rigidArea = Box.createRigidArea(new Dimension(width, height));
+		Component rigidArea = Box.createRigidArea(new Dimension(0, height));
 		areaPanel.add(rigidArea);
 		areaPanel.revalidate();
 	}
@@ -220,17 +189,14 @@ public class AreaView implements IChildView, PropertyChangeListener {
 			case "y":
 				SwingUtilities.invokeLater(this::updateY);
 				break;
-			case "imagePath":
-				loadImage();
-				break;
 			case "secondImagePath":
 				loadSecondImage();
 				break;
 			case "usedHeight":
-				resizeImage();
 				if(model.getSecondImagePath() == null) {
 					addsFiller();
 				}
+				loadSizedImage();
 				break;
 		}
 	}
