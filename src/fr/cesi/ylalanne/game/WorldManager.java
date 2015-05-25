@@ -8,10 +8,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import javax.swing.JOptionPane;
-
-import fr.cesi.ylalanne.lang.LocaleManager;
-
 public class WorldManager implements PropertyChangeListener {
 	private World world;
 	private Player player;
