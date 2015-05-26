@@ -52,6 +52,7 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 	private ImageIcon livesIcon;
 	private int timeLeftMaxSize;
 	private boolean built;
+	private Color lightGreen;
 	
 	private void updateLives() {
 		livesPanel.removeAll();
@@ -100,12 +101,14 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 	private void buildScore() {
 		scoresLabel = new JLabel();
 		scoresLabel.setText(String.format("%s %d", LocaleManager.getString(PlayerInfosStrings.SCORE.getKey()), model.getScore()));
+		scoresLabel.setForeground(lightGreen);
 		scoresLabel.setVisible(true);
 	}
 
 	private void buildTime() {
 		timeLabel = new JLabel();
 		timeLabel.setText(LocaleManager.getString(PlayerInfosStrings.TIME.getKey()));
+		timeLabel.setForeground(lightGreen);
 		timeLabel.setVisible(true);
 		timeLeftLabel = new JLabel();
 		timeLeftLabel.setBackground(Color.green);
@@ -182,7 +185,7 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 	}
 	
 	private void updateScore() {
-		scoresLabel.setText(String.format("%s %i", 
+		scoresLabel.setText(String.format("%s %d", 
 				LocaleManager.getString(PlayerInfosStrings.SCORE.getKey()), 
 				model.getScore()));
 	}
@@ -207,6 +210,7 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 	public PlayerInfosView(PlayerModel model) {
 		this.model = model;
 		built = false;
+		lightGreen = new Color(0x90, 0xEE, 0x90);
 		model.addPropertyChangeListener(this);
 		gridBagConstraintsBuilder = new GridBagConstraintsBuilder();
 	}
@@ -271,6 +275,7 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 	}
 
 	public void showWin() {
+		
 		JOptionPane.showMessageDialog(null, LocaleManager.getString(WorldManagerStrings.WIN_GAME.getKey()));
 	}
 }

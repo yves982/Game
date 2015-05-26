@@ -4,8 +4,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 
-import javax.swing.JOptionPane;
-
+import fr.cesi.ylalanne.highscores.HighScoreController;
 import fr.cesi.ylalanne.mainframe.model.MainFrameActions;
 import fr.cesi.ylalanne.settings.SettingsController;
 
@@ -28,7 +27,13 @@ public class MainFrameMenuHandler {
 	}
 
 	private static void highScores() {
-		JOptionPane.showMessageDialog(null, "high scores was clicked", "Info", JOptionPane.INFORMATION_MESSAGE);
+		FutureTask<Void> highScoreTask = new FutureTask<Void>(() -> {
+			HighScoreController highScoreController = new HighScoreController();
+			highScoreController.start();
+		}, null);
+		ExecutorService exec = Executors.newSingleThreadExecutor();
+		exec.execute(highScoreTask);
+		exec.shutdown();
 	}
 
 	private static void settings() {

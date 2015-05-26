@@ -3,6 +3,8 @@ package fr.cesi.ylalanne.game;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.cesi.ylalanne.contracts.IHighScoreController;
+import fr.cesi.ylalanne.highscores.HighScoreController;
 import fr.cesi.ylalanne.settings.SettingsController;
 import fr.cesi.ylalanne.settings.model.Settings;
 import fr.cesi.ylalanne.utils.Range;
@@ -92,8 +94,10 @@ public class WorldGenerator {
 	}
 
 	private Player buildPlayer(int row) {
-		int maxLiveTimeMs = settings.getDifficulty().getMaxLivetimeMs();
-		Player player = generatePlayer(3, maxLiveTimeMs, row);
+		Range<Integer> xBounds = new Range<Integer>(0, world.getWidth());
+		// 22 is half the size of Player's sprite
+		Range<Integer> yBounds = new Range<Integer>((int)rows.get(0).getBounds().size() -28, world.getHeight() - (int)rows.get(0).getBounds().size() +28);
+		Player player = generatePlayer(3, 60000, row, 5, xBounds, yBounds);
 		playerReservedHeight = player.getReservedHeight();
 		
 		world.setPlayer(player);
@@ -112,16 +116,18 @@ public class WorldGenerator {
 
 	private void buildBottomRows() {
 		int rowCount = rows.size();
+		int minObstacleSpace = settings.getDifficulty().getMinObstacleSpace();
 		for(int i = 1; i < 4; i++) {
-			int space = (int)Math.ceil(Math.random() * 17) + 80;
+			int space = (int)Math.ceil(Math.random() * 17) + minObstacleSpace;
 			ObstacleKind kind = i%2 == 0 ? ObstacleKind.TRUCK : ObstacleKind.CAR;
 			fillObstacleRow(kind, rowCount -i, space);
 		}
 	}
 
 	private void buildTopRows() {
+		int minObstacleSpace = settings.getDifficulty().getMinObstacleSpace();
 		for(int i = 1; i < 4; i++) {
-			int space = (int)Math.ceil(Math.random() * 17) + 80;
+			int space = (int)Math.ceil(Math.random() * 17) + minObstacleSpace;
 			ObstacleKind kind = i == 1 ? ObstacleKind.TRUNK : ObstacleKind.TURTLE;
 			fillObstacleRow(kind, i + 1, space);
 		}
@@ -137,7 +143,7 @@ public class WorldGenerator {
 	 * @param world the {@code World}
 	 */
 	public WorldGenerator(World world) {
-		this.world = world;
+		this.world = world; 
 		hasSpawn = false;
 	}
 	
@@ -194,10 +200,15 @@ public class WorldGenerator {
 	 * @param maxLives The maximum number of lives this Player has
 	 * @param maxLeftTimeMs the maximum lifetime this Player has (in milliseconds)
 	 * @param row the virtual row the generated Player should be placed into (<b>use at least 1</b>)
+	 * @param movesStep the size of each Player's move
+	 * @param xBounds the x min/max coordinates to stay in the World
+	 * @param xBounds the y min/max coordinates to stay in the World
 	 * @return the generated {@link Player}
 	 */
-	public Player generatePlayer(int maxLives, int maxLeftTimeMs, int row) {
-		Player player = new Player(maxLives, maxLeftTimeMs, 5);
+	public Player generatePlayer(int maxLives, int maxLeftTimeMs, int row, int movesStep, Range<Integer> xBounds, Range<Integer> yBounds) {
+		Player player = new Player(maxLives, maxLeftTimeMs, movesStep, xBounds, yBounds);
+		IHighScoreController highScore = new HighScoreController();
+		player.setHighScore(highScore);
 		Range<Integer> bounds = rows.get(row-1).getBounds();
 		int startX = world.getWidth()/2 - player.getWidth()/2;
 		int startY = bounds.getStart();

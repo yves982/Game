@@ -10,6 +10,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import fr.cesi.ylalanne.contracts.IHighScoreController;
 import fr.cesi.ylalanne.contracts.ILayeredChildrenController;
 import fr.cesi.ylalanne.contracts.ui.ILayeredChildView;
 import fr.cesi.ylalanne.game.model.PlayerModel;
@@ -18,6 +19,7 @@ import fr.cesi.ylalanne.game.ui.MoveRequestEvent;
 import fr.cesi.ylalanne.game.ui.MovesListener;
 import fr.cesi.ylalanne.game.ui.PlayerInfosView;
 import fr.cesi.ylalanne.game.ui.PlayerView;
+import fr.cesi.ylalanne.utils.Range;
 
 /**
  * The Player : a moving area which can be checked for collisions and moves on command
@@ -44,6 +46,9 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	private int reservedHeight;
 	private int startX;
 	private int startY;
+	private Range<Integer> xBounds;
+	private Range<Integer> yBounds;
+	private IHighScoreController highScore;
 	
 	private void fillChildrenView() {
 		childrenView.add(infosView);
@@ -151,12 +156,20 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 
 	private void moveX(int movesStep, MutableRectangle playerArea) {
 		int oldX = playerArea.getX();
-		playerArea.setX(playerArea.getX() + movesStep);
+		int newX = playerArea.getX() + movesStep;
+		if(!xBounds.isIn(newX) || !xBounds.isIn(newX + playerArea.getWidth())) {
+			return;
+		}
+		playerArea.setX(newX);
 		propertyChange.firePropertyChange("x", oldX, playerArea.getX());
 	}
 
 	private void moveY(int movesStep, MutableRectangle playerArea) {
 		int oldY = playerArea.getY();
+		int newY = playerArea.getY() + movesStep;
+		if(!yBounds.isIn(newY) || !yBounds.isIn(newY + playerArea.getHeight())) {
+			return;
+		}
 		playerArea.setY(playerArea.getY() + movesStep);
 		propertyChange.firePropertyChange("y", oldY, playerArea.getY());
 	}
@@ -170,11 +183,15 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 		switch(moveRequest) {
 			case UP:
 			case DOWN:
+				if(moveYFuture != null) {
 					moveYFuture.cancel(false);
+				}
 				break;
 			case RIGHT:
 			case LEFT:
+				if(moveXFuture != null) {
 					moveXFuture.cancel(false);
+				}
 				break;
 		}
 		
@@ -225,8 +242,10 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	 * @param maxLives the maximum number of lives before the fr.cesi.ylalanne.game is over
 	 * @param maxLeftTimeMs the maximum time every life can last (in milliseconds)
 	 * @param movesStep the step for all moves
+	 * @param xBounds min/max x coordinates to stay in the World
+	 * @param yBounds min/max y coordinates to stay in the World
 	 */
-	public Player(int maxLives, int maxLeftTimeMs, int movesStep) {
+	public Player(int maxLives, int maxLeftTimeMs, int movesStep, Range<Integer> xBounds, Range<Integer> yBounds) {
 		childrenView = new ArrayList<ILayeredChildView>();
 		movesListener = new MovesListener();
 		setupViewAndModel(maxLives, maxLeftTimeMs, movesStep);
@@ -234,6 +253,8 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 		propertyChange = new PropertyChangeSupport(this);
 		setupExecutors();
 		collider = null;
+		this.xBounds = xBounds;
+		this.yBounds = yBounds;
 		playerView.addPropertyChangeListener(this);
 	}
 
@@ -300,6 +321,7 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 			model.getArea().setX(startX);
 			model.getArea().setY(startY);
 		}
+		collider = null;
 	}
 	
 	/**
@@ -307,14 +329,9 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	 * @param obstacle the collided {@code Obstacle}
 	 */
 	public void collides(Obstacle obstacle) {
-		Obstacle oldCollider = collider;
 		collider = obstacle;
-		if(collider.isDeadly() && oldCollider == null) {
-			dies();
-			if(!liveLess && collider.isDeadly()) {
-				model.getArea().setX(startX);
-				model.getArea().setY(startY);
-			}
+		if(collider.isDeadly()) {
+			kill();
 		}
 	}
 
@@ -391,6 +408,19 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 		return reservedHeight;
 	}
 
+	/**
+	 * @return the highScore
+	 */
+	public IHighScoreController getHighScore() {
+		return highScore;
+	}
+	/**
+	 * @param highScore the highScore to set
+	 */
+	public void setHighScore(IHighScoreController highScore) {
+		this.highScore = highScore;
+	}
+
 	@Override
 	public List<ILayeredChildView> getChildren() {
 		return childrenView;
@@ -443,8 +473,22 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	}
 
 	public void win() {
+		int score = model.getScore();
+		int remainingLiveTimeMs = model.getRemainingLiveTimeMs();
+		int maxLiveTimeMs = model.getMaxLiveTimeMs();
+		int lives = model.getLives();
+		model.setScore(score * remainingLiveTimeMs + (maxLiveTimeMs / 1000) * (lives -1));
 		infosView.showWin();
+		highScore.askName(model.getScore());
 		clean();
+	}
+
+	/**
+	 * Increases the player's score
+	 * @param amount the amount to increase the score by
+	 */
+	public void gains(int amount) {
+		model.setScore(model.getScore() + amount);
 	}
 	
 	

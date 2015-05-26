@@ -2,12 +2,12 @@ package fr.cesi.ylalanne.settings.model;
 
 
 public enum Difficulties {
-	EASY("Difficulty_Easy", 15000),
-	NORMAL("Difficulty_Normal", 8000),
-	HARD("Difficulty_Hard", 6000);
+	EASY("Difficulty_Easy", 140),
+	NORMAL("Difficulty_Normal", 100),
+	HARD("Difficulty_Hard", 80);
 	
 	private String key;
-	private int maxLiveTimeMs;
+	private int minObstacleSpace;
 	
 	/**
 	 * Initialize an instance
@@ -16,7 +16,7 @@ public enum Difficulties {
 	 */
 	private Difficulties(String key, int maxLivetimeMs) {
 		this.key = key;
-		this.maxLiveTimeMs = maxLivetimeMs;
+		this.minObstacleSpace = maxLivetimeMs;
 	}
 	
 	/**
@@ -27,9 +27,9 @@ public enum Difficulties {
 	}
 	
 	/**
-	 * @return the maximum livetime in milliseconds
+	 * @return the minimum amount of space between obstacle of a same row
 	 */
-	public int getMaxLivetimeMs() {
-		return maxLiveTimeMs;
+	public int getMinObstacleSpace() {
+		return minObstacleSpace;
 	}
 }
