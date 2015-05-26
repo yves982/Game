@@ -62,6 +62,7 @@ public class HighScoreView implements IView, ActionListener {
 		highScoreDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		highScoreDialog.pack();
 		highScoreDialog.setLocation(ComponentLocation.getCenteredLocation(highScoreDialog));
+		highScoreDialog.setTitle(LocaleManager.getString(HighScoresStrings.VIEW_TITLE.getKey()));
 	}
 
 

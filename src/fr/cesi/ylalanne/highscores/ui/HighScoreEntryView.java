@@ -13,12 +13,14 @@ import java.lang.reflect.InvocationTargetException;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import fr.cesi.ylalanne.contracts.ui.IView;
 import fr.cesi.ylalanne.highscores.model.HighScoresStrings;
 import fr.cesi.ylalanne.lang.LocaleManager;
+import fr.cesi.ylalanne.utils.ui.ComponentLocation;
 import fr.cesi.ylalanne.utils.ui.GridBagConstraintsAnchor;
 import fr.cesi.ylalanne.utils.ui.GridBagConstraintsBuilder;
 
@@ -59,12 +61,13 @@ public class HighScoreEntryView implements IView, ActionListener {
 		GridBagConstraints nameConstraint = builder
 				.position(0, 0)
 				.weight(1, 1)
+				.margins(15, 0, 10, 0)
 				.anchor(GridBagConstraintsAnchor.BASELINE)
 				.build();
 		
 		GridBagConstraints okConstraint = builder
 				.position(0, 1)
-				.weight(2, 1)
+				.weight(10, 1)
 				.anchor(GridBagConstraintsAnchor.BASELINE)
 				.build();
 		
@@ -72,6 +75,7 @@ public class HighScoreEntryView implements IView, ActionListener {
 		GridBagConstraints scoreConstraint = builder
 				.position(1, 0)
 				.weight(1, 1)
+				.margins(15, 0, 10, 0)
 				.anchor(GridBagConstraintsAnchor.BASELINE)
 				.build();
 		
@@ -81,17 +85,19 @@ public class HighScoreEntryView implements IView, ActionListener {
 		mainDialog.pack();
 		mainDialog.setResizable(false);
 		mainDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		mainDialog.setLocation(ComponentLocation.getCenteredLocation(mainDialog));
+		mainDialog.setTitle(LocaleManager.getString(HighScoresStrings.ENTRY_VIEW_TITLE.getKey()));
 	}
 
 	private void buildScore() {
 		scoreLabel = new JLabel(String.format("%d", highScore));
-		scoreLabel.setPreferredSize(new Dimension(18, 10));
+		scoreLabel.setPreferredSize(new Dimension(140, 16));
 		scoreLabel.setVisible(true);
 	}
 
 	private void buildName() {
 		nameTextField = new JTextField();
-		nameTextField.setPreferredSize(new Dimension(24, 10));
+		nameTextField.setPreferredSize(new Dimension(140, 16));
 		nameTextField.setVisible(true);
 	}
 
@@ -119,8 +125,12 @@ public class HighScoreEntryView implements IView, ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		propertyChange.firePropertyChange("name", null, nameTextField.getText());
-		mainDialog.dispose();
+		if(nameTextField.getText() == "" || nameTextField.getText() == null) {
+			JOptionPane.showMessageDialog(null, LocaleManager.getString(HighScoresStrings.WARNING_EMPTY_NAME.getKey()));
+		} else {
+			propertyChange.firePropertyChange("name", null, nameTextField.getText());
+			mainDialog.dispose();
+		}
 	}
 
 	/**
