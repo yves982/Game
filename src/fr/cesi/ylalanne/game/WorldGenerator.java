@@ -178,8 +178,9 @@ public class WorldGenerator {
 	 * @return the generated {@link Obstacle} or null if there's not enough space left
 	 */
 	public Obstacle generateObstacle(ObstacleKind kind, int row, int spaceAfterPrevious) {
-		Obstacle obstacle = new Obstacle(kind);
+		Range<Integer> xBounds = new Range<Integer>(0, world.getWidth());
 		GameRow gameRow = rows.get(row -1);
+		Obstacle obstacle = new Obstacle(kind, xBounds, 3 * Math.abs(gameRow.getxStep()));
 		Range<Integer> bounds = gameRow.getBounds();
 		obstacle.defineSteps(gameRow.getxStep(), 0);
 		

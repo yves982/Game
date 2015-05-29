@@ -8,6 +8,7 @@ import fr.cesi.ylalanne.contracts.ui.IChildView;
 import fr.cesi.ylalanne.game.model.ObstacleModel;
 import fr.cesi.ylalanne.game.model.geom.MutableRectangle;
 import fr.cesi.ylalanne.game.ui.ObstacleView;
+import fr.cesi.ylalanne.utils.Range;
 
 /**
  * An Obstacle : basically, a moving area, which can be checked for collisions
@@ -18,6 +19,11 @@ public class Obstacle implements IChildController, PropertyChangeListener {
 	private ObstacleView view;
 	private boolean widthUpdated;
 	private boolean heightUpdated;
+	private Range<Integer> xBounds;
+	private boolean isOutOfWorld;
+	private int outOfWorldTicks;
+	private int outOfWorldTicksCount;
+	
 	
 	private synchronized void updateWidth(int width) {
 		model.getArea().setWidth(width);
@@ -34,12 +40,18 @@ public class Obstacle implements IChildController, PropertyChangeListener {
 	/**
 	 * Initialize an Obstacle
 	 * @param kind the obstacle's kind
+	 * @param xBounds min/max x coordinates to stay in the World
+	 * @param outOfWorldTicks Number of times it'll ignore move requests before going back to its starting position in the World
 	 */
-	public Obstacle(ObstacleKind kind) {
+	public Obstacle(ObstacleKind kind, Range<Integer> xBounds, int outOfWorldTicks) {
 		this.kind = kind;
 		model = new ObstacleModel();
 		view = new ObstacleView(model);
 		view.build();
+		this.xBounds = xBounds;
+		this.outOfWorldTicks = outOfWorldTicks;
+		isOutOfWorld = false;
+		outOfWorldTicksCount = 0;
 		model.setImagePath(kind.getImagePath());
 		model.setDeadly(kind.isDeadly());
 		view.addPropertyChangeListener(this);
@@ -77,9 +89,25 @@ public class Obstacle implements IChildController, PropertyChangeListener {
 	 * Moves the obstacle by predefined steps (dx on the X axis and dy on the Y one)
 	 */
 	public void move() {
-		MutableRectangle obstacleArea = model.getArea();
-		obstacleArea.setX(obstacleArea.getX() + model.getDx());
-		obstacleArea.setY(obstacleArea.getY() + model.getDy());
+		if(!isOutOfWorld) {
+			MutableRectangle obstacleArea = model.getArea();
+			obstacleArea.setX(obstacleArea.getX() + model.getDx());
+			obstacleArea.setY(obstacleArea.getY() + model.getDy());
+			
+			if(model.getDx() > 0) { 
+				isOutOfWorld = !xBounds.isIn(obstacleArea.getX());
+			} else {
+				isOutOfWorld = !xBounds.isIn(obstacleArea.getX() + obstacleArea.getWidth());
+			}
+		} else {
+			outOfWorldTicksCount++;
+			if(outOfWorldTicksCount == outOfWorldTicks) {
+				int x = model.getDx() > 0 ? xBounds.getStart() : xBounds.getEnd() - model.getWidth();
+				position(x, model.getArea().getY());
+				isOutOfWorld = false;
+				outOfWorldTicksCount = 0;
+			}
+		}
 	}
 	
 	/**
