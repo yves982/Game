@@ -57,7 +57,7 @@ public class Obstacle implements IChildController, PropertyChangeListener {
 	 * @param x the x coordinate
 	 * @param y the y coordinate
 	 */
-	public void startPosition(int x, int y) {
+	public void position(int x, int y) {
 		MutableRectangle obstacleArea = model.getArea();
 		obstacleArea.setX(x);
 		obstacleArea.setY(y);

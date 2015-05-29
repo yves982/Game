@@ -46,8 +46,10 @@ public class HighScoreController implements PropertyChangeListener, IHighScoreCo
 					InputStream input = Files.newInputStream(settingsPath);
 					JsonParser parser = factory.createParser(input)
 			) {
-				parser.setCodec(new ObjectMapper(factory));
-				model = parser.readValueAs(HighScoresModel.class);
+				if(Files.exists(settingsPath) && Files.size(settingsPath) > 0) {
+					parser.setCodec(new ObjectMapper(factory));
+					model = parser.readValueAs(HighScoresModel.class);
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 				throw new RuntimeException(e);

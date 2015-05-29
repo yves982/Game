@@ -187,7 +187,7 @@ public class WorldGenerator {
 		int startY = bounds.getStart();
 		
 		if(startX != -1) {
-			obstacle.startPosition(startX, startY);
+			obstacle.position(startX, startY);
 		} else {
 			obstacle = null;
 		}
@@ -213,7 +213,7 @@ public class WorldGenerator {
 		int startX = world.getWidth()/2 - player.getWidth()/2;
 		int startY = bounds.getStart();
 		
-		player.startPosition(startX, startY);
+		player.position(startX, startY);
 		return player;
 	}
 	

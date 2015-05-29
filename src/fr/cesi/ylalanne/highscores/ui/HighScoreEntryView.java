@@ -125,7 +125,7 @@ public class HighScoreEntryView implements IView, ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(nameTextField.getText() == "" || nameTextField.getText() == null) {
+		if(nameTextField.getText().trim().equals("") || nameTextField.getText() == null) {
 			JOptionPane.showMessageDialog(null, LocaleManager.getString(HighScoresStrings.WARNING_EMPTY_NAME.getKey()));
 		} else {
 			propertyChange.firePropertyChange("name", null, nameTextField.getText());

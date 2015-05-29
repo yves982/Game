@@ -133,7 +133,7 @@ public class MutableRectangle {
 	 * @return true if this {@code Rectangle} intersects with the given circle, false otherwise.
 	 */
 	public boolean intersects(int x, int y, int radius) {
-		Ellipse2D.Double ellipse2d = new Ellipse2D.Double(x, y, x+radius, y+radius);
+		Ellipse2D.Double ellipse2d = new Ellipse2D.Double(x, y, 2*radius, 2*radius);
 		return ellipse2d.intersects(rectangle);
 	}
 	

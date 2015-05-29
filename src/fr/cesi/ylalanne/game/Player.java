@@ -256,18 +256,34 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 		this.xBounds = xBounds;
 		this.yBounds = yBounds;
 		playerView.addPropertyChangeListener(this);
+		startX = -43;
+		startY=-43;
 	}
 
 	/**
 	 * Places the player in the world                                                                               
 	 * @param x the x coordinate
 	 * @param y the y coordinate
+	 * @return true if the requested position would place the Player in its bounds, false otherwise
 	 */
-	public void startPosition(int x, int y) {
-		model.getArea().setX(x);
-		model.getArea().setY(y);
-		startX = x;
-		startY = y;
+	public boolean position(int x, int y) {
+		MutableRectangle playerArea = model.getArea();
+		
+		// we cannot check for yBounds here as initially the player is placed out of the World (the starting area is not included in yBounds that is)
+		playerArea.setY(y);
+		if(startY == -43) {
+			startY = y;
+		}
+		
+		
+		boolean inXBounds = xBounds.isIn(x) && xBounds.isIn(x + playerArea.getWidth());
+		if(inXBounds) {
+			playerArea.setX(x);
+			if(startX == -43) {
+				startX = x;
+			}
+		}
+		return inXBounds;
 	}
 
 	/**
@@ -369,7 +385,7 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	 * @return true if the Player is at least partially within an Obstacle, false otherwise
 	 */
 	public boolean isCollided() {
-		return collider == null;
+		return collider != null;
 	}
 	
 	/**
@@ -406,6 +422,13 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	 */
 	public int getReservedHeight() {
 		return reservedHeight;
+	}
+	
+	/**
+	 * Get the Obstacle in collision with the Player, if it is collided, null otherwise
+	 */
+	public Obstacle getCollider() {
+		return collider;
 	}
 
 	/**
