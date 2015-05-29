@@ -2,6 +2,7 @@ package fr.cesi.ylalanne.game;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import fr.cesi.ylalanne.contracts.IHighScoreController;
 import fr.cesi.ylalanne.highscores.HighScoreController;
@@ -23,6 +24,7 @@ public class WorldGenerator {
 	private int interRowSpace;
 	private int areasSpace;
 	private Settings settings;
+	private Random random;
 	
 	private void defineWinningAreas() {
 		List<Range<Integer>> winningAreas = new ArrayList<Range<Integer>>();
@@ -118,7 +120,7 @@ public class WorldGenerator {
 		int rowCount = rows.size();
 		int minObstacleSpace = settings.getDifficulty().getMinObstacleSpace();
 		for(int i = 1; i < 4; i++) {
-			int space = (int)Math.ceil(Math.random() * 17) + minObstacleSpace;
+			int space = random.nextInt(17) + minObstacleSpace;
 			ObstacleKind kind = i%2 == 0 ? ObstacleKind.TRUCK : ObstacleKind.CAR;
 			fillObstacleRow(kind, rowCount -i, space);
 		}
@@ -127,7 +129,7 @@ public class WorldGenerator {
 	private void buildTopRows() {
 		int minObstacleSpace = settings.getDifficulty().getMinObstacleSpace();
 		for(int i = 1; i < 4; i++) {
-			int space = (int)Math.ceil(Math.random() * 17) + minObstacleSpace;
+			int space = random.nextInt(17) + minObstacleSpace;
 			ObstacleKind kind = i == 1 ? ObstacleKind.TRUNK : ObstacleKind.TURTLE;
 			fillObstacleRow(kind, i + 1, space);
 		}
@@ -138,6 +140,18 @@ public class WorldGenerator {
 		buildTopRows();
 	}
 
+	private void buildBear() {
+		Range<Integer> xBounds = new Range<Integer>(0, world.getWidth());
+		Obstacle bear = new Obstacle(ObstacleKind.BEAR, xBounds, 0);
+		int index = random.nextInt(5);
+		Range<Integer> firstRowBearSlot = rows.get(0).getWinningAreas().get(index);
+		int bearX = firstRowBearSlot.getStart() + (int)Math.ceil(firstRowBearSlot.size() / 2.0d) -(int)Math.ceil(bear.getWidth() / 2.0d);
+		int bearY = (int) Math.ceil(rows.get(0).getBounds().size() / 2.0d) -8;
+		bear.position(bearX, bearY);
+		bear.waitUntilReady();
+		world.addObstacle(bear);
+	}
+
 	/**
 	 * Initialize an ObstacleGenerator
 	 * @param world the {@code World}
@@ -145,6 +159,7 @@ public class WorldGenerator {
 	public WorldGenerator(World world) {
 		this.world = world; 
 		hasSpawn = false;
+		random = new Random();
 	}
 	
 	/**
@@ -239,6 +254,7 @@ public class WorldGenerator {
 		
 		buildAreas();
 		Player player = buildPlayer(xSteps.length);
+		buildBear();
 		buildObstacles();
 		
 		WorldManager manager = new WorldManager(world, player, xSteps.length, rows);

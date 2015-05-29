@@ -22,6 +22,7 @@ public class ObstacleModel{
 	private int dy;
 	private boolean dropped;
 	private boolean deadly;
+	private boolean isStatic;
 	private PropertyChangeSupport propertyChange;
 	
 	public ObstacleModel() {
@@ -130,6 +131,19 @@ public class ObstacleModel{
 	}
 
 	/**
+	 * @return the isStatic
+	 */
+	public boolean isStatic() {
+		return isStatic;
+	}
+	/**
+	 * @param isStatic the isStatic to set
+	 */
+	public void setStatic(boolean isStatic) {
+		this.isStatic = isStatic;
+	}
+
+	/**
 	 * @param listener
 	 * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.beans.PropertyChangeListener)
 	 * @see fr.cesi.ylalanne.game.model.geom.MutableRectangle#addPropertyChangeListener(java.beans.PropertyChangeListener)
@@ -138,7 +152,6 @@ public class ObstacleModel{
 		propertyChange.addPropertyChangeListener(listener);
 		area.addPropertyChangeListener(listener);
 	}
-
 	/**
 	 * @param listener
 	 * @see java.beans.PropertyChangeSupport#removePropertyChangeListener(java.beans.PropertyChangeListener)
@@ -148,7 +161,6 @@ public class ObstacleModel{
 		propertyChange.removePropertyChangeListener(listener);
 		area.removePropertyChangeListener(listener);
 	}
-
 	/**
 	 * @param propertyName
 	 * @param listener
@@ -159,7 +171,6 @@ public class ObstacleModel{
 		propertyChange.addPropertyChangeListener(propertyName, listener);
 		area.addPropertyChangeListener(propertyName, listener);
 	}
-
 	/**
 	 * @param propertyName
 	 * @param listener

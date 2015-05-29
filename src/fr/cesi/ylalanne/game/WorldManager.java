@@ -2,11 +2,15 @@ package fr.cesi.ylalanne.game;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import fr.cesi.ylalanne.utils.Range;
 
 public class WorldManager implements PropertyChangeListener {
 	private World world;
@@ -16,6 +20,7 @@ public class WorldManager implements PropertyChangeListener {
 	private List<Obstacle> obstacles;
 	private int lowestRow;
 	private ScheduledExecutorService moveExecutor;
+	private Random random;
 	
 	
 	private void checkEnd() {
@@ -24,9 +29,11 @@ public class WorldManager implements PropertyChangeListener {
 			boolean won = rows.get(0).getWinningAreas()
 					.stream()
 					.anyMatch( winningRow -> winningRow.isIn(playerCenterX) );
-			if(won) {
+			if(won && !player.isCollided() || !player.getCollider().isStatic()) {
 				player.win();
 				endWorld(true);
+			} else if (player.isCollided() && player.getCollider().isStatic()) {
+				player.position(player.getX(), player.getY() - player.getHeight()/2 - (int)rows.get(0).getBounds().size());
 			}
 		}
 	}
@@ -48,7 +55,10 @@ public class WorldManager implements PropertyChangeListener {
 	}
 
 	private void moveObstacles() {
-		for(Obstacle obstacle : world.getObstacles()) {
+		Iterator<Obstacle> movingObstaclesIterator = obstacles.stream().filter( obstacle -> !obstacle.isStatic()).iterator();
+		Iterable<Obstacle> movingObstacles = () -> movingObstaclesIterator;
+		
+		for(Obstacle obstacle : movingObstacles) {
 			int oldX = obstacle.getX();
 			obstacle.move();
 			checkX(oldX, obstacle.getX(), obstacle);
@@ -102,8 +112,8 @@ public class WorldManager implements PropertyChangeListener {
 	}
 
 	private void movesOnWater() {
-		if(player.isCollided()) {
-			Obstacle collider = player.getCollider();
+		Obstacle collider = player.getCollider();
+		if(player.isCollided() && !collider.isDeadly()) {
 			int playerWidth = player.getWidth();
 			int colliderWidth = collider.getWidth();
 			int colliderX = collider.getX();
@@ -136,6 +146,15 @@ public class WorldManager implements PropertyChangeListener {
 		}
 	}
 
+	private void placeBear() {
+		Obstacle bear = obstacles.stream().filter( obstacle -> obstacle.getKind().equals(ObstacleKind.BEAR) ).findFirst().get();
+		int index = random.nextInt(5);
+		Range<Integer> firstRowBearSlot = rows.get(0).getWinningAreas().get(index);
+		int bearX = firstRowBearSlot.getStart() + (int)Math.ceil(firstRowBearSlot.size() / 2.0d) -(int)Math.ceil(bear.getWidth() / 2.0d);
+		int bearY = (int) Math.ceil(rows.get(0).getBounds().size() / 2.0d) -8;
+		bear.position(bearX, bearY);
+	}
+
 	public WorldManager(World world, Player player, int playerRow, List<GameRow> rows) {
 		this.world = world;
 		this.player = player;
@@ -144,6 +163,7 @@ public class WorldManager implements PropertyChangeListener {
 		this.player.addPropertyChangeListener(this);
 		lowestRow = rows.size();
 		obstacles = world.getObstacles();
+		random = new Random();
 	}
 	
 	public void start() {
@@ -181,6 +201,9 @@ public class WorldManager implements PropertyChangeListener {
 				}
 				updateScore();
 				checkEnd();
+				break;
+			case "lives":
+				placeBear();
 				break;
 		}
 		

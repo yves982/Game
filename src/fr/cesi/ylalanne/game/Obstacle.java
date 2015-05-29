@@ -54,6 +54,7 @@ public class Obstacle implements IChildController, PropertyChangeListener {
 		outOfWorldTicksCount = 0;
 		model.setImagePath(kind.getImagePath());
 		model.setDeadly(kind.isDeadly());
+		model.setStatic(kind.isStatic());
 		view.addPropertyChangeListener(this);
 	}
 	
@@ -89,6 +90,9 @@ public class Obstacle implements IChildController, PropertyChangeListener {
 	 * Moves the obstacle by predefined steps (dx on the X axis and dy on the Y one)
 	 */
 	public void move() {
+		if(model.isStatic()) {
+			throw new IllegalStateException("A static Obstacle should not be moved");
+		}
 		if(!isOutOfWorld) {
 			MutableRectangle obstacleArea = model.getArea();
 			obstacleArea.setX(obstacleArea.getX() + model.getDx());
@@ -171,6 +175,13 @@ public class Obstacle implements IChildController, PropertyChangeListener {
 	 */
 	public boolean isDeadly() {
 		return model.isDeadly();
+	}
+
+	/**
+	 * @return the isStatic ( a static Obstacle should not be moved )
+	 */
+	public boolean isStatic() {
+		return model.isStatic();
 	}
 
 	/**

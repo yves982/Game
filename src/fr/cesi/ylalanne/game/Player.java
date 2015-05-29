@@ -26,6 +26,7 @@ import fr.cesi.ylalanne.utils.Range;
  * <p>It has the following bound properties:</p>
  * <ul>
  * 	<li>liveLess</li>
+ * <li>lives</li>
  *  <li>x</li>
  *  <li>y</li>
  * </ul>
@@ -93,6 +94,7 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 		int lives = model.getLives();
 		model.setLives(lives -1);
 		model.setRemainingLiveTimeMs(model.getMaxLiveTimeMs());
+		propertyChange.firePropertyChange("lifes", lives, model.getLives());
 		
 		if(model.getLives() <= 0) {
 			Object oldLifeLess = liveLess;
