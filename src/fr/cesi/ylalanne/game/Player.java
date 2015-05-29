@@ -94,7 +94,7 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 		int lives = model.getLives();
 		model.setLives(lives -1);
 		model.setRemainingLiveTimeMs(model.getMaxLiveTimeMs());
-		propertyChange.firePropertyChange("lifes", lives, model.getLives());
+		propertyChange.firePropertyChange("lives", lives,  model.getLives());
 		
 		if(model.getLives() <= 0) {
 			Object oldLifeLess = liveLess;
