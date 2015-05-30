@@ -263,4 +263,11 @@ public class WorldGenerator {
 			hasSpawn = true;
 		}
 	}
+
+	/**
+	 * @return the hasSpawn
+	 */
+	public boolean isHasSpawn() {
+		return hasSpawn;
+	}
 }

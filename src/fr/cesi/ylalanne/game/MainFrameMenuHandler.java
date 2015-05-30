@@ -54,12 +54,14 @@ public class MainFrameMenuHandler {
 	private static void start(WorldGenerator generator) {
 		FutureTask<Void> startTask = new FutureTask<Void>( () -> {
 			generator.spawnWorld();
+			if(generator.isHasSpawn()) {
+				SoundManager.stop();
+			}
+			SoundManager.playContinuously("/ambiance.wav");
 		}, null);
 		ExecutorService exec = Executors.newSingleThreadExecutor();
 		exec.execute(startTask);
 		exec.shutdown();
-		
-		SoundManager.playContinuously("/ambiance.wav");
 	}
 
 	private static void mute() {

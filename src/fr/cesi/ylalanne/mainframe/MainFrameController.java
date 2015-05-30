@@ -51,7 +51,7 @@ public class MainFrameController implements PropertyChangeListener {
 		mainModel.setFrameTitle(frameTitle);
 		mainModel.setWidth(width);
 		mainModel.setHeight(height);
-		mainModel.setMuted(false);
+		mainModel.setMuted(true);
 		mainModel.setMutedTitle(mutedTitle);
 	}
 
@@ -88,8 +88,15 @@ public class MainFrameController implements PropertyChangeListener {
 			case "action":
 				MainFrameActions action = Enum.valueOf(MainFrameActions.class, newValue.toString());
 				actionsHandler.accept(action);
-				if(action.equals(MainFrameActions.MUTE)) {
-					mainModel.setMuted(mainModel.isMuted());
+				switch(action) {
+					case MUTE:
+						mainModel.setMuted(!mainModel.isMuted());
+						break;
+					case START:
+						mainModel.setMuted(false);
+						break;
+					default:
+						break;
 				}
 				break;
 			case "reseted":
