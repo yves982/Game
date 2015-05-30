@@ -7,6 +7,7 @@ import java.util.concurrent.FutureTask;
 import fr.cesi.ylalanne.highscores.HighScoreController;
 import fr.cesi.ylalanne.mainframe.model.MainFrameActions;
 import fr.cesi.ylalanne.settings.SettingsController;
+import fr.cesi.ylalanne.utils.sound.SoundManager;
 
 public class MainFrameMenuHandler {
 	public static void handleAction(MainFrameActions action, WorldGenerator generator) {
@@ -21,7 +22,11 @@ public class MainFrameMenuHandler {
 			start(generator);
 				break;
 			case QUIT:
+				SoundManager.stop();
 				System.exit(0);
+				break;
+			case MUTE:
+				mute();
 				break;
 		}
 	}
@@ -53,5 +58,15 @@ public class MainFrameMenuHandler {
 		ExecutorService exec = Executors.newSingleThreadExecutor();
 		exec.execute(startTask);
 		exec.shutdown();
+		
+		SoundManager.playContinuously("/ambiance.wav");
+	}
+
+	private static void mute() {
+		if(SoundManager.isPlaying()) {
+			SoundManager.stop();
+		} else {
+			SoundManager.playContinuously("/ambiance.wav");
+		}
 	}
 }

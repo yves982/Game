@@ -137,6 +137,13 @@ public class SettingsController implements PropertyChangeListener {
 		model.setSelectedLanguage(settings.getLanguage());
 	}
 
+	private static void loadDefaultSettings() {
+		settings = new Settings();
+		settings.setDifficulty(Difficulties.EASY);
+		settings.setResolution(Resolutions.LOW);
+		settings.setLanguage(Languages.FRENCH);
+	}
+
 	/**
 	 * Initialize the SettingsController (load existing settings if any)
 	 */
@@ -177,18 +184,19 @@ public class SettingsController implements PropertyChangeListener {
 			) {
 				parser.setCodec(new ObjectMapper(factory));
 				settings = parser.readValueAs(Settings.class);
+				if(settings == null) {
+					loadDefaultSettings();
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 				throw new RuntimeException(e);
 			}
-		
-			if(settings == null) {
-				settings = new Settings();
-				settings.setDifficulty(Difficulties.EASY);
-				settings.setResolution(Resolutions.LOW);
-				settings.setLanguage(Languages.FRENCH);
-			}
+		} else {
+			loadDefaultSettings();
+			
 		}
+		
+		
 		return settings;
 	}
 

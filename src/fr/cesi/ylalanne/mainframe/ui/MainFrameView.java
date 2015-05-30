@@ -6,10 +6,15 @@ import java.awt.Dimension;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.lang.reflect.InvocationTargetException;
 
+import javax.swing.JCheckBox;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -18,8 +23,10 @@ import javax.swing.SwingUtilities;
 
 import fr.cesi.ylalanne.contracts.ui.IChildView;
 import fr.cesi.ylalanne.contracts.ui.IFocusedParentView;
+import fr.cesi.ylalanne.mainframe.model.MainFrameActions;
 import fr.cesi.ylalanne.mainframe.model.MainFrameModel;
 import fr.cesi.ylalanne.mainframe.model.MainMenuItemModel;
+import fr.cesi.ylalanne.utils.sound.SoundManager;
 import fr.cesi.ylalanne.utils.ui.ComponentLocation;
 
 /**
@@ -29,7 +36,7 @@ import fr.cesi.ylalanne.utils.ui.ComponentLocation;
  * 	<li>action</li>
  * </ul>
  */
-public class MainFrameView implements IFocusedParentView, ActionListener {
+public class MainFrameView extends WindowAdapter implements IFocusedParentView, ActionListener, PropertyChangeListener {
 	private JFrame frame;
 	private JMenuBar menuBar;
 	private JMenu menu;
@@ -39,6 +46,7 @@ public class MainFrameView implements IFocusedParentView, ActionListener {
 	private JMenuItem highScoreMenuItem;
 	private JMenuItem settingsMenuItem;
 	private JMenuItem quitMenuItem;
+	private JCheckBoxMenuItem mutedMenuItem;
 	private IChildView child;
 	
 	private void buildComponents() {
@@ -47,11 +55,10 @@ public class MainFrameView implements IFocusedParentView, ActionListener {
 		buildFrame();
 	}
 	
-	private void addHandlers(JMenuItem startMenuItem, JMenuItem highScoreMenuItem, JMenuItem settingsMenuItem, JMenuItem quitMenuItem) {
-		startMenuItem.addActionListener(this);
-		highScoreMenuItem.addActionListener(this);
-		settingsMenuItem.addActionListener(this);
-		quitMenuItem.addActionListener(this);
+	private void addHandlers(JMenuItem ... menuItems) {
+		for(JMenuItem menuItem : menuItems) {
+			menuItem.addActionListener(this);
+		}
 	}
 
 	private void fillModels(JMenuItem startMenuItem, JMenuItem highScoreMenuItem, JMenuItem settingsMenuItem, JMenuItem quitMenuItem) {
@@ -67,14 +74,17 @@ public class MainFrameView implements IFocusedParentView, ActionListener {
 		highScoreMenuItem = new JMenuItem(viewModel.getHighScores().getValue(), viewModel.getHighScores().getMnemonic());
 		settingsMenuItem = new JMenuItem(viewModel.getSettings().getValue(), viewModel.getSettings().getMnemonic());
 		quitMenuItem = new JMenuItem(viewModel.getQuit().getValue(), viewModel.getQuit().getMnemonic());
+		mutedMenuItem = new JCheckBoxMenuItem(viewModel.getMutedTitle(), viewModel.isMuted());
 		
-		addHandlers(startMenuItem, highScoreMenuItem, settingsMenuItem, quitMenuItem);
+		
+		addHandlers(startMenuItem, highScoreMenuItem, settingsMenuItem, quitMenuItem, mutedMenuItem);
 		fillModels(startMenuItem, highScoreMenuItem, settingsMenuItem, quitMenuItem);
 		
 		menu = new JMenu(viewModel.getMenuTitle());
 		menu.setMnemonic(viewModel.getMenuMnemonic());
 		menu.add(startMenuItem);
 		menu.add(highScoreMenuItem);
+		menu.add(mutedMenuItem);
 		menu.add(settingsMenuItem);
 		menu.add(quitMenuItem);
 	}
@@ -92,14 +102,20 @@ public class MainFrameView implements IFocusedParentView, ActionListener {
 		frame.add(menuBar, BorderLayout.PAGE_START);
 		
 		frame.setPreferredSize(new Dimension(viewModel.getWidth(), viewModel.getHeight()));
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		frame.addWindowListener(this);
 		frame.pack();
 		frame.setLocation(ComponentLocation.getCenteredLocation(frame));
+	}
+
+	private void updateMuted() {
+		mutedMenuItem.setSelected(viewModel.isMuted());
 	}
 
 	public MainFrameView(MainFrameModel viewModel) {
 		this.viewModel = viewModel;
 		propertyChange = new PropertyChangeSupport(this);
+		viewModel.addPropertyChangeListener(this);
 	}
 
 	public void show() {
@@ -153,10 +169,31 @@ public class MainFrameView implements IFocusedParentView, ActionListener {
 	}
 
 	@Override
+	public void windowClosing(WindowEvent e) {
+		SoundManager.stop();
+		System.exit(0);
+	}
+	
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		JMenuItem menuItem = (JMenuItem)e.getSource();
-		MainMenuItemModel menuItemModel = (MainMenuItemModel)menuItem.getModel();
-		propertyChange.firePropertyChange("action", null, menuItemModel.getAction());
+		if(!e.getSource().equals(mutedMenuItem)) {
+			MainMenuItemModel menuItemModel = (MainMenuItemModel)menuItem.getModel();
+			propertyChange.firePropertyChange("action", null, menuItemModel.getAction());
+		}else {
+			propertyChange.firePropertyChange("action", null, MainFrameActions.MUTE);
+		}
+	}
+
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		String propertyName = evt.getPropertyName();
+		
+		switch(propertyName) {
+			case "muted":
+				updateMuted();
+				break;
+		}
 	}
 
 	/**

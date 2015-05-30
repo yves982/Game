@@ -32,6 +32,7 @@ public class Game {
 		
 		try {
 			controller.start();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

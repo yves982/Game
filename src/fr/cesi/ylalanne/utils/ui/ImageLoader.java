@@ -6,6 +6,8 @@ import java.net.URL;
 
 import javax.imageio.ImageIO;
 
+import fr.cesi.ylalanne.utils.ResourcesManager;
+
 /**
  * Utility class to load images
  */
@@ -18,7 +20,7 @@ public class ImageLoader {
 	public static Image LoadImage(String imagePath) {
 		try
 		{
-			URL fileUrl = ImageLoader.class.getResource(ResourcesManager.RESOURCES_BASE + imagePath);
+			URL fileUrl = ImageLoader.class.getResource(ResourcesManager.IMAGES_BASE + imagePath);
 			return ImageIO.read(fileUrl);
 		} catch(IOException e) {
 			e.printStackTrace();

@@ -6,6 +6,8 @@ import java.beans.PropertyChangeListener;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import com.fasterxml.jackson.databind.util.ViewMatcher;
+
 import fr.cesi.ylalanne.contracts.IBoundChildController;
 import fr.cesi.ylalanne.contracts.IChildController;
 import fr.cesi.ylalanne.lang.LocaleManager;
@@ -39,6 +41,7 @@ public class MainFrameController implements PropertyChangeListener {
 		MainMenuItemModel quitModel = buildMenuItemModel(MainFrameActions.QUIT);
 		String menuTitle = LocaleManager.getString(MainFrameStrings.MENU_TITLE.getKey());
 		String frameTitle = LocaleManager.getString(MainFrameStrings.TITLE.getKey());
+		String mutedTitle = LocaleManager.getString(MainFrameActions.MUTE.getKey());
 		
 		mainModel.setStart(startModel);
 		mainModel.setHighScores(highScoresModel);
@@ -48,6 +51,8 @@ public class MainFrameController implements PropertyChangeListener {
 		mainModel.setFrameTitle(frameTitle);
 		mainModel.setWidth(width);
 		mainModel.setHeight(height);
+		mainModel.setMuted(false);
+		mainModel.setMutedTitle(mutedTitle);
 	}
 
 
@@ -83,6 +88,9 @@ public class MainFrameController implements PropertyChangeListener {
 			case "action":
 				MainFrameActions action = Enum.valueOf(MainFrameActions.class, newValue.toString());
 				actionsHandler.accept(action);
+				if(action.equals(MainFrameActions.MUTE)) {
+					mainModel.setMuted(mainModel.isMuted());
+				}
 				break;
 			case "reseted":
 				mainView.removeLastChild();

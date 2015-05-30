@@ -1,6 +1,16 @@
 package fr.cesi.ylalanne.mainframe.model;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
+
+/**
+ * Model for the MainFrameView
+ * <p>It has the following bound properties:</p>
+ * <ul>
+ * <li>muted</li>
+ * </ul>
+ */
 public class MainFrameModel {
 	private MainMenuItemModel start;
 	private MainMenuItemModel highScores;
@@ -10,6 +20,13 @@ public class MainFrameModel {
 	private String frameTitle;
 	private int width;
 	private int height;
+	private boolean muted;
+	private String mutedTitle;
+	private PropertyChangeSupport propertyChange;
+	
+	public MainFrameModel() {
+		propertyChange = new PropertyChangeSupport(this);
+	}
 	
 	/**
 	 * @return the start
@@ -116,5 +133,64 @@ public class MainFrameModel {
 	 */
 	public void setHeight(int height) {
 		this.height = height;
+	}
+	
+	/**
+	 * @return the muted
+	 */
+	public boolean isMuted() {
+		return muted;
+	}
+	/**
+	 * @param muted the muted to set
+	 */
+	public void setMuted(boolean muted) {
+		boolean oldMuted = this.muted;
+		this.muted = muted;
+		propertyChange.firePropertyChange("muted", oldMuted, muted);
+ 	}
+	
+	/**
+	 * @return the Muted title
+	 */
+	public String getMutedTitle() {
+		return mutedTitle;
+	}
+	/**
+	 * @param mutedTitle the mutedTitle to set
+	 */
+	public void setMutedTitle(String mutedTitle) {
+		this.mutedTitle = mutedTitle;
+	}
+
+	/**
+	 * @param listener
+	 * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.beans.PropertyChangeListener)
+	 */
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		propertyChange.addPropertyChangeListener(listener);
+	}
+	/**
+	 * @param propertyName
+	 * @param listener
+	 * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
+	 */
+	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+		propertyChange.addPropertyChangeListener(propertyName, listener);
+	}
+	/**
+	 * @param listener
+	 * @see java.beans.PropertyChangeSupport#removePropertyChangeListener(java.beans.PropertyChangeListener)
+	 */
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		propertyChange.removePropertyChangeListener(listener);
+	}
+	/**
+	 * @param propertyName
+	 * @param listener
+	 * @see java.beans.PropertyChangeSupport#removePropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
+	 */
+	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+		propertyChange.removePropertyChangeListener(propertyName, listener);
 	}
 }

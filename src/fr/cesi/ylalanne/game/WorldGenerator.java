@@ -244,8 +244,7 @@ public class WorldGenerator {
 		};
 		
 		buildRows(xSteps);
-		SettingsController settingsController = new SettingsController();
-		settings = settingsController.getSettings();
+		settings = SettingsController.getSettings();
 		
 		if(hasSpawn) {
 			world.reset();
