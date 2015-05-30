@@ -8,6 +8,8 @@ public class MainFrameModel {
 	private MainMenuItemModel quit;
 	private String menuTitle;
 	private String frameTitle;
+	private int width;
+	private int height;
 	
 	/**
 	 * @return the start
@@ -88,5 +90,31 @@ public class MainFrameModel {
 	}
 	public int getMenuMnemonic() {
 		return 'M';
+	}
+	
+	/**
+	 * @return the width
+	 */
+	public int getWidth() {
+		return width;
+	}
+	/**
+	 * @param width the width to set
+	 */
+	public void setWidth(int width) {
+		this.width = width;
+	}
+	
+	/**
+	 * @return the height
+	 */
+	public int getHeight() {
+		return height;
+	}
+	/**
+	 * @param height the height to set
+	 */
+	public void setHeight(int height) {
+		this.height = height;
 	}
 }

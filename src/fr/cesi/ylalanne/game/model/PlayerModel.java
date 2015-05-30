@@ -22,6 +22,7 @@ public class PlayerModel {
 	private MutableRectangle area;
 	private String imagePath;
 	private boolean collided;
+	private boolean winning;
 	private int score;
 	private int lives;
 	private int remainingLiveTimeMs;
@@ -144,6 +145,19 @@ public class PlayerModel {
 	 */
 	public void setMovesStep(int movesStep) {
 		this.movesStep = movesStep;
+	}
+
+	/**
+	 * @return the winning
+	 */
+	public boolean isWinning() {
+		return winning;
+	}
+	/**
+	 * @param winning the winning to set
+	 */
+	public void setWinning(boolean winning) {
+		this.winning = winning;
 	}
 
 	/**

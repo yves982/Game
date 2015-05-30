@@ -131,6 +131,7 @@ public class SettingsView implements PropertyChangeListener, ActionListener, IVi
 				resolution));
 		
 		radioButton.addActionListener(this);
+		
 		return radioButton;
 	}
 	
@@ -144,6 +145,9 @@ public class SettingsView implements PropertyChangeListener, ActionListener, IVi
 		JRadioButton rdbLow = buildRadioButton(Resolutions.LOW);
 		JRadioButton rdbStandard = buildRadioButton(Resolutions.STANDARD);
 		JRadioButton rdbHigh = buildRadioButton(Resolutions.HIGH);
+		
+		rdbStandard.setEnabled(false);
+		rdbHigh.setEnabled(false);
 		
 		resolutionButtonGroup.add(rdbLow);
 		resolutionButtonGroup.add(rdbStandard);

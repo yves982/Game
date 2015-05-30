@@ -5,7 +5,7 @@ package fr.cesi.ylalanne.game;
  */
 public enum AreaKind {
 	START("/area/start.png", null),
-	WAIT("/area/wait.png", null),
+	WAIT("/area/wait.png", "/area/waitBG.png"),
 	FINISH("/area/finish.png", null);
 	
 	private String imagePath;

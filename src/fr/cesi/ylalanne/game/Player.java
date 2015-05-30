@@ -50,6 +50,7 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	private Range<Integer> xBounds;
 	private Range<Integer> yBounds;
 	private IHighScoreController highScore;
+	private MoveRequestEvent currentMoveRequest;
 	
 	private void fillChildrenView() {
 		childrenView.add(infosView);
@@ -62,6 +63,7 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 		model.setMaxLiveTimeMs(maxLeftTimeMs);
 		model.setRemainingLiveTimeMs(maxLeftTimeMs);
 		model.setMovesStep(movesStep);
+		model.setWinning(false);
 	}
 
 	private void countDown() {
@@ -128,6 +130,8 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 		
 		int movesStep = model.getMovesStep();
 		MutableRectangle playerArea = model.getArea();
+		currentMoveRequest = moveRequest;
+		
 		switch(moveRequest) {
 			case UP:
 				if((moveYFuture == null || moveYFuture.isDone())) {
@@ -271,10 +275,11 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	public boolean position(int x, int y) {
 		MutableRectangle playerArea = model.getArea();
 		
-		// we cannot check for yBounds here as initially the player is placed out of the World (the starting area is not included in yBounds that is)
-		playerArea.setY(y);
 		if(startY == -43) {
+			playerArea.setY(y);
 			startY = y;
+		} else if(yBounds.isIn(y) && xBounds.isIn(y + playerArea.getHeight())) {
+			playerArea.setY(y);
 		}
 		
 		
@@ -391,6 +396,13 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	}
 	
 	/**
+	 * @return the winning state of the Player (true if he's won, false otherwise)
+	 */
+	public boolean isWinning() {
+		return model.isWinning();
+	}
+	
+	/**
 	 * @return the x coordinate of the player
 	 */
 	public int getX() {
@@ -446,6 +458,13 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 		this.highScore = highScore;
 	}
 
+	/**
+	 * @return the currentMoveRequest
+	 */
+	public MoveRequestEvent getCurrentMoveRequest() {
+		return currentMoveRequest;
+	}
+
 	@Override
 	public List<ILayeredChildView> getChildren() {
 		return childrenView;
@@ -497,12 +516,16 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 		propertyChange.removePropertyChangeListener(propertyName, listener);
 	}
 
+	/**
+	 * Makes the Player win the game
+	 */
 	public void win() {
 		int score = model.getScore();
 		int remainingLiveTimeMs = model.getRemainingLiveTimeMs();
 		int maxLiveTimeMs = model.getMaxLiveTimeMs();
 		int lives = model.getLives();
 		model.setScore(score * remainingLiveTimeMs + (maxLiveTimeMs / 1000) * (lives -1));
+		model.setWinning(true);
 		infosView.showWin();
 		highScore.askName(model.getScore());
 		clean();

@@ -91,7 +91,7 @@ public class MainFrameView implements IFocusedParentView, ActionListener {
 		
 		frame.add(menuBar, BorderLayout.PAGE_START);
 		
-		frame.setPreferredSize(new Dimension(800, 600));
+		frame.setPreferredSize(new Dimension(viewModel.getWidth(), viewModel.getHeight()));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
 		frame.setLocation(ComponentLocation.getCenteredLocation(frame));
@@ -111,6 +111,11 @@ public class MainFrameView implements IFocusedParentView, ActionListener {
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
+	}
+	
+	public void updateSize() {
+		frame.setPreferredSize(new Dimension(viewModel.getWidth(), viewModel.getHeight()));
+		frame.pack();
 	}
 	
 	@Override

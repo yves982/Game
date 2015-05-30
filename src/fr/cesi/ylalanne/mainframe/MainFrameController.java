@@ -1,8 +1,10 @@
 package fr.cesi.ylalanne.mainframe;
 
+import java.awt.Dimension;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import fr.cesi.ylalanne.contracts.IBoundChildController;
 import fr.cesi.ylalanne.contracts.IChildController;
@@ -19,6 +21,7 @@ public class MainFrameController implements PropertyChangeListener {
 	private IChildController child;
 	private MainFrameModel mainModel;
 	private Consumer<MainFrameActions> actionsHandler;
+	private Supplier<Dimension> resolutionProvider;
 	
 	private MainMenuItemModel buildMenuItemModel(MainFrameActions action) {
 		MainMenuItemModel itemModel = new MainMenuItemModel();
@@ -28,7 +31,7 @@ public class MainFrameController implements PropertyChangeListener {
 		return itemModel;
 	}
 	
-	private void buildMainModel() {
+	private void buildMainModel(int width, int height) {
 		mainModel = new MainFrameModel();
 		MainMenuItemModel startModel = buildMenuItemModel(MainFrameActions.START);
 		MainMenuItemModel highScoresModel = buildMenuItemModel(MainFrameActions.HIGH_SCORE);
@@ -43,19 +46,32 @@ public class MainFrameController implements PropertyChangeListener {
 		mainModel.setQuit(quitModel);
 		mainModel.setMenuTitle(menuTitle);
 		mainModel.setFrameTitle(frameTitle);
+		mainModel.setWidth(width);
+		mainModel.setHeight(height);
 	}
 
+
+	private void updateViewSize() {
+		Dimension size = resolutionProvider.get();
+		mainModel.setWidth(size.width);
+		mainModel.setHeight(size.height);
+		mainView.updateSize();
+	}
 
 	/**
 	 * Initialize the MainFrameController
 	 * @param child the IChildController to run on start
 	 * @param actionsHandler the handler for menu Actions
+	 * @param resolutionProvider a delegate to provides Frame's size
 	 */
-	public MainFrameController(IBoundChildController child, Consumer<MainFrameActions> actionsHandler) {
+	public MainFrameController(IBoundChildController child, Consumer<MainFrameActions> actionsHandler, Supplier<Dimension> resolutionProvider) {
 		this.child = child;
-		buildMainModel();
+		this.resolutionProvider = resolutionProvider;
+		Dimension size = resolutionProvider.get();
+		buildMainModel(size.width, size.height);
 		this.actionsHandler = actionsHandler;
 		child.addPropertyChangeListener("reseted", this);
+		
 	}
 
 	@Override
@@ -70,6 +86,7 @@ public class MainFrameController implements PropertyChangeListener {
 				break;
 			case "reseted":
 				mainView.removeLastChild();
+				updateViewSize();
 				mainView.addChild(child.getChild(), true);
 				break;
 		}

@@ -189,12 +189,11 @@ public class AreaView implements IChildView, PropertyChangeListener {
 			case "y":
 				SwingUtilities.invokeLater(this::updateY);
 				break;
-			case "secondImagePath":
-				loadSecondImage();
-				break;
 			case "usedHeight":
 				if(model.getSecondImagePath() == null) {
 					addsFiller();
+				} else {
+					loadSecondImage();
 				}
 				loadSizedImage();
 				break;

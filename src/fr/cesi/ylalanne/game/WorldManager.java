@@ -10,6 +10,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import fr.cesi.ylalanne.game.ui.MoveRequestEvent;
 import fr.cesi.ylalanne.utils.Range;
 
 public class WorldManager implements PropertyChangeListener {
@@ -18,6 +19,7 @@ public class WorldManager implements PropertyChangeListener {
 	private int playerRow;
 	private List<GameRow> rows;
 	private List<Obstacle> obstacles;
+	private List<Range<Integer>> winningAreas;
 	private int lowestRow;
 	private ScheduledExecutorService moveExecutor;
 	private Random random;
@@ -25,11 +27,16 @@ public class WorldManager implements PropertyChangeListener {
 	
 	private void checkEnd() {
 		if (playerRow == 1) {
-			int playerCenterX = player.getX() + (int)Math.ceil(player.getWidth() / 2.0d);
-			boolean won = rows.get(0).getWinningAreas()
-					.stream()
-					.anyMatch( winningRow -> winningRow.isIn(playerCenterX) );
-			if(won && !player.isCollided() || !player.getCollider().isStatic()) {
+			int playerCenterX = player.getX() + (int)(player.getWidth() / 2.0d);
+			boolean won = false;
+			for(Range<Integer> winningRange : winningAreas) {
+				if(winningRange.isIn(playerCenterX)) {
+					won = true;
+					break;
+				}
+			}
+			
+			if(won && (!player.isCollided() || !player.getCollider().isStatic())) {
 				player.win();
 				endWorld(true);
 			} else if (player.isCollided() && player.getCollider().isStatic()) {
@@ -142,7 +149,13 @@ public class WorldManager implements PropertyChangeListener {
 
 	private void freeFromWaterMover() {
 		if(player.isCollided()) {
-			player.position(player.getX(), player.getY() - (int)rows.get(0).getBounds().size());
+			int y=0;
+			if(player.getCurrentMoveRequest().equals(MoveRequestEvent.UP)) {
+				y = player.getY() - (int)rows.get(0).getBounds().size();
+			} else {
+				y = player.getY() + (int)rows.get(0).getBounds().size();
+			}
+			player.position(player.getX(), y);
 		}
 	}
 
@@ -151,7 +164,7 @@ public class WorldManager implements PropertyChangeListener {
 		int index = random.nextInt(5);
 		Range<Integer> firstRowBearSlot = rows.get(0).getWinningAreas().get(index);
 		int bearX = firstRowBearSlot.getStart() + (int)Math.ceil(firstRowBearSlot.size() / 2.0d) -(int)Math.ceil(bear.getWidth() / 2.0d);
-		int bearY = (int) Math.ceil(rows.get(0).getBounds().size() / 2.0d) -8;
+		int bearY = (int) Math.ceil(rows.get(0).getBounds().size() / 2.0d) -(int)Math.ceil(4.78d * bear.getHeight());
 		bear.position(bearX, bearY);
 	}
 
@@ -163,6 +176,7 @@ public class WorldManager implements PropertyChangeListener {
 		this.player.addPropertyChangeListener(this);
 		lowestRow = rows.size();
 		obstacles = world.getObstacles();
+		winningAreas = rows.get(0).getWinningAreas();
 		random = new Random();
 	}
 	
@@ -178,7 +192,9 @@ public class WorldManager implements PropertyChangeListener {
 		
 		switch(propertyName) {
 			case "liveLess":
-				endWorld(false);
+				if(!player.isWinning()) {
+					endWorld(false);
+				}
 				break;
 			case "x":
 				int oldX = (int)evt.getOldValue();

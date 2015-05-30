@@ -157,9 +157,7 @@ public class SettingsController implements PropertyChangeListener {
 	 * @return the settings
 	 */
 	public Settings getSettings() {
-		if(!initialized) {
-			init();
-		}
+		init();
 		
 		if(settings == null) {
 			settings.setDifficulty(model.getSelectedDifficulty());
