@@ -27,45 +27,79 @@ import javax.swing.border.Border;
 import fr.cesi.ylalanne.contracts.ui.IView;
 import fr.cesi.ylalanne.settings.model.Actions;
 import fr.cesi.ylalanne.settings.model.Difficulties;
+import fr.cesi.ylalanne.settings.model.Languages;
 import fr.cesi.ylalanne.settings.model.Resolutions;
 import fr.cesi.ylalanne.settings.model.SettingsProperties;
 import fr.cesi.ylalanne.settings.model.SettingsViewModel;
 import fr.cesi.ylalanne.utils.ui.ComponentLocation;
 import fr.cesi.ylalanne.utils.ui.GridBagConstraintsAnchor;
 import fr.cesi.ylalanne.utils.ui.GridBagConstraintsBuilder;
+import fr.cesi.ylalanne.utils.ui.GridBagConstraintsFill;
 
 public class SettingsView implements PropertyChangeListener, ActionListener, IView {
 	private JDialog settingsDialog;
 	private JPanel difficultyPanel;
 	private JPanel resolutionPanel;
+	private JPanel langPanel;
 	private JButton okBtn;
 	private JButton cancelBtn;
 	private GridBagConstraintsBuilder constraintBuilder;
 	private SettingsViewModel model;
 	private Map<Difficulties, JRadioButton> difficultyButtons;
 	private Map<Resolutions, JRadioButton> resolutionButtons;
+	private Map<Languages, JRadioButton> languageButtons;
 	private Map<JComponent, Consumer<Void>> actionHandlers;
 	private ButtonGroup difficultyButtonGroup;
 	private ButtonGroup resolutionButtonGroup;
+	private ButtonGroup languagesButtonGroup;
 	private PropertyChangeSupport propertyChange;
 	
-	public SettingsView(SettingsViewModel model) {
-		this.model = model;
-		constraintBuilder = new GridBagConstraintsBuilder();
-		difficultyButtons = new HashMap<Difficulties, JRadioButton>();
-		difficultyButtonGroup = new ButtonGroup();
-		resolutionButtons = new HashMap<Resolutions, JRadioButton>();
-		resolutionButtonGroup = new ButtonGroup();
-		actionHandlers = new HashMap<JComponent, Consumer<Void>>();
-		propertyChange = new PropertyChangeSupport(this);
-	}
-
 	private void buildComponents() {
 		buildDifficultyPanel();
 		buildResolutionPanel();
 		buildButtons();
+		buildLangPanel();
 		buildSettingsDialog();
 		model.addPropertyChangeListener(this);
+	}
+
+	private void buildLangPanel() {
+		langPanel = new JPanel();
+		Border titledBorder = BorderFactory.createTitledBorder(model.getLangTitle());
+		langPanel.setBorder(titledBorder);
+		
+		JRadioButton frButton = buildRadioButton(Languages.FRENCH);
+		JRadioButton enButton = buildRadioButton(Languages.ENGLISH);
+		
+		GridBagConstraints frConstraint = constraintBuilder
+				.position(0, 0)
+				.span(1, 1)
+				.build();
+		
+		GridBagConstraints enConstraint = constraintBuilder
+				.position(1, 0)
+				.span(1, 1)
+				.build();
+		
+		langPanel.add(frButton, frConstraint);
+		langPanel.add(enButton, enConstraint);
+		langPanel.setVisible(true);
+	}
+
+	private JRadioButton buildRadioButton(Languages lang) {
+		JRadioButton radioButton = new JRadioButton(model.getLanguage(lang));
+		actionHandlers.put(radioButton, (v) -> propertyChange.firePropertyChange(SettingsProperties.LANG.toString(), 
+				model.getSelectedLanguage(),
+				lang));
+		
+		if(model.getSelectedLanguage().equals(lang)) {
+			radioButton.setSelected(true);
+		}
+		languageButtons.put(lang, radioButton);
+		languagesButtonGroup.add(radioButton);
+		
+		radioButton.addActionListener(this);
+		return radioButton;
 	}
 
 	private JRadioButton buildRadioButton(Difficulties difficulty) {
@@ -199,15 +233,23 @@ public class SettingsView implements PropertyChangeListener, ActionListener, IVi
 				.margins(0, 5, 5, 0).build();
 		
 		GridBagConstraints okConstraint = constraintBuilder
-				.position(0, 1)
+				.position(0, 2)
 				.span(1, 1).build();
 		
 		GridBagConstraints cancelConstraint = constraintBuilder
-				.position(1, 1)
+				.position(1, 2)
 				.span(1, 1).build();
+		
+		GridBagConstraints langConstraint = constraintBuilder
+				.position(0, 1)
+				.span(2, 1)
+				.margins(0, 5, 5, 0)
+				.fill(GridBagConstraintsFill.NONE)
+				.build();
 		
 		settingsDialog.add(difficultyPanel, difficultyConstraint);
 		settingsDialog.add(resolutionPanel, resolutionConstraint);
+		settingsDialog.add(langPanel, langConstraint);
 		settingsDialog.add(okBtn, okConstraint);
 		settingsDialog.add(cancelBtn, cancelConstraint);
 	}
@@ -228,6 +270,19 @@ public class SettingsView implements PropertyChangeListener, ActionListener, IVi
 	}
 	
 	
+
+	public SettingsView(SettingsViewModel model) {
+		this.model = model;
+		constraintBuilder = new GridBagConstraintsBuilder();
+		difficultyButtons = new HashMap<Difficulties, JRadioButton>();
+		difficultyButtonGroup = new ButtonGroup();
+		resolutionButtons = new HashMap<Resolutions, JRadioButton>();
+		resolutionButtonGroup = new ButtonGroup();
+		languageButtons = new HashMap<Languages, JRadioButton>();
+		languagesButtonGroup = new ButtonGroup();
+		actionHandlers = new HashMap<JComponent, Consumer<Void>>();
+		propertyChange = new PropertyChangeSupport(this);
+	}
 
 	public void show() {
 		SwingUtilities.invokeLater( () -> {
@@ -251,6 +306,9 @@ public class SettingsView implements PropertyChangeListener, ActionListener, IVi
 				Resolutions resolution = (Resolutions)evt.getNewValue();
 				resolutionButtonGroup.setSelected(resolutionButtons.get(resolution).getModel(), true);
 				break;
+			case "selectedLanguage":
+				Languages language = (Languages)evt.getNewValue();
+				languagesButtonGroup.setSelected(languageButtons.get(language).getModel(), true);
 		}
 	}
 

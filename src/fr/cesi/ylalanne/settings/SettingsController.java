@@ -11,6 +11,8 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.JOptionPane;
+
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -20,6 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.cesi.ylalanne.lang.LocaleManager;
 import fr.cesi.ylalanne.settings.model.Actions;
 import fr.cesi.ylalanne.settings.model.Difficulties;
+import fr.cesi.ylalanne.settings.model.Languages;
 import fr.cesi.ylalanne.settings.model.Resolutions;
 import fr.cesi.ylalanne.settings.model.Settings;
 import fr.cesi.ylalanne.settings.model.SettingsProperties;
@@ -30,10 +33,11 @@ import fr.cesi.ylalanne.settings.ui.SettingsView;
 public class SettingsController implements PropertyChangeListener {
 	private SettingsView view;
 	private SettingsViewModel model;
-	private Settings settings;
+	private static Settings settings;
 	private static final Path settingsPath = Paths.get("./settings.json");
-	private JsonFactory factory;
+	private static JsonFactory factory = new JsonFactory();
 	private boolean initialized;
+	private boolean langChanged;
 	
 	private void fillResolutions(Map<Resolutions, String> resolutions) {
 		resolutions.put(Resolutions.LOW, LocaleManager.getString(Resolutions.LOW.getKey()));
@@ -52,23 +56,34 @@ public class SettingsController implements PropertyChangeListener {
 		actions.put(Actions.CANCEL, LocaleManager.getString(Actions.CANCEL.getKey()));
 	}
 
+	private void fillLanguages(Map<Languages, String> languages) {
+		languages.put(Languages.FRENCH, LocaleManager.getString(Languages.FRENCH.getKey()));
+		languages.put(Languages.ENGLISH,  LocaleManager.getString(Languages.ENGLISH.getKey()));
+	}
+
 	private void buildModel() {
 		Map<Difficulties, String> difficulties = new HashMap<Difficulties, String>();
 		Map<Resolutions, String> resolutions = new HashMap<Resolutions, String>();
 		Map<Actions, String> actions = new HashMap<Actions, String>();
+		Map<Languages, String> languages = new HashMap<Languages, String>();
+		
 		model.setDifficulties(difficulties);
 		model.setSelectedDifficulty(Difficulties.EASY);
 		model.setResolutions(resolutions);
 		model.setSelectedResolution(Resolutions.LOW);
 		model.setActions(actions);
+		model.setLanguages(languages);
+		model.setSelectedLanguage(Languages.FRENCH);
 		
 		fillDifficulties(difficulties);
 		fillResolutions(resolutions);
 		fillActions(actions);
+		fillLanguages(languages);
 		
 		model.setDifficultyTitle(LocaleManager.getString(Titles.DIFFICULTY.getKey()));
 		model.setResolutionTitle(LocaleManager.getString(Titles.RESOLUTION.getKey()));
 		model.setSettingsTitle(LocaleManager.getString(Titles.SETTINGS.getKey()));
+		model.setLangTitle(LocaleManager.getString(Titles.LANG.getKey()));
 	}
 
 	private void handleChoice(Resolutions resolution) {
@@ -83,16 +98,25 @@ public class SettingsController implements PropertyChangeListener {
 			switch(action) {
 				case OK:
 					writeSettings();
+					if(langChanged) {
+						JOptionPane.showMessageDialog(null, LocaleManager.getString(SettingsStrings.CHANGE_LANG.getKey()));
+					}
 					break;
 				default:
 			}
 			view.close();
 	}
 
+	private void handleLanguage(Languages lang) {
+		model.setSelectedLanguage(lang);
+		langChanged = !langChanged;
+	}
+
 	private void writeSettings() {
 		settings = new Settings();
 		settings.setDifficulty(model.getSelectedDifficulty());
 		settings.setResolution(model.getSelectedResolution());
+		settings.setLanguage(model.getSelectedLanguage());
 		
 		try(
 				OutputStream output = Files.newOutputStream(settingsPath);
@@ -108,26 +132,16 @@ public class SettingsController implements PropertyChangeListener {
 	}
 
 	private void loadSettings() {
-		if(Files.exists(settingsPath)) {
-			try(
-					InputStream input = Files.newInputStream(settingsPath);
-					JsonParser parser = factory.createParser(input)
-			) {
-				parser.setCodec(new ObjectMapper(factory));
-				settings = parser.readValueAs(Settings.class);
-				model.setSelectedDifficulty(settings.getDifficulty());
-				model.setSelectedResolution(settings.getResolution());
-			} catch (IOException e) {
-				e.printStackTrace();
-				throw new RuntimeException(e);
-			}
-		}
+		model.setSelectedDifficulty(settings.getDifficulty());
+		model.setSelectedResolution(settings.getResolution());
+		model.setSelectedLanguage(settings.getLanguage());
 	}
 
 	/**
 	 * Initialize the SettingsController (load existing settings if any)
 	 */
 	private void init() {
+		getSettings();
 		loadSettings();
 		initialized = true;
 	}
@@ -135,8 +149,7 @@ public class SettingsController implements PropertyChangeListener {
 	public SettingsController() {
 		model = new SettingsViewModel();
 		view = new SettingsView(model);
-		
-		factory = new JsonFactory();
+		langChanged = false;
 		
 		view.addPropertyChangeListener(this);
 		buildModel();
@@ -156,12 +169,25 @@ public class SettingsController implements PropertyChangeListener {
 	/**
 	 * @return the settings
 	 */
-	public Settings getSettings() {
-		init();
+	public static Settings getSettings() {
+		if(Files.exists(settingsPath)) {
+			try(
+					InputStream input = Files.newInputStream(settingsPath);
+					JsonParser parser = factory.createParser(input)
+			) {
+				parser.setCodec(new ObjectMapper(factory));
+				settings = parser.readValueAs(Settings.class);
+			} catch (IOException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}
 		
-		if(settings == null) {
-			settings.setDifficulty(model.getSelectedDifficulty());
-			settings.setResolution(model.getSelectedResolution());
+			if(settings == null) {
+				settings = new Settings();
+				settings.setDifficulty(Difficulties.EASY);
+				settings.setResolution(Resolutions.LOW);
+				settings.setLanguage(Languages.FRENCH);
+			}
 		}
 		return settings;
 	}
@@ -180,6 +206,9 @@ public class SettingsController implements PropertyChangeListener {
 				break;
 			case ACTION:
 				handleAction((Actions)evt.getNewValue());
+				break;
+			case LANG:
+				handleLanguage((Languages)evt.getNewValue());
 				break;
 		}
 	}

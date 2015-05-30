@@ -3,6 +3,7 @@ package fr.cesi.ylalanne.settings.model;
 public class Settings {
 	private Difficulties difficulty;
 	private Resolutions resolution;
+	private Languages language;
 	
 	/**
 	 * @return the difficulty
@@ -28,5 +29,18 @@ public class Settings {
 	 */
 	public void setResolution(Resolutions resolution) {
 		this.resolution = resolution;
+	}
+	
+	/**
+	 * @return the language
+	 */
+	public Languages getLanguage() {
+		return language;
+	}
+	/**
+	 * @param language the language to set
+	 */
+	public void setLanguage(Languages language) {
+		this.language = language;
 	}
 }

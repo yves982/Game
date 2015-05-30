@@ -3,7 +3,8 @@ package fr.cesi.ylalanne.settings.model;
 public enum Titles {
 	DIFFICULTY("DifficultyPanel_Title"),
 	RESOLUTION("ResolutionPanel_Title"),
-	SETTINGS("SettingsDialog_Title");
+	SETTINGS("SettingsDialog_Title"), 
+	LANG("LangPanel_Title");
 	
 	private String key;
 	

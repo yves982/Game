@@ -15,13 +15,14 @@ import fr.cesi.ylalanne.settings.model.Settings;
 public class Game {
 	
 	public static void main(String[] args) {
-		LocaleManager.setLocale(Locale.FRANCE);
+		Locale locale = SettingsController.getSettings().getLanguage().getLocale();
+		LocaleManager.setLocale(locale);
+		
 		World world = new World();
 		WorldGenerator generator = new WorldGenerator(world);
-		SettingsController settingsController = new SettingsController();
 		
 		Supplier<Dimension> sizeProvider = () -> {
-			Settings settings = settingsController.getSettings();
+			Settings settings = SettingsController.getSettings();
 			Dimension size = new Dimension(settings.getResolution().getWidth(), settings.getResolution().getHeight());
 			return size;
 		};

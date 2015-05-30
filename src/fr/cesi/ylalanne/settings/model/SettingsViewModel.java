@@ -13,7 +13,10 @@ public class SettingsViewModel {
 	private Map<Resolutions, String> resolutions;
 	private Resolutions selectedResolution;
 	private Map<Actions, String> actions;
+	private Map<Languages, String> languages;
+	private Languages selectedLanguage;
 	private PropertyChangeSupport propertyChange;
+	private String langTitle;
 	
 	public SettingsViewModel() {
 		propertyChange = new PropertyChangeSupport(this);
@@ -92,6 +95,19 @@ public class SettingsViewModel {
 	}
 
 	/**
+	 * @return the langTitle
+	 */
+	public String getLangTitle() {
+		return this.langTitle;
+	}
+	/**
+	 * @param langTitle the langTitle to set
+	 */
+	public void setLangTitle(String langTitle) {
+		this.langTitle = langTitle;
+	}
+
+	/**
 	 * @return the difficulties
 	 */
 	public Map<Difficulties, String> getDifficulties() {
@@ -146,6 +162,19 @@ public class SettingsViewModel {
 	}
 
 	/**
+	 * @return the languages
+	 */
+	public Map<Languages, String> getLanguages() {
+		return languages;
+	}
+	/**
+	 * @param languages the languages to set
+	 */
+	public void setLanguages(Map<Languages, String> languages) {
+		this.languages = languages;
+	}
+
+	/**
 	 * @return the selectedResolution
 	 */
 	public Resolutions getSelectedResolution() {
@@ -160,6 +189,21 @@ public class SettingsViewModel {
 		propertyChange.firePropertyChange("selectedResolution", oldResolution, selectedResolution);
 	}
 	
+	/**
+	 * @return the selectedLanguage
+	 */
+	public Languages getSelectedLanguage() {
+		return selectedLanguage;
+	}
+	/**
+	 * @param selectedLanguage the selectedLanguage to set
+	 */
+	public void setSelectedLanguage(Languages selectedLanguage) {
+		Languages oldSelectedLanguage = this.selectedLanguage;
+		this.selectedLanguage = selectedLanguage;
+		propertyChange.firePropertyChange("selectedLanguage", oldSelectedLanguage, selectedLanguage);
+	}
+
 	/**
 	 * @param difficulty the seeked difficulty
 	 * @return the difficulty string representation
@@ -182,5 +226,13 @@ public class SettingsViewModel {
 	 */
 	public String getAction(Actions action) {
 		return actions.get(action);
+	}
+	
+	/**
+	 * @param lang the seeked Languages
+	 * @return the Languages string representation
+	 */
+	public String getLanguage(Languages lang) {
+		return languages.get(lang);
 	}
 }
