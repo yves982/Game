@@ -2,7 +2,7 @@ package fr.cesi.ylalanne.contracts.ui;
 
 /**
  * a view interface : all views are required to implement it<br>
- *  <b>Note: </b> {@link #build()} should be invoked on any IView Implementation before using it (adding it as child or updating it)
+ *  <b>Note: </b> {@link #build()} should be invoked on any IView Implementation before using it (adding it as child or updating it).
  */
 public interface IView {
 	/**

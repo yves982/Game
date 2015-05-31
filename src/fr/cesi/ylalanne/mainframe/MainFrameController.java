@@ -6,8 +6,6 @@ import java.beans.PropertyChangeListener;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import com.fasterxml.jackson.databind.util.ViewMatcher;
-
 import fr.cesi.ylalanne.contracts.IBoundChildController;
 import fr.cesi.ylalanne.contracts.IChildController;
 import fr.cesi.ylalanne.lang.LocaleManager;
@@ -17,6 +15,10 @@ import fr.cesi.ylalanne.mainframe.model.MainFrameStrings;
 import fr.cesi.ylalanne.mainframe.model.MainMenuItemModel;
 import fr.cesi.ylalanne.mainframe.ui.MainFrameView;
 
+/**
+ * Handles MainFrame view and model.
+ * <p>Note: this controller holds an actionsHandler for external handling,<br> although some internal handling is performed.</p>
+ */
 public class MainFrameController implements PropertyChangeListener {
 
 	private MainFrameView mainView;
@@ -64,7 +66,8 @@ public class MainFrameController implements PropertyChangeListener {
 	}
 
 	/**
-	 * Initialize the MainFrameController
+	 * Initialize the MainFrameController.
+	 *
 	 * @param child the IChildController to run on start
 	 * @param actionsHandler the handler for menu Actions
 	 * @param resolutionProvider a delegate to provides Frame's size
@@ -79,6 +82,9 @@ public class MainFrameController implements PropertyChangeListener {
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
+	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		String propertyName = evt.getPropertyName();
@@ -108,7 +114,7 @@ public class MainFrameController implements PropertyChangeListener {
 	}
 
 	/**
-	 * Starts this controller and display its view and its child's view
+	 * Starts this controller and display its view and its child's view.
 	 */
 	public void start() {
 		mainView = new MainFrameView(mainModel);

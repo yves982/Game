@@ -1,7 +1,7 @@
 package fr.cesi.ylalanne.game.model;
 
 /**
- * Storage class for PlayerInfos's translation keys
+ * PlayerInfos's translation keys.
  */
 public enum PlayerInfosStrings {
 	SCORE("player_infos.score"),
@@ -17,6 +17,8 @@ public enum PlayerInfosStrings {
 	}
 	
 	/**
+	 * Gets the key.
+	 *
 	 * @return the translation key
 	 */
 	public String getKey() {

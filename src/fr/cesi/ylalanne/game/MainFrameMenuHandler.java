@@ -9,7 +9,18 @@ import fr.cesi.ylalanne.mainframe.model.MainFrameActions;
 import fr.cesi.ylalanne.settings.SettingsController;
 import fr.cesi.ylalanne.utils.sound.SoundManager;
 
+/**
+ * Handles MainFrame's menu action.
+ * <p> Acts as a join between {@link fr.cesi.ylalanne.mainframe.MainFrameController MainFrameController} and the {@link WorldGenerator}.</p>
+ */
 public class MainFrameMenuHandler {
+	
+	/**
+	 * Handle action.
+	 *
+	 * @param action the action
+	 * @param generator the generator
+	 */
 	public static void handleAction(MainFrameActions action, WorldGenerator generator) {
 		switch(action) {
 			case SETTINGS:
@@ -54,7 +65,7 @@ public class MainFrameMenuHandler {
 	private static void start(WorldGenerator generator) {
 		FutureTask<Void> startTask = new FutureTask<Void>( () -> {
 			generator.spawnWorld();
-			if(generator.isHasSpawn()) {
+			if(generator.hasSpawn()) {
 				SoundManager.stop();
 			}
 			SoundManager.playContinuously("/ambiance.wav");

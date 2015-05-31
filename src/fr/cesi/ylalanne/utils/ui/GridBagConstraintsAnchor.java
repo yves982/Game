@@ -1,7 +1,9 @@
 package fr.cesi.ylalanne.utils.ui;
 
 import java.awt.GridBagConstraints;
-
+/**
+ * Store {@link GridBagConstraints}'s possible anchors.
+ */
 public enum GridBagConstraintsAnchor {
 	CENTER(GridBagConstraints.CENTER),
 	PAGE_START(GridBagConstraints.PAGE_START),
@@ -28,6 +30,11 @@ public enum GridBagConstraintsAnchor {
 		this.value = value;
 	}
 	
+	/**
+	 * Gets the anchor value.
+	 *
+	 * @return the value
+	 */
 	public int getValue() {
 		return value;
 	}

@@ -13,10 +13,10 @@ import fr.cesi.ylalanne.game.model.geom.MutableRectangle;
  * 	<li>imagePath</li>
  * 	<li>score</li>
  * 	<li>lives</li>
- * 	<li>x</li>
- * 	<li>y</li>
+ * 	<li>x (indirect)</li>
+ * 	<li>y (indirect)</li>
  *  <li>remainingLiveTimeMs</li>
- * </ul>
+ * </ul>.
  */
 public class PlayerModel {
 	private MutableRectangle area;
@@ -30,6 +30,9 @@ public class PlayerModel {
 	private int movesStep;
 	private PropertyChangeSupport propertyChange;
 	
+	/**
+	 * Instantiates a new player model.
+	 */
 	public PlayerModel() {
 		area = new MutableRectangle();
 		score = 0;
@@ -39,12 +42,17 @@ public class PlayerModel {
 	}
 	
 	/**
+	 * Checks if is collided.
+	 *
 	 * @return the collided
 	 */
 	public boolean isCollided() {
 		return collided;
 	}
+	
 	/**
+	 * Sets the collided.
+	 *
 	 * @param collided the collided to set
 	 */
 	public void setCollided(boolean collided) {
@@ -54,12 +62,17 @@ public class PlayerModel {
 	}
 
 	/**
+	 * Gets the image path.
+	 *
 	 * @return the imagePath
 	 */
 	public String getImagePath() {
 		return imagePath;
 	}
+	
 	/**
+	 * Sets the image path.
+	 *
 	 * @param imagePath the imagePath to set
 	 */
 	public void setImagePath(String imagePath) {
@@ -69,6 +82,8 @@ public class PlayerModel {
 	}
 	
 	/**
+	 * Gets the area.
+	 *
 	 * @return the area
 	 */
 	public MutableRectangle getArea() {
@@ -76,12 +91,17 @@ public class PlayerModel {
 	}
 
 	/**
+	 * Gets the score.
+	 *
 	 * @return the score
 	 */
 	public int getScore() {
 		return score;
 	}
+	
 	/**
+	 * Sets the score.
+	 *
 	 * @param score the score to set
 	 */
 	public void setScore(int score) {
@@ -91,12 +111,17 @@ public class PlayerModel {
 	}
 
 	/**
+	 * Gets the lives.
+	 *
 	 * @return the lives
 	 */
 	public int getLives() {
 		return lives;
 	}
+	
 	/**
+	 * Sets the lives.
+	 *
 	 * @param lives the lives to set
 	 */
 	public void setLives(int lives) {
@@ -106,12 +131,17 @@ public class PlayerModel {
 	}
 	
 	/**
+	 * Gets the remaining live time ms.
+	 *
 	 * @return the remainingLiveTimeMs
 	 */
 	public int getRemainingLiveTimeMs() {
 		return remainingLiveTimeMs;
 	}
+	
 	/**
+	 * Sets the remaining live time ms.
+	 *
 	 * @param remainingLiveTimeMs the remainingLiveTimeMs to set
 	 */
 	public void setRemainingLiveTimeMs(int remainingLiveTimeMs) {
@@ -121,6 +151,8 @@ public class PlayerModel {
 	}
 
 	/**
+	 * Gets the max live time ms.
+	 *
 	 * @return the maxLiveTimeMs
 	 */
 	public int getMaxLiveTimeMs() {
@@ -128,6 +160,8 @@ public class PlayerModel {
 	}
 
 	/**
+	 * Sets the max live time ms.
+	 *
 	 * @param maxLiveTimeMs the maxLiveTimeMs to set
 	 */
 	public void setMaxLiveTimeMs(int maxLiveTimeMs) {
@@ -135,12 +169,17 @@ public class PlayerModel {
 	}
 
 	/**
+	 * Gets the moves step.
+	 *
 	 * @return the movesStep
 	 */
 	public int getMovesStep() {
 		return movesStep;
 	}
+	
 	/**
+	 * Sets the moves step.
+	 *
 	 * @param movesStep the movesStep to set
 	 */
 	public void setMovesStep(int movesStep) {
@@ -148,12 +187,17 @@ public class PlayerModel {
 	}
 
 	/**
+	 * Checks if is winning.
+	 *
 	 * @return the winning
 	 */
 	public boolean isWinning() {
 		return winning;
 	}
+	
 	/**
+	 * Sets the winning.
+	 *
 	 * @param winning the winning to set
 	 */
 	public void setWinning(boolean winning) {
@@ -161,7 +205,9 @@ public class PlayerModel {
 	}
 
 	/**
-	 * @param listener
+	 * Adds the property change listener.
+	 *
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.beans.PropertyChangeListener)
 	 * @see fr.cesi.ylalanne.game.model.geom.MutableRectangle#addPropertyChangeListener(java.beans.PropertyChangeListener)
 	 */
@@ -169,9 +215,10 @@ public class PlayerModel {
 		propertyChange.addPropertyChangeListener(listener);
 		area.addPropertyChangeListener(listener);
 	}
-
 	/**
-	 * @param listener
+	 * Removes the property change listener.
+	 *
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#removePropertyChangeListener(java.beans.PropertyChangeListener)
 	 * @see fr.cesi.ylalanne.game.model.geom.MutableRectangle#removePropertyChangeListener(java.beans.PropertyChangeListener)
 	 */
@@ -179,10 +226,11 @@ public class PlayerModel {
 		propertyChange.removePropertyChangeListener(listener);
 		area.removePropertyChangeListener(listener);
 	}
-
 	/**
-	 * @param propertyName
-	 * @param listener
+	 * Adds the property change listener.
+	 *
+	 * @param propertyName the property name
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
 	 * @see fr.cesi.ylalanne.game.model.geom.MutableRectangle#addPropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
 	 */
@@ -190,10 +238,11 @@ public class PlayerModel {
 		propertyChange.addPropertyChangeListener(propertyName, listener);
 		area.addPropertyChangeListener(propertyName, listener);
 	}
-
 	/**
-	 * @param propertyName
-	 * @param listener
+	 * Removes the property change listener.
+	 *
+	 * @param propertyName the property name
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#removePropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
 	 * @see fr.cesi.ylalanne.game.model.geom.MutableRectangle#removePropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
 	 */

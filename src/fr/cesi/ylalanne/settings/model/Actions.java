@@ -1,5 +1,8 @@
 package fr.cesi.ylalanne.settings.model;
 
+/**
+ * Store MainFrame Button and their translation keys
+ */
 public enum Actions {
 	OK("MainButtons_Ok"),
 	CANCEL("MainButtons_Cancel");
@@ -10,6 +13,11 @@ public enum Actions {
 		this.key = key;
 	}
 	
+	/**
+	 * Gets the translation key.
+	 *
+	 * @return the key
+	 */
 	public String getKey() {
 		return key;
 	}

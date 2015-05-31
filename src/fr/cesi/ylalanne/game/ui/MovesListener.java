@@ -5,7 +5,9 @@ import java.awt.event.KeyEvent;
 import java.util.function.Consumer;
 
 /**
- * class to handles ui move requests
+ * class to handles ui move requests.
+ *
+ * @see MoveRequestEvent
  */
 public class MovesListener extends KeyAdapter {
 	
@@ -13,7 +15,8 @@ public class MovesListener extends KeyAdapter {
 	private Consumer<MoveRequestEvent> releasedAction;
 	
 	/**
-	 * defines an handler for a moveRequestEvent (on key pressed)
+	 * defines an handler for a moveRequestEvent (on key pressed).
+	 *
 	 * @param moveConsumer the consumer to accept
 	 */
 	public void defineHandler(Consumer<MoveRequestEvent> moveConsumer) {
@@ -21,7 +24,8 @@ public class MovesListener extends KeyAdapter {
 	}
 	
 	/**
-	 * defines an handler for a moveRequestEvent
+	 * defines an handler for a moveRequestEvent.
+	 *
 	 * @param moveConsumer the consumer to accept
 	 * @param pressed true if the action is to be performed on key press, false if it's intended to manage key released
 	 */
@@ -34,12 +38,18 @@ public class MovesListener extends KeyAdapter {
 	}
 	
 	
+	/* (non-Javadoc)
+	 * @see java.awt.event.KeyAdapter#keyPressed(java.awt.event.KeyEvent)
+	 */
 	@Override
 	public void keyPressed(KeyEvent e) {
 		int keyCode = e.getKeyCode();
 		pressedAction.accept(MoveRequestEvent.parseInt(keyCode));
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.awt.event.KeyAdapter#keyReleased(java.awt.event.KeyEvent)
+	 */
 	@Override
 	public void keyReleased(KeyEvent e) {
 		int keyCode = e.getKeyCode();

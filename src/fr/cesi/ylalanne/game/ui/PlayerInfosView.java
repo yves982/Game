@@ -33,7 +33,7 @@ import fr.cesi.ylalanne.utils.ui.GridBagConstraintsBuilder;
 import fr.cesi.ylalanne.utils.ui.ImageLoader;
 
 /**
- * a view for player infos, this one does not raise events as it's inputless
+ * a view for player infos, this one does not raise events as it's inputless.
  */
 public class PlayerInfosView implements ILayeredChildView, PropertyChangeListener {
 	private Container parent;
@@ -204,7 +204,8 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 	}
 
 	/**
-	 * Initialize the Player infos view
+	 * Initializes the PlayerInfosView.
+	 *
 	 * @param model the player model
 	 */
 	public PlayerInfosView(PlayerModel model) {
@@ -215,18 +216,27 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 		gridBagConstraintsBuilder = new GridBagConstraintsBuilder();
 	}
 
+	/* (non-Javadoc)
+	 * @see fr.cesi.ylalanne.contracts.ui.IChildView#getComponent()
+	 */
 	@Override
 	public JComponent getComponent() {
 		checkBuild();
 		return infosPanel;
 	}
 	
+	/* (non-Javadoc)
+	 * @see fr.cesi.ylalanne.contracts.ui.ILayeredChildView#getLayer()
+	 */
 	@Override
 	public int getLayer() {
 		checkBuild();
 		return 1;
 	}
 
+	/* (non-Javadoc)
+	 * @see fr.cesi.ylalanne.contracts.ui.IChildView#setParent(java.awt.Container, java.awt.Dimension)
+	 */
 	@Override
 	public void setParent(Container container, Dimension availableSize) {
 		checkBuild();
@@ -234,18 +244,27 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 		timeLeftMaxSize = (int)Math.ceil(0.04 * this.parent.getWidth());
 	}
 
+	/* (non-Javadoc)
+	 * @see fr.cesi.ylalanne.contracts.ui.ILayeredChildView#getWidth()
+	 */
 	@Override
 	public int getWidth() {
 		checkBuild();
 		return infosPanel.getWidth();
 	}
 
+	/* (non-Javadoc)
+	 * @see fr.cesi.ylalanne.contracts.ui.ILayeredChildView#getHeight()
+	 */
 	@Override
 	public int getHeight() {
 		checkBuild();
 		return infosPanel.getHeight();
 	}
 
+	/* (non-Javadoc)
+	 * @see fr.cesi.ylalanne.contracts.ui.IView#build()
+	 */
 	public void build() {
 		try {
 			SwingUtilities.invokeAndWait(this::buildComponents);
@@ -256,6 +275,9 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 	}
 	
 
+	/* (non-Javadoc)
+	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
+	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		String propertyName = evt.getPropertyName();
@@ -274,6 +296,9 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 		}
 	}
 
+	/**
+	 * Shows the player's victory.
+	 */
 	public void showWin() {
 		
 		JOptionPane.showMessageDialog(null, LocaleManager.getString(WorldManagerStrings.WIN_GAME.getKey()));

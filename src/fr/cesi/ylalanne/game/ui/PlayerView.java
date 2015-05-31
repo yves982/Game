@@ -27,7 +27,7 @@ import fr.cesi.ylalanne.utils.ui.ImageLoader;
  * <ul>
  * 	<li>width</li>
  * <li>height</li>
- * </ul>
+ * </ul>.
  */
 public class PlayerView implements ILayeredChildView, PropertyChangeListener {
 	private PlayerModel model;
@@ -123,7 +123,8 @@ public class PlayerView implements ILayeredChildView, PropertyChangeListener {
 	}
 
 	/**
-	 * Initialize the Player view
+	 * Initializes a Playerview.
+	 *
 	 * @param model the player model
 	 */
 	public PlayerView(PlayerModel model) {
@@ -133,36 +134,54 @@ public class PlayerView implements ILayeredChildView, PropertyChangeListener {
 		model.addPropertyChangeListener(this);
 	}
 	
+	/* (non-Javadoc)
+	 * @see fr.cesi.ylalanne.contracts.ui.IChildView#getComponent()
+	 */
 	@Override
 	public JComponent getComponent() {
 		checkBuild();
 		return playerLabel;
 	}
 	
+	/* (non-Javadoc)
+	 * @see fr.cesi.ylalanne.contracts.ui.ILayeredChildView#getLayer()
+	 */
 	@Override
 	public int getLayer() {
 		checkBuild();
 		return 0;
 	}
 
+	/* (non-Javadoc)
+	 * @see fr.cesi.ylalanne.contracts.ui.IChildView#setParent(java.awt.Container, java.awt.Dimension)
+	 */
 	@Override
 	public void setParent(Container container, Dimension availableSize) {
 		checkBuild();
 		this.parent = container;
 	}
 
+	/* (non-Javadoc)
+	 * @see fr.cesi.ylalanne.contracts.ui.ILayeredChildView#getWidth()
+	 */
 	@Override
 	public int getWidth() {
 		checkBuild();
 		return playerLabel.getWidth();
 	}
 
+	/* (non-Javadoc)
+	 * @see fr.cesi.ylalanne.contracts.ui.ILayeredChildView#getHeight()
+	 */
 	@Override
 	public int getHeight() {
 		checkBuild();
 		return playerLabel.getHeight();
 	}
 
+	/* (non-Javadoc)
+	 * @see fr.cesi.ylalanne.contracts.ui.IView#build()
+	 */
 	public void build() {
 		try {
 			SwingUtilities.invokeAndWait(this::buildComponents);
@@ -173,6 +192,8 @@ public class PlayerView implements ILayeredChildView, PropertyChangeListener {
 	}
 
 	/**
+	 * Adds the key listener.
+	 *
 	 * @param l the {@code KeyListener} to add
 	 * @see java.awt.Component#addKeyListener(java.awt.event.KeyListener)
 	 */
@@ -181,6 +202,8 @@ public class PlayerView implements ILayeredChildView, PropertyChangeListener {
 	}
 
 	/**
+	 * Removes the key listener.
+	 *
 	 * @param l the {@code KeyListener} to remove
 	 * @see java.awt.Component#removeKeyListener(java.awt.event.KeyListener)
 	 */
@@ -188,6 +211,9 @@ public class PlayerView implements ILayeredChildView, PropertyChangeListener {
 		parent.removeKeyListener(l);
 	}
 
+	/* (non-Javadoc)
+	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
+	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		checkBuild();
@@ -210,33 +236,38 @@ public class PlayerView implements ILayeredChildView, PropertyChangeListener {
 	}
 
 	/**
-	 * @param listener
+	 * Adds the property change listener.
+	 *
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.beans.PropertyChangeListener)
 	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		modelChange.addPropertyChangeListener(listener);
 	}
-
 	/**
-	 * @param listener
+	 * Removes the property change listener.
+	 *
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#removePropertyChangeListener(java.beans.PropertyChangeListener)
 	 */
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		modelChange.removePropertyChangeListener(listener);
 	}
-
 	/**
-	 * @param propertyName
-	 * @param listener
+	 * Adds the property change listener.
+	 *
+	 * @param propertyName the property name
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
 	 */
 	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
 		modelChange.addPropertyChangeListener(propertyName, listener);
 	}
-
 	/**
-	 * @param propertyName
-	 * @param listener
+	 * Removes the property change listener.
+	 *
+	 * @param propertyName the property name
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#removePropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
 	 */
 	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {

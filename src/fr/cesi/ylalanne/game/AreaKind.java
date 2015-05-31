@@ -1,7 +1,7 @@
 package fr.cesi.ylalanne.game;
 
 /**
- * The kind of an {@link Area}, determines the image and associated business rule for an {@link Area}
+ * The kind of an {@link Area}, determines the image and associated business rule for an {@link Area}.
  */
 public enum AreaKind {
 	START("/area/start.png", null),
@@ -17,12 +17,19 @@ public enum AreaKind {
 	}
 	
 	/**
+	 * Gets the image path.
+	 *
 	 * @return the imagePath
 	 */
 	public String getImagePath() {
 		return imagePath;
 	}
 	
+	/**
+	 * Gets the second image path.
+	 *
+	 * @return the second image path
+	 */
 	public String getSecondImagePath() {
 		return secondImagePath;
 	}

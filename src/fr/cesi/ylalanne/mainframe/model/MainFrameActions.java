@@ -1,5 +1,8 @@
 package fr.cesi.ylalanne.mainframe.model;
 
+/**
+ * Stores MainFrame menu actions and their translation keys.
+ */
 public enum MainFrameActions {
 	
 	START("MainFrame.menu_start"),
@@ -10,10 +13,15 @@ public enum MainFrameActions {
 	
 	private String key;
 	
-	MainFrameActions(String key) {
+	private MainFrameActions(String key) {
 		this.key = key;
 	}
 	
+	/**
+	 * Gets the key.
+	 *
+	 * @return the key
+	 */
 	public String getKey() {
 		return key;
 	}

@@ -2,6 +2,9 @@ package fr.cesi.ylalanne.contracts;
 
 import java.beans.PropertyChangeListener;
 
+/**
+ * The Interface IBoundChildController.
+ */
 public interface IBoundChildController extends IChildController {
 	void addPropertyChangeListener(PropertyChangeListener listener);
 	void addPropertyChangeListener(String propertyName, PropertyChangeListener listener);

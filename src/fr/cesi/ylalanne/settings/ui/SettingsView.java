@@ -36,6 +36,9 @@ import fr.cesi.ylalanne.utils.ui.GridBagConstraintsAnchor;
 import fr.cesi.ylalanne.utils.ui.GridBagConstraintsBuilder;
 import fr.cesi.ylalanne.utils.ui.GridBagConstraintsFill;
 
+/**
+ * The Class SettingsView.
+ */
 public class SettingsView implements PropertyChangeListener, ActionListener, IView {
 	private JDialog settingsDialog;
 	private JPanel difficultyPanel;
@@ -271,6 +274,11 @@ public class SettingsView implements PropertyChangeListener, ActionListener, IVi
 	
 	
 
+	/**
+	 * Initializes a SettingsView.
+	 *
+	 * @param model the model
+	 */
 	public SettingsView(SettingsViewModel model) {
 		this.model = model;
 		constraintBuilder = new GridBagConstraintsBuilder();
@@ -284,16 +292,25 @@ public class SettingsView implements PropertyChangeListener, ActionListener, IVi
 		propertyChange = new PropertyChangeSupport(this);
 	}
 
+	/**
+	 * Shows this view.
+	 */
 	public void show() {
 		SwingUtilities.invokeLater( () -> {
 			settingsDialog.setVisible(true);
 		});
 	}
 
+	/**
+	 * Closes this view.
+	 */
 	public void close() {
 		settingsDialog.dispose();
 	}
 
+	/* (non-Javadoc)
+	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
+	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		String propertyName = evt.getPropertyName();
@@ -312,12 +329,18 @@ public class SettingsView implements PropertyChangeListener, ActionListener, IVi
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		JComponent source = (JComponent)e.getSource();
 		actionHandlers.get(source).accept(null);
 	}
 
+	/* (non-Javadoc)
+	 * @see fr.cesi.ylalanne.contracts.ui.IView#build()
+	 */
 	@Override
 	public void build() {
 		try {
@@ -329,33 +352,38 @@ public class SettingsView implements PropertyChangeListener, ActionListener, IVi
 	}
 	
 	/**
-	 * @param listener
+	 * Adds the property change listener.
+	 *
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.beans.PropertyChangeListener)
 	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		propertyChange.addPropertyChangeListener(listener);
 	}
-
 	/**
-	 * @param listener
+	 * Removes the property change listener.
+	 *
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#removePropertyChangeListener(java.beans.PropertyChangeListener)
 	 */
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		propertyChange.removePropertyChangeListener(listener);
 	}
-
 	/**
-	 * @param propertyName
-	 * @param listener
+	 * Adds the property change listener.
+	 *
+	 * @param propertyName the property name
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
 	 */
 	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
 		propertyChange.addPropertyChangeListener(propertyName, listener);
 	}
-
 	/**
-	 * @param propertyName
-	 * @param listener
+	 * Removes the property change listener.
+	 *
+	 * @param propertyName the property name
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#removePropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
 	 */
 	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {

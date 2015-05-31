@@ -1,7 +1,7 @@
 package fr.cesi.ylalanne.highscores.model;
 
 /**
- * Storage class for HighScores translation keys
+ * Store HighScores translation keys.
  */
 public enum HighScoresStrings {
 	NAME("highScores_nameColumn"),
@@ -21,6 +21,8 @@ public enum HighScoresStrings {
 	}
 	
 	/**
+	 * Gets the key.
+	 *
 	 * @return the translation key
 	 */
 	public String getKey() {

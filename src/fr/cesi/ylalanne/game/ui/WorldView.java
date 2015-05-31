@@ -22,12 +22,12 @@ import fr.cesi.ylalanne.game.WorldManagerStrings;
 import fr.cesi.ylalanne.lang.LocaleManager;
 
 /**
- * A world view
+ * The world view
  * <p>It has the following bound properties:</p>
  * <ul>
  * 	<li>width</li>
  *  <li>height</li>
- * </ul>
+ * </ul>.
  */
 public class WorldView implements IChildView, ILayeredParentView {
 	private List<IChildView> childViews;
@@ -75,7 +75,7 @@ public class WorldView implements IChildView, ILayeredParentView {
 	}
 
 	/**
-	 * Initialize the World view
+	 * Initialize the WorldView.
 	 */
 	public WorldView() {
 		childViews = new ArrayList<IChildView>();
@@ -84,7 +84,7 @@ public class WorldView implements IChildView, ILayeredParentView {
 	}
 	
 	/**
-	 * Shows this view
+	 * Shows this view.
 	 */
 	public void show() {
 		checkBuild();
@@ -99,48 +99,62 @@ public class WorldView implements IChildView, ILayeredParentView {
 	}
 	
 	/**
-	 * Tell the user the world has ended and there's nothing to do about it
+	 * Tell the user the world has ended and there's nothing to do about it.
 	 */
 	public void showEnd() {
 		JOptionPane.showMessageDialog(null, LocaleManager.getString(WorldManagerStrings.END_GAME.getKey()));
 	}
 	
 	/**
-	 * @param listener
+	 * Adds the property change listener.
+	 *
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.beans.PropertyChangeListener)
 	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		propertyChange.addPropertyChangeListener(listener);
 	}
 	/**
-	 * @param listener
+	 * Removes the property change listener.
+	 *
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#removePropertyChangeListener(java.beans.PropertyChangeListener)
 	 */
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		propertyChange.removePropertyChangeListener(listener);
 	}
 	/**
-	 * @param propertyName
-	 * @param listener
+	 * Adds the property change listener.
+	 *
+	 * @param propertyName the property name
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
 	 */
 	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
 		propertyChange.addPropertyChangeListener(propertyName, listener);
 	}
 	/**
-	 * @param propertyName
-	 * @param listener
+	 * Removes the property change listener.
+	 *
+	 * @param propertyName the property name
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#removePropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
 	 */
 	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
 		propertyChange.removePropertyChangeListener(propertyName, listener);
 	}
 
+	/* (non-Javadoc)
+	 * @see fr.cesi.ylalanne.contracts.ui.IParentView#addChild(fr.cesi.ylalanne.contracts.ui.IChildView)
+	 */
 	@Override
 	public void addChild(IChildView childView) {
 		addChild(childView, 0);
 	}
 	
+	/* (non-Javadoc)
+	 * @see fr.cesi.ylalanne.contracts.ui.ILayeredParentView#addChild(fr.cesi.ylalanne.contracts.ui.IChildView, int)
+	 */
 	@Override
 	public void addChild(IChildView childView, int layer) {
 		checkBuild();
@@ -159,12 +173,18 @@ public class WorldView implements IChildView, ILayeredParentView {
 		mainPanel.repaint();
 	}
 
+	/* (non-Javadoc)
+	 * @see fr.cesi.ylalanne.contracts.ui.IChildView#getComponent()
+	 */
 	@Override
 	public JComponent getComponent() {
 		checkBuild();
 		return mainPanel;
 	}
 	
+	/* (non-Javadoc)
+	 * @see fr.cesi.ylalanne.contracts.ui.IChildView#setParent(java.awt.Container, java.awt.Dimension)
+	 */
 	@Override
 	public void setParent(Container container, Dimension availableSize) {
 		checkBuild();
@@ -185,6 +205,9 @@ public class WorldView implements IChildView, ILayeredParentView {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see fr.cesi.ylalanne.contracts.ui.IView#build()
+	 */
 	@Override
 	public void build() {
 		try {

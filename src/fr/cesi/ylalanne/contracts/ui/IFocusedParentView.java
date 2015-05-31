@@ -1,7 +1,7 @@
 package fr.cesi.ylalanne.contracts.ui;
 
 /**
- * An {@link IParentView} with the ability to manage focus (generally one with a top level container)
+ * An {@link IParentView} with the ability to manage focus (generally one with a top level container).
  */
 public interface IFocusedParentView extends IParentView {
 	

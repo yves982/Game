@@ -1,7 +1,7 @@
 package fr.cesi.ylalanne.game;
 
 /**
- * The kind of an obstacle, determines the image and associated business rule for an {@link Obstacle}
+ * The kind of an obstacle, determines the image and associated business rule for an {@link Obstacle}.
  */
 public enum ObstacleKind {
 	TRUCK("/obstacle/truck.png", true, false),
@@ -21,6 +21,8 @@ public enum ObstacleKind {
 	}
 
 	/**
+	 * Gets the image path.
+	 *
 	 * @return the imagePath
 	 */
 	public String getImagePath() {
@@ -28,6 +30,9 @@ public enum ObstacleKind {
 	}
 	
 	/**
+	 * Checks if it is deadly.
+	 * <p>A deadly Obstacle takes the Player's life on collision, a non deadly one can be climbed upon.</p>
+	 *
 	 * @return true if this ObstacleKind is deadly, false otherwise
 	 */
 	public boolean isDeadly() {
@@ -35,6 +40,9 @@ public enum ObstacleKind {
 	}
 	
 	/**
+	 * Checks if it is static.
+	 * <p>A static Obstacle should not be moved.</p>
+	 *
 	 * @return true if this ObstacleKind is static, false otherwise
 	 */
 	public boolean isStatic() {

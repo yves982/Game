@@ -29,7 +29,7 @@ import fr.cesi.ylalanne.utils.Range;
  * <li>lives</li>
  *  <li>x</li>
  *  <li>y</li>
- * </ul>
+ * </ul>.
  */
 public class Player implements ILayeredChildrenController, PropertyChangeListener {
 	private PlayerModel model;
@@ -222,7 +222,7 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 		playerView.addKeyListener(movesListener);
 	}
 
-	// we can't call this within live as we'd loose view parents, defined through dependency injection
+	// we can't call this within lives method as we'd loose view parents, defined through dependency injection
 	private void setupViews() {
 		infosView = new PlayerInfosView(model);
 		infosView.build();
@@ -244,7 +244,8 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	}
 
 	/**
-	 * Initialize a Player
+	 * Initializes a Player.
+	 *
 	 * @param maxLives the maximum number of lives before the fr.cesi.ylalanne.game is over
 	 * @param maxLeftTimeMs the maximum time every life can last (in milliseconds)
 	 * @param movesStep the step for all moves
@@ -267,7 +268,8 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	}
 
 	/**
-	 * Places the player in the world                                                                               
+	 * Places the player in the world                                                                               .
+	 *
 	 * @param x the x coordinate
 	 * @param y the y coordinate
 	 * @return true if the requested position would place the Player in its bounds, false otherwise
@@ -294,7 +296,7 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	}
 
 	/**
-	 * Starts living (starts live time countdown)
+	 * Starts living (starts live time countdown).
 	 */
 	public void lives() {
 		if(movesExecutor != null) {
@@ -313,7 +315,7 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	}
 
 	/**
-	 * Cleans the resources used by the Player
+	 * Cleans the resources used by the Player.
 	 */
 	public void clean() {
 		try {
@@ -336,7 +338,7 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	}
 	
 	/**
-	 * Kills the Player
+	 * Kills the Player.
 	 */
 	public void kill() {
 		dies();
@@ -348,7 +350,8 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	}
 	
 	/**
-	 * Collides this player with an {@code Obstacle}
+	 * Collides this player with an {@code Obstacle}.
+	 *
 	 * @param obstacle the collided {@code Obstacle}
 	 */
 	public void collides(Obstacle obstacle) {
@@ -359,7 +362,8 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	}
 
 	/**
-	 * Checks whether the player's area is at least partially contained in the given circular area
+	 * Checks whether the player's area is at least partially contained in the given circular area.
+	 *
 	 * @param x the center (x coordinate) of a circular area
 	 * @param y the center (y coordinate) of a circular area
 	 * @param radius the distance between circle's center and edge
@@ -370,7 +374,8 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	}
 	
 	/**
-	 * Checks whether this player is at least partially in the given area
+	 * Checks whether this player is at least partially in the given area.
+	 *
 	 * @param area the area to check for collision with the player
 	 * @return {@code true} if the player's area intersects with the given one, {@code false} otherwise.
 	 */
@@ -380,8 +385,9 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 
 	/**
 	 * <p>
-	 * a lifeless player cannot keep on player, the party should end
-	 * </p>
+	 * a lifeless player cannot keep on playing, the party should end
+	 * </p>.
+	 *
 	 * @return the liveLess state
 	 */
 	public boolean isLifeLess() {
@@ -389,6 +395,8 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	}
 
 	/**
+	 * Checks if it is collided.
+	 *
 	 * @return true if the Player is at least partially within an Obstacle, false otherwise
 	 */
 	public boolean isCollided() {
@@ -396,6 +404,8 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	}
 	
 	/**
+	 * Checks if it is winning.
+	 *
 	 * @return the winning state of the Player (true if he's won, false otherwise)
 	 */
 	public boolean isWinning() {
@@ -403,6 +413,8 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	}
 	
 	/**
+	 * Gets the x.
+	 *
 	 * @return the x coordinate of the player
 	 */
 	public int getX() {
@@ -410,6 +422,8 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	}
 	
 	/**
+	 * Gets the y.
+	 *
 	 * @return the y coordinate of the Player
 	 */
 	public int getY() {
@@ -417,6 +431,8 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	}
 	
 	/**
+	 * Gets the width.
+	 *
 	 * @return the player's width
 	 */
 	public int getWidth() {
@@ -424,6 +440,8 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	}
 	
 	/**
+	 * Gets the height.
+	 *
 	 * @return the player's height
 	 */
 	public int getHeight() {
@@ -431,7 +449,8 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	}
 	
 	/**
-	 * Gets the player's reserved height (reserved to display its infos)
+	 * Gets the player's reserved height (reserved to display its infos).
+	 *
 	 * @return the reservedHeight
 	 */
 	public int getReservedHeight() {
@@ -439,19 +458,26 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	}
 	
 	/**
-	 * Get the Obstacle in collision with the Player, if it is collided, null otherwise
+	 * Get the Obstacle in collision with the Player, if it is collided, null otherwise.
+	 *
+	 * @return the collider
 	 */
 	public Obstacle getCollider() {
 		return collider;
 	}
 
 	/**
+	 * Gets the high score.
+	 *
 	 * @return the highScore
 	 */
 	public IHighScoreController getHighScore() {
 		return highScore;
 	}
+	
 	/**
+	 * Sets the high score.
+	 *
 	 * @param highScore the highScore to set
 	 */
 	public void setHighScore(IHighScoreController highScore) {
@@ -459,17 +485,25 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	}
 
 	/**
+	 * Gets the current move request.
+	 *
 	 * @return the currentMoveRequest
 	 */
 	public MoveRequestEvent getCurrentMoveRequest() {
 		return currentMoveRequest;
 	}
 
+	/* (non-Javadoc)
+	 * @see fr.cesi.ylalanne.contracts.ILayeredChildrenController#getChildren()
+	 */
 	@Override
 	public List<ILayeredChildView> getChildren() {
 		return childrenView;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
+	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		String propertyName = evt.getPropertyName();
@@ -486,30 +520,38 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	}
 
 	/**
-	 * @param listener
+	 * Adds the property change listener.
+	 *
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.beans.PropertyChangeListener)
 	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		propertyChange.addPropertyChangeListener(listener);
 	}
 	/**
-	 * @param listener
+	 * Removes the property change listener.
+	 *
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#removePropertyChangeListener(java.beans.PropertyChangeListener)
 	 */
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		propertyChange.removePropertyChangeListener(listener);
 	}
 	/**
-	 * @param propertyName
-	 * @param listener
+	 * Adds the property change listener.
+	 *
+	 * @param propertyName the property name
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
 	 */
 	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
 		propertyChange.addPropertyChangeListener(propertyName, listener);
 	}
 	/**
-	 * @param propertyName
-	 * @param listener
+	 * Removes the property change listener.
+	 *
+	 * @param propertyName the property name
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#removePropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
 	 */
 	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
@@ -517,7 +559,7 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	}
 
 	/**
-	 * Makes the Player win the game
+	 * Makes the Player win the game.
 	 */
 	public void win() {
 		int score = model.getScore();
@@ -532,7 +574,8 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	}
 
 	/**
-	 * Increases the player's score
+	 * Increases the player's score.
+	 *
 	 * @param amount the amount to increase the score by
 	 */
 	public void gains(int amount) {

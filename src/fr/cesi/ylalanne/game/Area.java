@@ -12,7 +12,7 @@ import fr.cesi.ylalanne.game.ui.AreaView;
  * An Area which does not handle collision nor provide any input
  * <p>
  * It's simply part of the background with no interaction whatsoever
- * </p>
+ * </p>.
  */
 public class Area implements IChildController, PropertyChangeListener {
 	private AreaKind kind;
@@ -24,7 +24,8 @@ public class Area implements IChildController, PropertyChangeListener {
 	}
 
 	/**
-	 * Initialize an Area
+	 * Initialize an Area.
+	 *
 	 * @param kind the kind of this area
 	 */
 	public Area(AreaKind kind) {
@@ -40,7 +41,8 @@ public class Area implements IChildController, PropertyChangeListener {
 	}
 	
 	/**
-	 * Sets the bounds of this area
+	 * Sets the bounds of this area.
+	 *
 	 * @param width the area's width
 	 * @param height the area's filled height
 	 * @param usedHeight the area's height within which some rules will apply
@@ -52,6 +54,8 @@ public class Area implements IChildController, PropertyChangeListener {
 	}
 	
 	/**
+	 * Gets the kind.
+	 *
 	 * @return the area's kind
 	 */
 	public AreaKind getKind() {
@@ -59,7 +63,8 @@ public class Area implements IChildController, PropertyChangeListener {
 	}
 
 	/**
-	 * Gives this area her position in the {@link World}
+	 * Gives this area her position in the {@link World}.
+	 *
 	 * @param y the y coordinate of this area (depends on its row)
 	 */
 	public void startPosition(int y) {
@@ -67,6 +72,8 @@ public class Area implements IChildController, PropertyChangeListener {
 	}
 	
 	/**
+	 * Gets the width.
+	 *
 	 * @return the area's width
 	 * @see fr.cesi.ylalanne.game.model.AreaModel#getWidth()
 	 */
@@ -75,6 +82,8 @@ public class Area implements IChildController, PropertyChangeListener {
 	}
 
 	/**
+	 * Gets the height.
+	 *
 	 * @return the area's height
 	 * @see fr.cesi.ylalanne.game.model.AreaModel#getHeight()
 	 */
@@ -83,6 +92,8 @@ public class Area implements IChildController, PropertyChangeListener {
 	}
 
 	/**
+	 * Gets the used height.
+	 *
 	 * @return the area's height
 	 * @see fr.cesi.ylalanne.game.model.AreaModel#getUsedHeight()
 	 */
@@ -90,11 +101,17 @@ public class Area implements IChildController, PropertyChangeListener {
 		return model.getUsedHeight();
 	}
 	
+	/* (non-Javadoc)
+	 * @see fr.cesi.ylalanne.contracts.IChildController#getChild()
+	 */
 	@Override
 	public IChildView getChild() {
 		return view;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
+	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		String propertyName = evt.getPropertyName();

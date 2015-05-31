@@ -22,6 +22,9 @@ import fr.cesi.ylalanne.highscores.model.HighScoresModel;
 import fr.cesi.ylalanne.highscores.ui.HighScoreEntryView;
 import fr.cesi.ylalanne.highscores.ui.HighScoreView;
 
+/**
+ * Handle HighScores view models and (de)serialization in JSON.
+ */
 public class HighScoreController implements PropertyChangeListener, IHighScoreController {
 	private HighScoresModel model;
 	private HighScoreView view;
@@ -67,6 +70,9 @@ public class HighScoreController implements PropertyChangeListener, IHighScoreCo
 		writeHighScores();
 	}
 
+	/**
+	 * Initializes an HighScoreController.
+	 */
 	public HighScoreController() {
 		model = new HighScoresModel();
 		view = new HighScoreView();
@@ -76,6 +82,9 @@ public class HighScoreController implements PropertyChangeListener, IHighScoreCo
 		initialized = false;
 	}
 	
+	/**
+	 * Write high scores to a JSON file.
+	 */
 	public void writeHighScores() {
 		if(!initialized) {
 			init();
@@ -95,6 +104,8 @@ public class HighScoreController implements PropertyChangeListener, IHighScoreCo
 	}
 	
 	/**
+	 * Gets the high scores.
+	 *
 	 * @return the high scores
 	 */
 	public List<HighScore> getHighScores() {
@@ -102,7 +113,7 @@ public class HighScoreController implements PropertyChangeListener, IHighScoreCo
 	}
 	
 	/**
-	 * Starts this controller shows its view
+	 * Starts this controller shows its view.
 	 */
 	public void start() {
 		if(!initialized) {
@@ -111,6 +122,9 @@ public class HighScoreController implements PropertyChangeListener, IHighScoreCo
 		view.show();
 	}
 	
+	/* (non-Javadoc)
+	 * @see fr.cesi.ylalanne.contracts.IHighScoreController#askName(int)
+	 */
 	public void askName(int highScore) {
 		if(!initialized) {
 			init();
@@ -122,6 +136,9 @@ public class HighScoreController implements PropertyChangeListener, IHighScoreCo
 		entryView.addPropertyChangeListener(this);
 	}
 
+	/* (non-Javadoc)
+	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
+	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		String propertyName = evt.getPropertyName();

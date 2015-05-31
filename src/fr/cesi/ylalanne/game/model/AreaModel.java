@@ -4,7 +4,6 @@ import java.awt.Rectangle;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-
 /**
  * Immutable Area model with a position(x, y), a size(width, height) and an image
  * <p>It has the following bound properties:</p>
@@ -16,7 +15,7 @@ import java.beans.PropertyChangeSupport;
  * 	<li>imagePath</li>
  *  <li>secondImagePath</li>
  *  <li>usedHeight</li>
- * </ul>
+ * </ul>.
  */
 public class AreaModel {
 	private Rectangle rectangle;
@@ -27,7 +26,7 @@ public class AreaModel {
 	
 	
 	/**
-	 * Initialize an AreaModel
+	 * Initialize an AreaModel.
 	 */
 	public AreaModel() {
 		rectangle = new Rectangle();
@@ -36,12 +35,17 @@ public class AreaModel {
 
 
 	/**
+	 * Gets the image path.
+	 *
 	 * @return the imagePath
 	 */
 	public String getImagePath() {
 		return imagePath;
 	}
+	
 	/**
+	 * Sets the image path.
+	 *
 	 * @param imagePath the imagePath to set
 	 */
 	public void setImagePath(String imagePath) {
@@ -51,12 +55,17 @@ public class AreaModel {
 	}
 
 	/**
+	 * Gets the second image path.
+	 *
 	 * @return the secondImagePath
 	 */
 	public String getSecondImagePath() {
 		return secondImagePath;
 	}
+	
 	/**
+	 * Sets the second image path.
+	 *
 	 * @param secondImagePath the secondImagePath to set
 	 */
 	public void setSecondImagePath(String secondImagePath) {
@@ -67,12 +76,17 @@ public class AreaModel {
 
 
 	/**
+	 * Gets the x.
+	 *
 	 * @return the x coordinate
 	 */
 	public int getX() {
 		return rectangle.x;
 	}
+	
 	/**
+	 * Sets the x.
+	 *
 	 * @param x the x coordinate to set
 	 */
 	public void setX(int x) {
@@ -82,12 +96,17 @@ public class AreaModel {
 	}
 
 	/**
+	 * Gets the y.
+	 *
 	 * @return the y coordinate
 	 */
 	public int getY() {
 		return rectangle.y;
 	}
+	
 	/**
+	 * Sets the y.
+	 *
 	 * @param y the y coordinate to set
 	 */
 	public void setY(int y) {
@@ -97,12 +116,17 @@ public class AreaModel {
 	}
 
 	/**
+	 * Gets the width.
+	 *
 	 * @return the width
 	 */
 	public int getWidth() {
 		return rectangle.width;
 	}
+	
 	/**
+	 * Sets the width.
+	 *
 	 * @param width the width to set
 	 */
 	public void setWidth(int width) {
@@ -112,12 +136,17 @@ public class AreaModel {
 	}
 
 	/**
+	 * Gets the height.
+	 *
 	 * @return the height
 	 */
 	public int getHeight() {
 		return rectangle.height;
 	}
+	
 	/**
+	 * Sets the height.
+	 *
 	 * @param height the height to set
 	 */
 	public void setHeight(int height) {
@@ -127,12 +156,17 @@ public class AreaModel {
 	}
 
 	/**
+	 * Gets the used height.
+	 *
 	 * @return the usedHeight
 	 */
 	public int getUsedHeight() {
 		return usedHeight;
 	}
+	
 	/**
+	 * Sets the used height.
+	 *
 	 * @param usedHeight the usedHeight to set
 	 */
 	public void setUsedHeight(int usedHeight) {
@@ -143,30 +177,38 @@ public class AreaModel {
 
 
 	/**
-	 * @param listener
+	 * Adds the property change listener.
+	 *
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.beans.PropertyChangeListener)
 	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		propertyChange.addPropertyChangeListener(listener);
 	}
 	/**
-	 * @param listener
+	 * Removes the property change listener.
+	 *
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#removePropertyChangeListener(java.beans.PropertyChangeListener)
 	 */
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		propertyChange.removePropertyChangeListener(listener);
 	}
 	/**
-	 * @param propertyName
-	 * @param listener
+	 * Adds the property change listener.
+	 *
+	 * @param propertyName the property name
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
 	 */
 	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
 		propertyChange.addPropertyChangeListener(propertyName, listener);
 	}
 	/**
-	 * @param propertyName
-	 * @param listener
+	 * Removes the property change listener.
+	 *
+	 * @param propertyName the property name
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#removePropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
 	 */
 	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {

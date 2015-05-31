@@ -11,12 +11,18 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 import fr.cesi.ylalanne.utils.ResourcesManager;
 
+/**
+ * The SoundManager.
+ * <p>Note: Handles playing a single sound continuously, for the moment</p>
+ */
 public class SoundManager {
 	private static URL soundURL;
 	private static Clip clip;
 	private static AudioInputStream aStream;
 	
 	/**
+	 * Play a sound continuously.
+	 *
 	 * @param soundPath relative path (relative to ResourcesManager.SOUNDS_BASE) to a sound file
 	 */
 	public static void playContinuously(String soundPath) {
@@ -36,6 +42,8 @@ public class SoundManager {
 	}
 	
 	/**
+	 * Checks if it is playing a sound.
+	 *
 	 * @return true if the SoundManager is playing some sound
 	 */
 	public static boolean isPlaying() {
@@ -43,7 +51,7 @@ public class SoundManager {
 	}
 	
 	/**
-	 * Stops the currently played sound and release system resources
+	 * Stops the currently played sound and release system resources.
 	 */
 	public static void stop() {
 		if(clip != null && clip.isOpen() && clip.isRunning()) {

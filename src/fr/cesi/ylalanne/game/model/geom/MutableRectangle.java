@@ -18,7 +18,7 @@ public class MutableRectangle {
 	private PropertyChangeSupport propertyChange;
 
 	/**
-	 * Initialize a MutableRectangle
+	 * Initializes a MutableRectangle.
 	 */
 	public MutableRectangle() {
 		rectangle = new Rectangle();
@@ -26,12 +26,17 @@ public class MutableRectangle {
 	}
 	
 	/**
+	 * Gets the x.
+	 *
 	 * @return the x coordinate
 	 */
 	public int getX() {
 		return rectangle.x;
 	}
+	
 	/**
+	 * Sets the x.
+	 *
 	 * @param x the x coordinate to set
 	 */
 	public void setX(int x) {
@@ -41,12 +46,17 @@ public class MutableRectangle {
 	}
 	
 	/**
+	 * Gets the y.
+	 *
 	 * @return the y coordinate
 	 */
 	public int getY() {
 		return rectangle.y;
 	}
+	
 	/**
+	 * Sets the y.
+	 *
 	 * @param y the y coordinate to set
 	 */
 	public void setY(int y) {
@@ -56,12 +66,17 @@ public class MutableRectangle {
 	}
 	
 	/**
+	 * Gets the width.
+	 *
 	 * @return the width
 	 */
 	public int getWidth() {
 		return rectangle.width;
 	}
+	
 	/**
+	 * Sets the width.
+	 *
 	 * @param width the width to set
 	 */
 	public void setWidth(int width) {
@@ -69,12 +84,17 @@ public class MutableRectangle {
 	}
 	
 	/**
+	 * Gets the height.
+	 *
 	 * @return the height
 	 */
 	public int getHeight() {
 		return rectangle.height;
 	}
+	
 	/**
+	 * Sets the height.
+	 *
 	 * @param height the height to set
 	 */
 	public void setHeight(int height) {
@@ -83,41 +103,47 @@ public class MutableRectangle {
 	
 	
 	/**
-	 * @param listener
+	 * Adds the property change listener.
+	 *
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.beans.PropertyChangeListener)
 	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		propertyChange.addPropertyChangeListener(listener);
 	}
-
 	/**
-	 * @param listener
+	 * Removes the property change listener.
+	 *
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#removePropertyChangeListener(java.beans.PropertyChangeListener)
 	 */
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		propertyChange.removePropertyChangeListener(listener);
 		
 	}
-
 	/**
-	 * @param propertyName
-	 * @param listener
+	 * Adds the property change listener.
+	 *
+	 * @param propertyName the property name
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
 	 */
 	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
 		propertyChange.addPropertyChangeListener(propertyName, listener);
 	}
-
 	/**
-	 * @param propertyName
-	 * @param listener
+	 * Removes the property change listener.
+	 *
+	 * @param propertyName the property name
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#removePropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
 	 */
 	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
 		propertyChange.removePropertyChangeListener(propertyName, listener);
 	}
-
 	/**
+	 * Checks if this obstacle intersects with the given rectangle.
+	 *
 	 * @param otherRectangle the {@link MutableRectangle} checked for intersection with current instance
 	 * @return true if the intersection of these {@code Rectangle} is not empty, false otherwise
 	 * @see java.awt.Rectangle#intersects(java.awt.Rectangle)
@@ -127,6 +153,8 @@ public class MutableRectangle {
 	}
 	
 	/**
+	 * Checks if this obstacle is at least partly within the given circle.
+	 *
 	 * @param x the x coordinate of a circle
 	 * @param y the y coordinate of a circle
 	 * @param radius the radius of a circle

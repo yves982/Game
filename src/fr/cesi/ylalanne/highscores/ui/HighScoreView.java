@@ -26,6 +26,9 @@ import fr.cesi.ylalanne.utils.ui.GridBagConstraintsAnchor;
 import fr.cesi.ylalanne.utils.ui.GridBagConstraintsBuilder;
 import fr.cesi.ylalanne.utils.ui.GridBagConstraintsFill;
 
+/**
+ * The view to show saved HighScores.
+ */
 public class HighScoreView implements IView, ActionListener {
 	private JDialog highScoreDialog;
 	private JPanel highScorePanel;
@@ -35,6 +38,9 @@ public class HighScoreView implements IView, ActionListener {
 	private JScrollPane highScoreScrollPane;
 	
 	
+	/**
+	 * Initializes an HighScoreView.
+	 */
 	public HighScoreView() {
 		builder = new GridBagConstraintsBuilder();
 	}
@@ -97,8 +103,9 @@ public class HighScoreView implements IView, ActionListener {
 	}
 	
 	/**
-	 * Updates this view with actual data
-	 * @param model
+	 * Updates this view with its model.
+	 *
+	 * @param model the model
 	 */
 	public void update(HighScoresModel model) {
 		List<HighScore> scores = model.getHighscores();
@@ -130,6 +137,9 @@ public class HighScoreView implements IView, ActionListener {
 		
 	}
 
+	/**
+	 * Show this view.
+	 */
 	public void show() {
 		SwingUtilities.invokeLater( () -> {
 			highScoreDialog.setVisible(true);
@@ -137,6 +147,9 @@ public class HighScoreView implements IView, ActionListener {
 	}
 	
 	
+	/* (non-Javadoc)
+	 * @see fr.cesi.ylalanne.contracts.ui.IView#build()
+	 */
 	@Override
 	public void build() {
 		try {
@@ -148,6 +161,9 @@ public class HighScoreView implements IView, ActionListener {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		highScoreDialog.dispose();

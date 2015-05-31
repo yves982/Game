@@ -9,13 +9,15 @@ import javax.imageio.ImageIO;
 import fr.cesi.ylalanne.utils.ResourcesManager;
 
 /**
- * Utility class to load images
+ * Utility class to load images.
  */
 public class ImageLoader {
+	
 	/**
-	 * @param imagePath the path to the image
+	 * Load an image.
+	 *
+	 * @param imagePath the path to the image (relatives to {@link ResourcesManager#IMAGES_BASE})
 	 * @return the image
-	 * @throws RuntimeException in case of an IO error while trying to access file or an unhandled URL.
 	 */
 	public static Image LoadImage(String imagePath) {
 		try

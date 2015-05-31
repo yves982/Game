@@ -12,8 +12,16 @@ import fr.cesi.ylalanne.mainframe.MainFrameController;
 import fr.cesi.ylalanne.settings.SettingsController;
 import fr.cesi.ylalanne.settings.model.Settings;
 
+/**
+ * Launcher class.
+ */
 public class Game {
 	
+	/**
+	 * The Entry point, grabs language, launch world generation.
+	 *
+	 * @param args the command line arguments (none handled)
+	 */
 	public static void main(String[] args) {
 		Locale locale = SettingsController.getSettings().getLanguage().getLocale();
 		LocaleManager.setLocale(locale);

@@ -1,7 +1,6 @@
 package fr.cesi.ylalanne.settings.model;
-
 /**
- * Storage class for Resolution related properties
+ * Stores Resolution related properties.
  */
 public enum Resolutions {
 	LOW("Resolution_Low", 800, 600),
@@ -24,6 +23,8 @@ public enum Resolutions {
 	}
 	
 	/**
+	 * Gets the key.
+	 *
 	 * @return the translation key
 	 */
 	public String getKey() {
@@ -31,6 +32,8 @@ public enum Resolutions {
 	}
 
 	/**
+	 * Gets the width.
+	 *
 	 * @return the width
 	 */
 	public int getWidth() {
@@ -38,6 +41,8 @@ public enum Resolutions {
 	}
 
 	/**
+	 * Gets the height.
+	 *
 	 * @return the height
 	 */
 	public int getHeight() {

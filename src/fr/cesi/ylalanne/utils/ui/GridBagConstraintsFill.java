@@ -2,6 +2,9 @@ package fr.cesi.ylalanne.utils.ui;
 
 import java.awt.GridBagConstraints;
 
+/**
+ * Handles how a component will occupy extra space.
+ */
 public enum GridBagConstraintsFill {
 
     NONE(GridBagConstraints.NONE),
@@ -15,6 +18,11 @@ public enum GridBagConstraintsFill {
     	this.value = value;
     }
     
+    /**
+     * Gets the value.
+     *
+     * @return the value
+     */
     public int getValue() {
     	return value;
     }

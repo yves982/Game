@@ -13,7 +13,6 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.lang.reflect.InvocationTargetException;
 
-import javax.swing.JCheckBox;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -34,7 +33,7 @@ import fr.cesi.ylalanne.utils.ui.ComponentLocation;
  * <p>It has the following bound properties:</p>
  * <ul>
  * 	<li>action</li>
- * </ul>
+ * </ul>.
  */
 public class MainFrameView extends WindowAdapter implements IFocusedParentView, ActionListener, PropertyChangeListener {
 	private JFrame frame;
@@ -112,12 +111,20 @@ public class MainFrameView extends WindowAdapter implements IFocusedParentView, 
 		mutedMenuItem.setSelected(viewModel.isMuted());
 	}
 
+	/**
+	 * Initializes a MainFrameView.
+	 *
+	 * @param viewModel the view model
+	 */
 	public MainFrameView(MainFrameModel viewModel) {
 		this.viewModel = viewModel;
 		propertyChange = new PropertyChangeSupport(this);
 		viewModel.addPropertyChangeListener(this);
 	}
 
+	/**
+	 * Show this view.
+	 */
 	public void show() {
 		try {
 			SwingUtilities.invokeAndWait( () -> {
@@ -129,16 +136,25 @@ public class MainFrameView extends WindowAdapter implements IFocusedParentView, 
 		}
 	}
 	
+	/**
+	 * Update the view size.
+	 */
 	public void updateSize() {
 		frame.setPreferredSize(new Dimension(viewModel.getWidth(), viewModel.getHeight()));
 		frame.pack();
 	}
 	
+	/* (non-Javadoc)
+	 * @see fr.cesi.ylalanne.contracts.ui.IParentView#addChild(fr.cesi.ylalanne.contracts.ui.IChildView)
+	 */
 	@Override
 	public void addChild(IChildView childView) {
 		addChild(childView, false);
 	}
 	
+	/* (non-Javadoc)
+	 * @see fr.cesi.ylalanne.contracts.ui.IFocusedParentView#addChild(fr.cesi.ylalanne.contracts.ui.IChildView, boolean)
+	 */
 	@Override
 	public void addChild(IChildView childView, boolean requestFocus){
 		Container contentPane = frame.getContentPane();
@@ -153,11 +169,17 @@ public class MainFrameView extends WindowAdapter implements IFocusedParentView, 
 		}
 	}
 
+	/**
+	 * Removes the last child.
+	 */
 	public void removeLastChild() {
 		frame.remove(child.getComponent());
 		frame.revalidate();
 	}
 
+	/* (non-Javadoc)
+	 * @see fr.cesi.ylalanne.contracts.ui.IView#build()
+	 */
 	@Override
 	public void build() {
 		try {
@@ -168,12 +190,18 @@ public class MainFrameView extends WindowAdapter implements IFocusedParentView, 
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.WindowAdapter#windowClosing(java.awt.event.WindowEvent)
+	 */
 	@Override
 	public void windowClosing(WindowEvent e) {
 		SoundManager.stop();
 		System.exit(0);
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		JMenuItem menuItem = (JMenuItem)e.getSource();
@@ -185,6 +213,9 @@ public class MainFrameView extends WindowAdapter implements IFocusedParentView, 
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
+	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		String propertyName = evt.getPropertyName();
@@ -197,30 +228,38 @@ public class MainFrameView extends WindowAdapter implements IFocusedParentView, 
 	}
 
 	/**
-	 * @param listener
+	 * Adds the property change listener.
+	 *
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.beans.PropertyChangeListener)
 	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		propertyChange.addPropertyChangeListener(listener);
 	}
 	/**
-	 * @param listener
+	 * Removes the property change listener.
+	 *
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#removePropertyChangeListener(java.beans.PropertyChangeListener)
 	 */
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		propertyChange.removePropertyChangeListener(listener);
 	}
 	/**
-	 * @param propertyName
-	 * @param listener
+	 * Adds the property change listener.
+	 *
+	 * @param propertyName the property name
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
 	 */
 	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
 		propertyChange.addPropertyChangeListener(propertyName, listener);
 	}
 	/**
-	 * @param propertyName
-	 * @param listener
+	 * Removes the property change listener.
+	 *
+	 * @param propertyName the property name
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#removePropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
 	 */
 	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {

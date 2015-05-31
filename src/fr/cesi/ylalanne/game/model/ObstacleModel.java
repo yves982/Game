@@ -10,10 +10,10 @@ import fr.cesi.ylalanne.game.model.geom.MutableRectangle;
  * <p> It has the following bound properties:</p>
  * <ul>
  * 	<li>imagePath</li>
- *  <li>x</li>
- *  <li>y</li>
+ *  <li>x (indirect)</li>
+ *  <li>y (indirect)</li>
  *   <li>dropped</li>
- * </ul>
+ * </ul>.
  */
 public class ObstacleModel{
 	private MutableRectangle area;
@@ -25,6 +25,9 @@ public class ObstacleModel{
 	private boolean isStatic;
 	private PropertyChangeSupport propertyChange;
 	
+	/**
+	 * Instantiates a new obstacle model.
+	 */
 	public ObstacleModel() {
 		area = new MutableRectangle();
 		dx=0;
@@ -33,12 +36,17 @@ public class ObstacleModel{
 	}
 	
 	/**
+	 * Gets the dx.
+	 *
 	 * @return the dx
 	 */
 	public int getDx() {
 		return dx;
 	}
+	
 	/**
+	 * Sets the dx.
+	 *
 	 * @param dx the dx to set
 	 */
 	public void setDx(int dx) {
@@ -46,12 +54,17 @@ public class ObstacleModel{
 	}
 	
 	/**
+	 * Gets the dy.
+	 *
 	 * @return the dy
 	 */
 	public int getDy() {
 		return dy;
 	}
+	
 	/**
+	 * Sets the dy.
+	 *
 	 * @param dy the dy to set
 	 */
 	public void setDy(int dy) {
@@ -59,6 +72,8 @@ public class ObstacleModel{
 	}
 	
 	/**
+	 * Gets the area.
+	 *
 	 * @return the area
 	 */
 	public MutableRectangle getArea() {
@@ -66,6 +81,8 @@ public class ObstacleModel{
 	}
 	
 	/**
+	 * Gets the width.
+	 *
 	 * @return the area's width
 	 * @see MutableRectangle#getWidth()
 	 */
@@ -74,6 +91,8 @@ public class ObstacleModel{
 	}
 	
 	/**
+	 * Gets the height.
+	 *
 	 * @return the area's height
 	 * @see MutableRectangle#getHeight()
 	 */
@@ -82,12 +101,17 @@ public class ObstacleModel{
 	}
 	
 	/**
+	 * Gets the image path.
+	 *
 	 * @return the imagePath
 	 */
 	public String getImagePath() {
 		return imagePath;
 	}
+	
 	/**
+	 * Sets the image path.
+	 *
 	 * @param imagePath the imagePath to set
 	 */
 	public void setImagePath(String imagePath) {
@@ -105,7 +129,10 @@ public class ObstacleModel{
 	public boolean isDropped() {
 		return dropped;
 	}
+	
 	/**
+	 * Sets the dropped.
+	 *
 	 * @param dropped the dropped to set
 	 */
 	public void setDropped(boolean dropped) {
@@ -117,13 +144,17 @@ public class ObstacleModel{
 	/**
 	 * <p>
 	 * A deadly obstacle cannot be climbed upon, it'd kill the player on contact
-	 * </p>
+	 * </p>.
+	 *
 	 * @return the deadly
 	 */
 	public boolean isDeadly() {
 		return deadly;
 	}
+	
 	/**
+	 * Sets the deadly.
+	 *
 	 * @param deadly the deadly to set
 	 */
 	public void setDeadly(boolean deadly) {
@@ -131,12 +162,17 @@ public class ObstacleModel{
 	}
 
 	/**
+	 * Checks if is static.
+	 *
 	 * @return the isStatic
 	 */
 	public boolean isStatic() {
 		return isStatic;
 	}
+	
 	/**
+	 * Sets the static.
+	 *
 	 * @param isStatic the isStatic to set
 	 */
 	public void setStatic(boolean isStatic) {
@@ -144,7 +180,9 @@ public class ObstacleModel{
 	}
 
 	/**
-	 * @param listener
+	 * Adds the property change listener.
+	 *
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.beans.PropertyChangeListener)
 	 * @see fr.cesi.ylalanne.game.model.geom.MutableRectangle#addPropertyChangeListener(java.beans.PropertyChangeListener)
 	 */
@@ -153,7 +191,9 @@ public class ObstacleModel{
 		area.addPropertyChangeListener(listener);
 	}
 	/**
-	 * @param listener
+	 * Removes the property change listener.
+	 *
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#removePropertyChangeListener(java.beans.PropertyChangeListener)
 	 * @see fr.cesi.ylalanne.game.model.geom.MutableRectangle#removePropertyChangeListener(java.beans.PropertyChangeListener)
 	 */
@@ -162,8 +202,10 @@ public class ObstacleModel{
 		area.removePropertyChangeListener(listener);
 	}
 	/**
-	 * @param propertyName
-	 * @param listener
+	 * Adds the property change listener.
+	 *
+	 * @param propertyName the property name
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
 	 * @see fr.cesi.ylalanne.game.model.geom.MutableRectangle#addPropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
 	 */
@@ -172,8 +214,10 @@ public class ObstacleModel{
 		area.addPropertyChangeListener(propertyName, listener);
 	}
 	/**
-	 * @param propertyName
-	 * @param listener
+	 * Removes the property change listener.
+	 *
+	 * @param propertyName the property name
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#removePropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
 	 * @see fr.cesi.ylalanne.game.model.geom.MutableRectangle#removePropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
 	 */

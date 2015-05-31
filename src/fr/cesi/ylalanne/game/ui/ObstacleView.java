@@ -25,7 +25,7 @@ import fr.cesi.ylalanne.utils.ui.ImageLoader;
  * <ul>
  * 	<li>width</li>
  *  <li>height</li>
- * </ul>
+ * </ul>.
  */
 public class ObstacleView implements IChildView, PropertyChangeListener {
 	private Container parent;
@@ -100,7 +100,8 @@ public class ObstacleView implements IChildView, PropertyChangeListener {
 	}
 
 	/**
-	 * Initialize the Obstacle view
+	 * Initializes an ObstacleView.
+	 *
 	 * @param model the obstacle model
 	 */
 	public ObstacleView(ObstacleModel model) {
@@ -110,18 +111,27 @@ public class ObstacleView implements IChildView, PropertyChangeListener {
 		model.addPropertyChangeListener(this);
 	}
 
+	/* (non-Javadoc)
+	 * @see fr.cesi.ylalanne.contracts.ui.IChildView#getComponent()
+	 */
 	@Override
 	public JComponent getComponent() {
 		checkBuild();
 		return obstacleLabel;
 	}
 
+	/* (non-Javadoc)
+	 * @see fr.cesi.ylalanne.contracts.ui.IChildView#setParent(java.awt.Container, java.awt.Dimension)
+	 */
 	@Override
 	public void setParent(Container container, Dimension availableSize) {
 		checkBuild();
 		this.parent = container;
 	}
 
+	/* (non-Javadoc)
+	 * @see fr.cesi.ylalanne.contracts.ui.IView#build()
+	 */
 	public void build() {
 		try {
 			SwingUtilities.invokeAndWait(this::buildComponents);
@@ -131,6 +141,9 @@ public class ObstacleView implements IChildView, PropertyChangeListener {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
+	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		String propertyName = evt.getPropertyName();
@@ -152,30 +165,38 @@ public class ObstacleView implements IChildView, PropertyChangeListener {
 	}
 
 	/**
-	 * @param listener
+	 * Adds the property change listener.
+	 *
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.beans.PropertyChangeListener)
 	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		modelChange.addPropertyChangeListener(listener);
 	}
 	/**
-	 * @param propertyName
-	 * @param listener
+	 * Adds the property change listener.
+	 *
+	 * @param propertyName the property name
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
 	 */
 	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
 		modelChange.addPropertyChangeListener(propertyName, listener);
 	}
 	/**
-	 * @param listener
+	 * Removes the property change listener.
+	 *
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#removePropertyChangeListener(java.beans.PropertyChangeListener)
 	 */
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		modelChange.removePropertyChangeListener(listener);
 	}
 	/**
-	 * @param propertyName
-	 * @param listener
+	 * Removes the property change listener.
+	 *
+	 * @param propertyName the property name
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#removePropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
 	 */
 	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {

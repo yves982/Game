@@ -10,14 +10,12 @@ import fr.cesi.ylalanne.contracts.IBoundChildController;
 import fr.cesi.ylalanne.contracts.ui.IChildView;
 import fr.cesi.ylalanne.game.ui.WorldView;
 
-
-
 /**
  * The world containing the entire game
  * <p>It has the following bound properties:</p>
  * <ul>
  *   <li>reseted</li>
- * </ul>
+ * </ul>.
  */
 public class World implements IBoundChildController, PropertyChangeListener {
 	private List<Obstacle> obstacles;
@@ -37,6 +35,10 @@ public class World implements IBoundChildController, PropertyChangeListener {
 		this.height = height;
 	}
 
+	
+	/**
+	 * Cleans resources used by the World
+	 */
 	private void clean() {
 		obstacles.clear();
 		areas.clear();
@@ -48,7 +50,7 @@ public class World implements IBoundChildController, PropertyChangeListener {
 	}
 
 	/**
-	 * Initialize the World
+	 * Initializes the World.
 	 */
 	public World() {
 		obstacles = new ArrayList<Obstacle>();
@@ -61,8 +63,9 @@ public class World implements IBoundChildController, PropertyChangeListener {
 	}
 	
 	/**
+	 * Adds the obstacle.
+	 *
 	 * @param obstacle the Obstacle to add to the World
-	 * @throws RuntimeException in case the Obstacle fails to get its child
 	 */
 	public void addObstacle(Obstacle obstacle) {
 		obstacles.add(obstacle);
@@ -70,8 +73,9 @@ public class World implements IBoundChildController, PropertyChangeListener {
 	}
 	
 	/**
+	 * Adds the area.
+	 *
 	 * @param area the Area to add to the world
-	 * @throws RuntimeException in case the area fails to get its child
 	 */
 	public void addArea(Area area) {
 		areas.add(area);
@@ -79,14 +83,18 @@ public class World implements IBoundChildController, PropertyChangeListener {
 	}
 	
 	/**
+	 * Gets the player.
+	 *
 	 * @return the player
 	 */
 	public Player getPlayer() {
 		return player;
 	}
+	
 	/**
+	 * Sets the player.
+	 *
 	 * @param player the player to set
-	 * @throws RuntimeException in case the player fails to get any of its children
 	 */
 	public void setPlayer(Player player) {
 		this.player = player;
@@ -94,12 +102,17 @@ public class World implements IBoundChildController, PropertyChangeListener {
 	}
 
 	/**
+	 * Gets the width.
+	 *
 	 * @return the world's width
 	 */
 	public int getWidth() {
 		return width;
 	}
+	
 	/**
+	 * Gets the height.
+	 *
 	 * @return the world's height
 	 */
 	public int getHeight() {
@@ -107,6 +120,8 @@ public class World implements IBoundChildController, PropertyChangeListener {
 	}
 
 	/**
+	 * Checks if it is reseted.
+	 *
 	 * @return the reseted state
 	 */
 	public boolean isReseted() {
@@ -114,7 +129,7 @@ public class World implements IBoundChildController, PropertyChangeListener {
 	}
 
 	/**
-	 * Reset this world
+	 * Reset this world.
 	 */
 	public void reset() {
 		clean();
@@ -127,7 +142,8 @@ public class World implements IBoundChildController, PropertyChangeListener {
 	}
 
 	/**
-	 * Ends this World
+	 * Ends this World.
+	 *
 	 * @param playerWon true if the player has won, false otherwise
 	 */
 	public void end(boolean playerWon) {
@@ -138,6 +154,8 @@ public class World implements IBoundChildController, PropertyChangeListener {
 	}
 
 	/**
+	 * Gets the obstacles.
+	 *
 	 * @return the obstacles
 	 */
 	public List<Obstacle> getObstacles() {
@@ -145,17 +163,25 @@ public class World implements IBoundChildController, PropertyChangeListener {
 	}
 
 	/**
+	 * Gets the areas.
+	 *
 	 * @return the areas
 	 */
 	public List<Area> getAreas() {
 		return areas;
 	}
 
+	/* (non-Javadoc)
+	 * @see fr.cesi.ylalanne.contracts.IChildController#getChild()
+	 */
 	@Override
 	public IChildView getChild() {
 		return view;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
+	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		String propertyName = evt.getPropertyName();
@@ -172,30 +198,38 @@ public class World implements IBoundChildController, PropertyChangeListener {
 	}
 
 	/**
-	 * @param listener
+	 * Adds the property change listener.
+	 *
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.beans.PropertyChangeListener)
 	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		propertyChange.addPropertyChangeListener(listener);
 	}
 	/**
-	 * @param listener
+	 * Removes the property change listener.
+	 *
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#removePropertyChangeListener(java.beans.PropertyChangeListener)
 	 */
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		propertyChange.removePropertyChangeListener(listener);
 	}
 	/**
-	 * @param propertyName
-	 * @param listener
+	 * Adds the property change listener.
+	 *
+	 * @param propertyName the property name
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
 	 */
 	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
 		propertyChange.addPropertyChangeListener(propertyName, listener);
 	}
 	/**
-	 * @param propertyName
-	 * @param listener
+	 * Removes the property change listener.
+	 *
+	 * @param propertyName the property name
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#removePropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
 	 */
 	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {

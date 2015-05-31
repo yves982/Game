@@ -30,6 +30,9 @@ import fr.cesi.ylalanne.settings.model.SettingsViewModel;
 import fr.cesi.ylalanne.settings.model.Titles;
 import fr.cesi.ylalanne.settings.ui.SettingsView;
 
+/**
+ * SettingsController handles {@link Settings}.
+ */
 public class SettingsController implements PropertyChangeListener {
 	private SettingsView view;
 	private SettingsViewModel model;
@@ -153,6 +156,9 @@ public class SettingsController implements PropertyChangeListener {
 		initialized = true;
 	}
 
+	/**
+	 * Instantiates a new settings controller.
+	 */
 	public SettingsController() {
 		model = new SettingsViewModel();
 		view = new SettingsView(model);
@@ -164,7 +170,7 @@ public class SettingsController implements PropertyChangeListener {
 	}
 	
 	/**
-	 * Start the SettingsController (shows its view)
+	 * Start the SettingsController (shows its view).
 	 */
 	public void start() {
 		if(!initialized) {
@@ -174,6 +180,8 @@ public class SettingsController implements PropertyChangeListener {
 	}
 
 	/**
+	 * Gets the settings from a file or sets default settings.
+	 *
 	 * @return the settings
 	 */
 	public static Settings getSettings() {
@@ -200,6 +208,9 @@ public class SettingsController implements PropertyChangeListener {
 		return settings;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
+	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		String propertyName = evt.getPropertyName();

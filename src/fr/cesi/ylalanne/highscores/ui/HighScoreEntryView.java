@@ -25,11 +25,11 @@ import fr.cesi.ylalanne.utils.ui.GridBagConstraintsAnchor;
 import fr.cesi.ylalanne.utils.ui.GridBagConstraintsBuilder;
 
 /**
- * HighScore entry view
+ * View used to enter an {@link fr.cesi.ylalanne.highscores.model.HighScore HighScore} (to asks the player name when he's won)
  * <p>It has the following bound properties</p>
  * <ul>
  *   <li>name</li>
- * </ul>
+ * </ul>.
  */
 public class HighScoreEntryView implements IView, ActionListener {
 	private PropertyChangeSupport propertyChange;
@@ -101,12 +101,20 @@ public class HighScoreEntryView implements IView, ActionListener {
 		nameTextField.setVisible(true);
 	}
 
+	/**
+	 * Initializs an HighScoreEntryView.
+	 *
+	 * @param score the score
+	 */
 	public HighScoreEntryView(int score) {
 		builder = new GridBagConstraintsBuilder();
 		propertyChange = new PropertyChangeSupport(this);
 		highScore = score;
 	}
 
+	/* (non-Javadoc)
+	 * @see fr.cesi.ylalanne.contracts.ui.IView#build()
+	 */
 	@Override
 	public void build() {
 		try {
@@ -117,12 +125,15 @@ public class HighScoreEntryView implements IView, ActionListener {
 	}
 	
 	/**
-	 * Shows this view
+	 * Shows this view.
 	 */
 	public void show() {
 		SwingUtilities.invokeLater(() -> { mainDialog.setVisible(true); });
 	}
 
+	/* (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(nameTextField.getText().trim().equals("") || nameTextField.getText() == null) {
@@ -134,30 +145,38 @@ public class HighScoreEntryView implements IView, ActionListener {
 	}
 
 	/**
-	 * @param listener
+	 * Adds the property change listener.
+	 *
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.beans.PropertyChangeListener)
 	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		propertyChange.addPropertyChangeListener(listener);
 	}
 	/**
-	 * @param listener
+	 * Removes the property change listener.
+	 *
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#removePropertyChangeListener(java.beans.PropertyChangeListener)
 	 */
 	public void removePropertyChangeListener(PropertyChangeListener listener) {
 		propertyChange.removePropertyChangeListener(listener);
 	}
 	/**
-	 * @param propertyName
-	 * @param listener
+	 * Adds the property change listener.
+	 *
+	 * @param propertyName the property name
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#addPropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
 	 */
 	public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
 		propertyChange.addPropertyChangeListener(propertyName, listener);
 	}
 	/**
-	 * @param propertyName
-	 * @param listener
+	 * Removes the property change listener.
+	 *
+	 * @param propertyName the property name
+	 * @param listener the listener
 	 * @see java.beans.PropertyChangeSupport#removePropertyChangeListener(java.lang.String, java.beans.PropertyChangeListener)
 	 */
 	public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {

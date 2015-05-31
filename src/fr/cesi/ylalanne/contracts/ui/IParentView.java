@@ -2,7 +2,7 @@ package fr.cesi.ylalanne.contracts.ui;
 
 /**
  * a view with a childView (sub part)<br>
- *  <b>Note: </b> {@link IView#build()} should be the first method ever called on any IView Implementation
+ *  <b>Note: </b> {@link IView#build()} should be the first method ever called on any IView Implementation.
  */
 public interface IParentView extends IView {
 	/**

@@ -2,6 +2,9 @@ package fr.cesi.ylalanne.game.ui;
 
 import java.awt.event.KeyEvent;
 
+/**
+ * Stores MoveRequest properties (Directions and associated KeyEvent).
+ */
 public enum MoveRequestEvent {
 	UP(KeyEvent.VK_UP),
 	DOWN(KeyEvent.VK_DOWN),
@@ -14,10 +17,21 @@ public enum MoveRequestEvent {
 		this.keyCode = keyCode;
 	}
 	
+	/**
+	 * Gets the key code.
+	 *
+	 * @return the key code
+	 */
 	public int getKeyCode() {
 		return keyCode;
 	}
 	
+	/**
+	 * Gets the corresponding member from a given KeyEvent.
+	 *
+	 * @param keyCode the key code
+	 * @return the matching MoveRequestEvent
+	 */
 	public static MoveRequestEvent parseInt(int keyCode) {
 		MoveRequestEvent [] events = values();
 		MoveRequestEvent seekedEvent = null;

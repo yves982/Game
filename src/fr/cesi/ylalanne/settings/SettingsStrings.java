@@ -1,7 +1,7 @@
 package fr.cesi.ylalanne.settings;
 
 /**
- * Storage class for SettingsController translations keys
+ * SettingsController translations keys.
  */
 public enum SettingsStrings {
 	CHANGE_LANG("Lang_Change");
@@ -16,6 +16,8 @@ public enum SettingsStrings {
 	}
 	
 	/**
+	 * Gets the key.
+	 *
 	 * @return the translation key
 	 */
 	public String getKey() {

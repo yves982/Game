@@ -13,6 +13,9 @@ import java.util.concurrent.TimeUnit;
 import fr.cesi.ylalanne.game.ui.MoveRequestEvent;
 import fr.cesi.ylalanne.utils.Range;
 
+/**
+ * The WorldManager (manages moves and Player/Obstacles interactions).
+ */
 public class WorldManager implements PropertyChangeListener {
 	private World world;
 	private Player player;
@@ -168,6 +171,14 @@ public class WorldManager implements PropertyChangeListener {
 		bear.position(bearX, bearY);
 	}
 
+	/**
+	 * Initializes a WorldManager.
+	 *
+	 * @param world the world
+	 * @param player the player
+	 * @param playerRow the current playerRow
+	 * @param rows the game rows
+	 */
 	public WorldManager(World world, Player player, int playerRow, List<GameRow> rows) {
 		this.world = world;
 		this.player = player;
@@ -180,12 +191,18 @@ public class WorldManager implements PropertyChangeListener {
 		random = new Random();
 	}
 	
+	/**
+	 * Starts animating the World.
+	 */
 	public void start() {
 		moveExecutor = Executors.newSingleThreadScheduledExecutor();
 		moveExecutor.scheduleAtFixedRate(this::moveObstacles, 0, 400, TimeUnit.MILLISECONDS);
 		player.lives();
 	}
 
+	/* (non-Javadoc)
+	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
+	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		String propertyName = evt.getPropertyName();

@@ -11,7 +11,7 @@ import fr.cesi.ylalanne.game.ui.ObstacleView;
 import fr.cesi.ylalanne.utils.Range;
 
 /**
- * An Obstacle : basically, a moving area, which can be checked for collisions
+ * An Obstacle : basically, a moving area, which can be checked for collisions.
  */
 public class Obstacle implements IChildController, PropertyChangeListener {
 	private ObstacleKind kind;
@@ -38,7 +38,8 @@ public class Obstacle implements IChildController, PropertyChangeListener {
 	}
 
 	/**
-	 * Initialize an Obstacle
+	 * Initializes an Obstacle.
+	 *
 	 * @param kind the obstacle's kind
 	 * @param xBounds min/max x coordinates to stay in the World
 	 * @param outOfWorldTicks Number of times it'll ignore move requests before going back to its starting position in the World
@@ -59,6 +60,8 @@ public class Obstacle implements IChildController, PropertyChangeListener {
 	}
 	
 	/**
+	 * Gets the kind.
+	 *
 	 * @return the obstacle's kind
 	 */
 	public ObstacleKind getKind() {
@@ -66,7 +69,8 @@ public class Obstacle implements IChildController, PropertyChangeListener {
 	}
 
 	/**
-	 * Places this obstacle in the world
+	 * Places this obstacle in the world.
+	 *
 	 * @param x the x coordinate
 	 * @param y the y coordinate
 	 */
@@ -77,7 +81,8 @@ public class Obstacle implements IChildController, PropertyChangeListener {
 	}
 	
 	/**
-	 * defines moving steps along X and Y axis
+	 * defines moving steps along X and Y axis.
+	 *
 	 * @param dx X axis step
 	 * @param dy Y axis step
 	 */
@@ -87,7 +92,7 @@ public class Obstacle implements IChildController, PropertyChangeListener {
 	}
 	
 	/**
-	 * Moves the obstacle by predefined steps (dx on the X axis and dy on the Y one)
+	 * Moves the obstacle by predefined steps (dx on the X axis and dy on the Y one).
 	 */
 	public void move() {
 		if(model.isStatic()) {
@@ -115,7 +120,8 @@ public class Obstacle implements IChildController, PropertyChangeListener {
 	}
 	
 	/**
-	 * Checks whether the obstacle's area is at least partially contained in the a given circular area
+	 * Checks whether the obstacle's area is at least partially contained in the a given circular area.
+	 *
 	 * @param x the center (x coordinate) of a circular area
 	 * @param y the center (y coordinate) of a circular area
 	 * @param radius the distance between circle's center and edge
@@ -126,7 +132,8 @@ public class Obstacle implements IChildController, PropertyChangeListener {
 	}
 	
 	/**
-	 * Checks whether the obstacle's area collides the other's
+	 * Checks whether the obstacle's area collides the other's.
+	 *
 	 * @param obstacle the other obstacle
 	 * @return {@code true} if those area's intersection is non empty (if they share some common points) {@code false} otherwise.
 	 */
@@ -135,7 +142,8 @@ public class Obstacle implements IChildController, PropertyChangeListener {
 	}
 	
 	/**
-	 * Checks whether this obstacle's area collide the player's area
+	 * Checks whether this obstacle's area collide the player's area.
+	 *
 	 * @param player the player
 	 * @return {@code true} if those area's intersection is non empty (if they share some common points) {@code false} otherwise.
 	 */
@@ -144,7 +152,7 @@ public class Obstacle implements IChildController, PropertyChangeListener {
 	}
 
 	/**
-	 * Waits until this Obstacle is fully loaded
+	 * Waits until this Obstacle is fully loaded.
 	 */
 	public synchronized void waitUntilReady() {
 		while(!widthUpdated || !heightUpdated) {
@@ -160,7 +168,8 @@ public class Obstacle implements IChildController, PropertyChangeListener {
 	/**
 	 * <p>
 	 * A dropped Obstacle cannot be collided
-	 * </p>
+	 * </p>.
+	 *
 	 * @return whether this Obstacle is dropped or not
 	 * @see fr.cesi.ylalanne.game.model.ObstacleModel#isDropped()
 	 */
@@ -169,7 +178,8 @@ public class Obstacle implements IChildController, PropertyChangeListener {
 	}
 
 	/**
-	 * A deadly obstacle cannot be climbed upon : a collision with such obstacle would kill the player
+	 * A deadly obstacle cannot be climbed upon : a collision with such obstacle would kill the player.
+	 *
 	 * @return whether this Obstacle is deadly or not
 	 * @see fr.cesi.ylalanne.game.model.ObstacleModel#isDeadly()
 	 */
@@ -178,6 +188,8 @@ public class Obstacle implements IChildController, PropertyChangeListener {
 	}
 
 	/**
+	 * Checks if it is static.
+	 *
 	 * @return the isStatic ( a static Obstacle should not be moved )
 	 */
 	public boolean isStatic() {
@@ -185,6 +197,8 @@ public class Obstacle implements IChildController, PropertyChangeListener {
 	}
 
 	/**
+	 * Gets the width.
+	 *
 	 * @return the obstacle's width
 	 * @see fr.cesi.ylalanne.game.model.ObstacleModel#getWidth()
 	 */
@@ -193,6 +207,8 @@ public class Obstacle implements IChildController, PropertyChangeListener {
 	}
 
 	/**
+	 * Gets the height.
+	 *
 	 * @return the obstacle's height
 	 * @see fr.cesi.ylalanne.game.model.ObstacleModel#getHeight()
 	 */
@@ -201,6 +217,8 @@ public class Obstacle implements IChildController, PropertyChangeListener {
 	}
 	
 	/**
+	 * Gets the x.
+	 *
 	 * @return the obstacle's x coordinate
 	 */
 	public int getX() {
@@ -208,17 +226,25 @@ public class Obstacle implements IChildController, PropertyChangeListener {
 	}
 	
 	/**
+	 * Gets the y.
+	 *
 	 * @return the obstacle's y coordinate
 	 */
 	public int getY() {
 		return model.getArea().getY();
 	}
 
+	/* (non-Javadoc)
+	 * @see fr.cesi.ylalanne.contracts.IChildController#getChild()
+	 */
 	@Override
 	public IChildView getChild() {
 		return view;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
+	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		String propertyName = evt.getPropertyName();

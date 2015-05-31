@@ -3,7 +3,7 @@ package fr.cesi.ylalanne.settings.model;
 import java.util.Locale;
 
 /**
- * Supported Languages and their locales
+ * Supported Languages and their locales.
  */
 public enum Languages {
 	FRENCH(Locale.FRENCH, "Lang_Fr"),
@@ -19,6 +19,8 @@ public enum Languages {
 	}
 	
 	/**
+	 * Gets the locale.
+	 *
 	 * @return the corresponding Locale
 	 */
 	public Locale getLocale() {
@@ -26,6 +28,8 @@ public enum Languages {
 	}
 	
 	/**
+	 * Gets the key.
+	 *
 	 * @return the translation key to get the Languages's name
 	 */
 	public String getKey() {
