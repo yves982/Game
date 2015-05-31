@@ -36,7 +36,7 @@ public enum Difficulties {
 	}
 	
 	/**
-	 * Gets the minimum space between {@link Obstacle Obstacles} (at World generation).
+	 * Gets the minimum space between {@link fr.cesi.ylalanne.game.Obstacle Obstacles} (at World generation).
 	 *
 	 * @return the minimum amount of space between obstacle of a same row
 	 */

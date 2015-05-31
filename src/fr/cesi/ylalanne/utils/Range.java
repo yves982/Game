@@ -24,7 +24,7 @@ public class Range<T extends Number & Comparable<T>> {
 	 * Checks the given {@link Number} is in this {@link Range}.
 	 *
 	 * @param number the tested number
-	 * @return {@link true} if the given number is in this {@link Range} (bounds included), {@link false} otherwise
+	 * @return {@code true} if the given number is in this {@link Range} (bounds included), {@code false} otherwise
 	 */
 	public boolean isIn(T number) {
 		return number.compareTo(start) >= 0 && number.compareTo(end) <= 0;

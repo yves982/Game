@@ -101,6 +101,8 @@ public class WorldManager implements PropertyChangeListener {
 		
 		if(collider.isPresent()) {
 			player.collides(collider.get());
+		} else if(player.isCollided()) {
+			player.unCollides();
 		}
 	}
 
@@ -115,6 +117,8 @@ public class WorldManager implements PropertyChangeListener {
 			
 			if(collider.isPresent()) {
 				player.collides(collider.get());
+			} else if(player.isCollided()) {
+				player.unCollides();
 			}
 		} else if(obstacle.isWithin((x+oldX)/2, player.getY(), 15) && obstacle.checkCollision(player)) {
 			player.collides(obstacle);
@@ -146,6 +150,7 @@ public class WorldManager implements PropertyChangeListener {
 		
 		if(!hasVeryCloseObstacles) {
 			player.kill();
+			playerRow = rows.size();
 		}
 		
 	}
@@ -159,6 +164,7 @@ public class WorldManager implements PropertyChangeListener {
 				y = player.getY() + (int)rows.get(0).getBounds().size();
 			}
 			player.position(player.getX(), y);
+			player.unCollides();
 		}
 	}
 

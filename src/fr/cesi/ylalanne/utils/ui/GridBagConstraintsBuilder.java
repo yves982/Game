@@ -4,7 +4,7 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 
 /**
- * Builds {@link GridBagConstraints} for use with {@link GridBagLayout}.
+ * Builds {@link java.awt.GridBagConstraints GridBagConstraints} for use with {@link java.awt.GridBagLayout GridBagLayout}.
  */
 public class GridBagConstraintsBuilder {
 
@@ -110,7 +110,7 @@ public class GridBagConstraintsBuilder {
 
 
 	/**
-	 * Builds a {@link GridBagContraints}.
+	 * Builds a {@link java.awt.GridBagConstraints GridBagConstraints}.
 	 *
 	 * @return the grid bag constraints
 	 */

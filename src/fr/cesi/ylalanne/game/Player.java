@@ -362,6 +362,13 @@ public class Player implements ILayeredChildrenController, PropertyChangeListene
 	}
 
 	/**
+	 * Removes collision
+	 */
+	public void unCollides() {
+		collider = null;
+	}
+	
+	/**
 	 * Checks whether the player's area is at least partially contained in the given circular area.
 	 *
 	 * @param x the center (x coordinate) of a circular area
