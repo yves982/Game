@@ -165,6 +165,8 @@ public class WorldManager implements PropertyChangeListener {
 			}
 			player.position(player.getX(), y);
 			player.unCollides();
+			updateRow();
+			checkWater();
 		}
 	}
 
