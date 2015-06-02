@@ -175,7 +175,7 @@ public class WorldManager implements PropertyChangeListener {
 		int index = random.nextInt(5);
 		Range<Integer> firstRowBearSlot = rows.get(0).getWinningAreas().get(index);
 		int bearX = firstRowBearSlot.getStart() + (int)Math.ceil(firstRowBearSlot.size() / 2.0d) -(int)Math.ceil(bear.getWidth() / 2.0d);
-		int bearY = (int) Math.ceil(rows.get(0).getBounds().size() / 2.0d) -(int)Math.ceil(4.78d * bear.getHeight());
+		int bearY = (int) Math.ceil(rows.get(0).getBounds().size() / 2.0d) -8;
 		bear.position(bearX, bearY);
 	}
 

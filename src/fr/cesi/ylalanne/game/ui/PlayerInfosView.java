@@ -113,7 +113,6 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 		timeLeftLabel = new JLabel();
 		timeLeftLabel.setBackground(Color.green);
 		timeLeftLabel.setOpaque(true);
-		timeLeftLabel.setSize(0, 0);
 		timeLeftLabel.setVisible(true);
 	}
 
@@ -138,15 +137,15 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 		
 		GridBagConstraints timeLeftConstraint = gridBagConstraintsBuilder
 				.position(1, 1)
-				.weight(26, 1)
-				.margins(0, 0, 4, 0)
-				.anchor(GridBagConstraintsAnchor.LAST_LINE_END)
+				.span(1, 1)
+				.margins(0, 4, 4, 4)
+				.anchor(GridBagConstraintsAnchor.LAST_LINE_START)
 				.build();
 		constraints.put(TIME_LEFT, timeLeftConstraint);
 		
 		GridBagConstraints timeConstraint = gridBagConstraintsBuilder
 				.position(2, 1)
-				.weight(1, 1)
+				.span(1, 1)
 				.margins(0, 4, 4, 0)
 				.anchor(GridBagConstraintsAnchor.LAST_LINE_END)
 				.build();
@@ -195,7 +194,7 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 		double totalTimeMs = model.getMaxLiveTimeMs();
 		int currentWidth = (int)Math.ceil(timeLeftMaxSize * (timeLeftMs / totalTimeMs));
 		timeLeftLabel.setPreferredSize(new Dimension(currentWidth , 12));
-		timeLeftLabel.setSize(currentWidth, 12);
+		infosPanel.revalidate();
 	}
 
 	private void updateLiveless() {
@@ -242,6 +241,7 @@ public class PlayerInfosView implements ILayeredChildView, PropertyChangeListene
 		checkBuild();
 		this.parent = container;
 		timeLeftMaxSize = (int)Math.ceil(0.04 * this.parent.getWidth());
+		timeLeftLabel.setPreferredSize(new Dimension(timeLeftMaxSize, 12));
 	}
 
 	/* (non-Javadoc)
